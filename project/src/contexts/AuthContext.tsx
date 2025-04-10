@@ -8,8 +8,6 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase';
 
-console.log("API KEY:", import.meta.env.VITE_FIREBASE_API_KEY);
-
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -25,6 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("🔥 Auth State Changed:", user ? "User Logged In" : "No User");
       setUser(user);
       setLoading(false);
     });
@@ -33,11 +32,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     getRedirectResult(auth)
       .then((result) => {
         if (result?.user) {
+          console.log("🔥 Redirect Result Success:", result.user.email);
           setUser(result.user);
         }
       })
       .catch((error) => {
-        console.error('Error getting redirect result:', error);
+        console.error("🔥 Redirect Result Error:", error);
       });
 
     return () => unsubscribe();
@@ -45,9 +45,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
+      console.log("🔥 Starting Google Sign In");
       await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
-      console.error('Error during Google authentication:', error);
+      console.error("🔥 Google Sign In Error:", error);
       throw error;
     }
   };
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await firebaseSignOut(auth);
       setUser(null);
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("🔥 Sign Out Error:", error);
       throw error;
     }
   };

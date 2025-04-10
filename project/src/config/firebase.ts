@@ -1,7 +1,16 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
-console.log("API KEY:", import.meta.env.VITE_FIREBASE_API_KEY);
+// Log environment variables before initialization
+console.log("🔥 Environment Variables Check:", {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? "✅ Present" : "❌ Missing",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? "✅ Present" : "❌ Missing",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? "✅ Present" : "❌ Missing",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ? "✅ Present" : "❌ Missing",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ? "✅ Present" : "❌ Missing",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID ? "✅ Present" : "❌ Missing",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID ? "✅ Present" : "❌ Missing"
+});
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,19 +22,21 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-console.log("🔥 firebaseConfig:", firebaseConfig);
+console.log("🔥 Firebase Config:", firebaseConfig);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Auth
+// Initialize Auth with custom settings
 export const auth = getAuth(app);
-auth.useDeviceLanguage(); // Use the device's language
+auth.useDeviceLanguage();
 
-// Configure Google Auth Provider
+// Configure Google Auth Provider with custom settings
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.addScope('email');
 googleProvider.addScope('profile');
 googleProvider.setCustomParameters({
-  prompt: 'select_account'
+  prompt: 'select_account',
+  // Add localhost to allowed domains
+  auth_domain: window.location.hostname
 });
