@@ -22,25 +22,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("🔥 AuthProvider mounted");
+    
+    // Handle redirect result first
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log("🔥 Redirect Result Success:", {
+            email: result.user.email,
+            uid: result.user.uid,
+            providerId: result.providerId
+          });
+          setUser(result.user);
+        } else {
+          console.log("🔥 No redirect result");
+        }
+      })
+      .catch((error) => {
+        console.error("🔥 Redirect Result Error:", {
+          code: error.code,
+          message: error.message,
+          email: error.email,
+          credential: error.credential
+        });
+      });
+
+    // Then set up auth state listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("🔥 Auth State Changed:", user ? "User Logged In" : "No User");
+      console.log("🔥 Auth State Changed:", {
+        loggedIn: !!user,
+        email: user?.email,
+        uid: user?.uid
+      });
       setUser(user);
       setLoading(false);
     });
 
-    // Handle redirect result when the page loads
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          console.log("🔥 Redirect Result Success:", result.user.email);
-          setUser(result.user);
-        }
-      })
-      .catch((error) => {
-        console.error("🔥 Redirect Result Error:", error);
-      });
-
-    return () => unsubscribe();
+    return () => {
+      console.log("🔥 Cleaning up auth listeners");
+      unsubscribe();
+    };
   }, []);
 
   const signInWithGoogle = async () => {
@@ -48,17 +69,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("🔥 Starting Google Sign In");
       await signInWithRedirect(auth, googleProvider);
     } catch (error: any) {
-      console.error("🔥 Google Sign In Error:", error);
+      console.error("🔥 Google Sign In Error:", {
+        code: error.code,
+        message: error.message,
+        email: error.email,
+        credential: error.credential
+      });
       throw error;
     }
   };
 
   const signOut = async () => {
     try {
+      console.log("🔥 Starting Sign Out");
       await firebaseSignOut(auth);
       setUser(null);
-    } catch (error) {
-      console.error("🔥 Sign Out Error:", error);
+      console.log("🔥 Sign Out Successful");
+    } catch (error: any) {
+      console.error("🔥 Sign Out Error:", {
+        code: error.code,
+        message: error.message
+      });
       throw error;
     }
   };
@@ -72,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

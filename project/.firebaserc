@@ -1,9 +1,9 @@
 {
   "projects": {
-    "default": "kuest-2ff23"
+    "default": "kuest3-5ef8c"
   },
   "targets": {
-    "kuest-2ff23": {
+    "kuest3-5ef8c": {
       "hosting": {
         "kuest3": [
           "kuest3"
