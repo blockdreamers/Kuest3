@@ -4,7 +4,7 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 // Log environment variables before initialization
 console.log("🔥 Environment Variables Check:", {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY ? "✅ Present" : "❌ Missing",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? "✅ Present" : "❌ Missing",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,  // Show actual value
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ? "✅ Present" : "❌ Missing",
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ? "✅ Present" : "❌ Missing",
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ? "✅ Present" : "❌ Missing",
@@ -22,7 +22,10 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-console.log("🔥 Firebase Config:", firebaseConfig);
+console.log("🔥 Firebase Config:", {
+  ...firebaseConfig,
+  authDomain: firebaseConfig.authDomain  // Explicitly log authDomain
+});
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
