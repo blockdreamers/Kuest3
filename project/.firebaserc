@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "kuest-2ff23"
+  },
+  "targets": {
+    "kuest-2ff23": {
+      "hosting": {
+        "kuest3": [
+          "kuest3"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
