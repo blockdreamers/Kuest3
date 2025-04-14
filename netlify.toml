@@ -1,0 +1,53 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NODE_ENV = "development"
+
+# Firebase Auth redirect path (Firebase popup/redirect handler용)
+[[redirects]]
+  from = "/__/auth/*"
+  to = "/__/auth/index.html"
+  status = 200
+
+# SPA fallback 설정
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval';"
+
+# ✅ Production context (지금은 dev 브랜치를 production으로 설정함)
+[context.production]
+  command = "npm run build:dev"
+  publish = "dist"
+
+[context.production.environment]
+  VITE_APP_ENV = "development"
+  NODE_ENV = "development"
+
+# 🟡 deploy-preview용 (PR 미리보기는 개발 빌드로)
+[context.deploy-preview]
+  command = "npm run build:dev"
+
+[context.deploy-preview.environment]
+  VITE_APP_ENV = "development"
+  NODE_ENV = "development"
+
+# 🟢 기타 브랜치 배포시 개발 환경 사용
+[context.branch-deploy]
+  command = "npm run build:dev"
+
+[context.branch-deploy.environment]
+  VITE_APP_ENV = "development"
+  NODE_ENV = "development"

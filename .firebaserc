@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "kuest3-5ef8c"
+  },
+  "targets": {
+    "kuest3-5ef8c": {
+      "hosting": {
+        "kuest3": [
+          "kuest3"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
