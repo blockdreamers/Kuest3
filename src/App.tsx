@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import CoinDetail from './pages/CoinDetail';
 import Login from './pages/Login';
@@ -23,18 +24,21 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/coin/:id" element={<CoinDetail />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/quest/:id" element={<QuestDetail />} />
-        <Route path="/kol" element={<KOL />} />
-        <Route path="/listing" element={<ListingApplication />} />
-        <Route path="/points" element={<Points />} />
-      </Routes>
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/coin/:id" element={<CoinDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/quest/:id" element={<QuestDetail />} />
+          <Route path="/kol" element={<KOL />} />
+          <Route path="/listing" element={<ListingApplication />} />
+          <Route path="/points" element={<Points />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
   );
 }
