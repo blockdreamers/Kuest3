@@ -23,6 +23,7 @@
   for = "/__/auth/*"
   [headers.values]
     X-Frame-Options = "ALLOWALL"
+    Content-Security-Policy = "frame-ancestors 'self' https://*.webcontainer.io https://*.stackblitz.com"
 
 # 🔒 전체 페이지 보안 헤더
 [[headers]]
@@ -32,7 +33,7 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval';"
+    Content-Security-Policy = "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'none';"
 
 # ✅ Production context (지금은 dev 브랜치를 production으로 설정함)
 [context.production]
