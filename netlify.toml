@@ -18,11 +18,11 @@
   to = "/index.html"
   status = 200
 
-# ✅ Firebase 인증 경로에만 iframe 허용
+# ✅ Firebase 인증 경로에만 iframe 허용 (팝업 로그인 정상 작동)
 [[headers]]
   for = "/__/auth/*"
   [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
+    X-Frame-Options = "ALLOWALL"
 
 # 🔒 전체 페이지 보안 헤더
 [[headers]]
