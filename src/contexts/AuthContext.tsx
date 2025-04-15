@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { login: privyLogin, authenticated: privyAuthenticated } = usePrivy();
+  const { login: privyLogin, authenticated: privyAuthenticated, logout: privyLogout } = usePrivy();
   const { wallets } = useWallets();
 
   useEffect(() => {
@@ -103,14 +103,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.location.href = '/';
     } catch (error: any) {
       console.error("🔥 Auth Error:", error);
-      toast.error('로그인 중 오류가 발생했습니다');
+      
+      if (error.code === 'auth/popup-blocked') {
+        toast.error('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해 주세요.');
+      } else {
+        toast.error('로그인 중 오류가 발생했습니다');
+      }
+      
       throw error;
     }
   };
 
   const signOut = async () => {
     try {
-      await firebaseSignOut(auth);
+      await Promise.all([
+        firebaseSignOut(auth),
+        privyAuthenticated ? privyLogout() : Promise.resolve()
+      ]);
+      
       setUser(null);
       toast.success('로그아웃되었습니다');
     } catch (error) {

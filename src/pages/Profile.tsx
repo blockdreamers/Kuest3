@@ -26,8 +26,8 @@ function Profile() {
   }
 
   const pointsHistory = [
-    { id: 1, type: "친구구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
-    { id: 2, type: "친구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
+    { id: 1, type: "전구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
+    { id: 2, type: "전구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
     { id: 3, type: "1day 출석체크 포인트", amount: 60, date: "2024-05-17 23:11:05" },
     { id: 4, type: "2day 출석체크 포인트", amount: 20, date: "2024-05-17 23:11:05" },
     { id: 5, type: "3day 출석체크 포인트", amount: 20, date: "2024-05-17 23:11:05" },

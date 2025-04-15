@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import QuestDetail from './pages/QuestDetail';
 import KOL from './pages/KOL';
 import ListingApplication from './pages/ListingApplication';
+import Points from './pages/Points';
 import { useAuth } from './contexts/AuthContext';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         <Route path="/quest/:id" element={<QuestDetail />} />
         <Route path="/kol" element={<KOL />} />
         <Route path="/listing" element={<ListingApplication />} />
+        <Route path="/points" element={<Points />} />
       </Routes>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { User, ChevronDown } from 'lucide-react';
+import { User, ChevronDown, Star } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
@@ -40,6 +40,10 @@ const Navbar = () => {
               <Link to="/listing" className="text-gray-900 hover:text-blue-600 transition-colors duration-200">
                 Listing Application
               </Link>
+              <Link to="/points" className="text-gray-900 hover:text-blue-600 transition-colors duration-200 flex items-center">
+                <Star className="h-4 w-4 mr-1" />
+                포인트 모으기
+              </Link>
             </div>
           </div>
 
@@ -69,7 +73,6 @@ const Navbar = () => {
                   </div>
                 </button>
 
-                {/* Dropdown Menu */}
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
                     <Link
