@@ -20,21 +20,24 @@ const mockKOLs = [
         content: "BTC looking bullish with strong support at $65k. Expecting a push to $70k in the next 24-48 hours. Set your stops at $63.5k.",
         timestamp: "2024-03-19T10:30:00Z",
         likes: 1234,
-        comments: 89
+        comments: 89,
+        link: "https://t.me/CryptoMasterOfficial/1"
       },
       {
         id: 2,
         content: "ETH/BTC pair showing weakness. Consider reducing ETH exposure until we see clear reversal signals. Key level to watch: 0.055",
         timestamp: "2024-03-19T08:15:00Z",
         likes: 956,
-        comments: 67
+        comments: 67,
+        link: "https://t.me/CryptoMasterOfficial/2"
       },
       {
         id: 3,
         content: "New DeFi protocol analysis coming up in 1 hour. This one looks promising with solid fundamentals and strong team backing.",
         timestamp: "2024-03-19T06:00:00Z",
         likes: 789,
-        comments: 45
+        comments: 45,
+        link: "https://t.me/CryptoMasterOfficial/3"
       }
     ]
   },
@@ -56,16 +59,122 @@ const mockKOLs = [
         content: "Just finished analyzing the latest L2 solution. Full report coming in the next hour. Spoiler: Very impressive tech stack!",
         timestamp: "2024-03-19T09:45:00Z",
         likes: 876,
-        comments: 54
-      },
-      {
-        id: 2,
-        content: "Market update: Altcoin season indicators flashing. Top picks for this cycle will be shared with premium members tonight.",
-        timestamp: "2024-03-19T07:30:00Z",
-        likes: 654,
-        comments: 43
+        comments: 54,
+        link: "https://t.me/JaneCryptoSignals/1"
       }
     ]
+  },
+  {
+    id: 3,
+    name: "Crypto Whale",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 156000,
+    telegramGroup: "WhaleAlerts",
+    telegramMembers: 52000,
+    rating: 4.9,
+    verified: true,
+    specialties: ["Whale Watching", "Market Analysis"],
+    recentPosts: 89,
+    successRate: 92,
+    telegramPosts: []
+  },
+  {
+    id: 4,
+    name: "DeFi Guru",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 87000,
+    telegramGroup: "DeFiInsights",
+    telegramMembers: 28000,
+    rating: 4.7,
+    verified: true,
+    specialties: ["DeFi", "Yield Farming"],
+    recentPosts: 145,
+    successRate: 88,
+    telegramPosts: []
+  },
+  {
+    id: 5,
+    name: "NFT Hunter",
+    avatar: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 76000,
+    telegramGroup: "NFTAlerts",
+    telegramMembers: 24000,
+    rating: 4.5,
+    verified: true,
+    specialties: ["NFTs", "Digital Art"],
+    recentPosts: 167,
+    successRate: 86,
+    telegramPosts: []
+  },
+  {
+    id: 6,
+    name: "Tech Analyst",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 65000,
+    telegramGroup: "TechAnalysis",
+    telegramMembers: 21000,
+    rating: 4.4,
+    verified: true,
+    specialties: ["Technical Analysis"],
+    recentPosts: 134,
+    successRate: 84,
+    telegramPosts: []
+  },
+  {
+    id: 7,
+    name: "Crypto News",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 112000,
+    telegramGroup: "CryptoNewsDaily",
+    telegramMembers: 38000,
+    rating: 4.7,
+    verified: true,
+    specialties: ["News", "Market Updates"],
+    recentPosts: 198,
+    successRate: 90,
+    telegramPosts: []
+  },
+  {
+    id: 8,
+    name: "Altcoin Expert",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 92000,
+    telegramGroup: "AltcoinSignals",
+    telegramMembers: 31000,
+    rating: 4.6,
+    verified: true,
+    specialties: ["Altcoins", "Trading"],
+    recentPosts: 156,
+    successRate: 87,
+    telegramPosts: []
+  },
+  {
+    id: 9,
+    name: "Mining Pro",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 58000,
+    telegramGroup: "MiningInsights",
+    telegramMembers: 19000,
+    rating: 4.5,
+    verified: true,
+    specialties: ["Mining", "Hardware"],
+    recentPosts: 112,
+    successRate: 85,
+    telegramPosts: []
+  },
+  {
+    id: 10,
+    name: "Chain Master",
+    avatar: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    followers: 71000,
+    telegramGroup: "ChainMaster",
+    telegramMembers: 23000,
+    rating: 4.6,
+    verified: true,
+    specialties: ["Blockchain", "Development"],
+    recentPosts: 143,
+    successRate: 88,
+    telegramPosts: []
   }
 ];
 
@@ -163,34 +272,47 @@ const KOL = () => {
                   className="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">{selectedKOL.name}'s Posts</h2>
+                  <h2 className="text-xl font-bold text-gray-900">{selectedKOL.name}'s Recent Posts</h2>
                   <p className="text-sm text-gray-600">{selectedKOL.telegramGroup}</p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6 max-h-[600px] overflow-y-auto">
+            <div className="space-y-4 max-h-[600px] overflow-y-auto">
               {selectedKOL.telegramPosts.map((post) => (
-                <div key={post.id} className="border rounded-lg p-4">
-                  <p className="text-gray-900 mb-3">{post.content}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-600">
-                    <div className="flex items-center space-x-4">
+                <a
+                  key={post.id}
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <div className="border rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1">
+                    <p className="text-gray-900 mb-3">{post.content}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center space-x-4">
+                        <span className="flex items-center">
+                          <Star className="h-4 w-4 mr-1" />
+                          {post.likes}
+                        </span>
+                        <span className="flex items-center">
+                          <MessageCircle className="h-4 w-4 mr-1" />
+                          {post.comments}
+                        </span>
+                      </div>
                       <span className="flex items-center">
-                        <Star className="h-4 w-4 mr-1" />
-                        {post.likes}
-                      </span>
-                      <span className="flex items-center">
-                        <MessageCircle className="h-4 w-4 mr-1" />
-                        {post.comments}
+                        <Calendar className="h-4 w-4 mr-1" />
+                        {formatDate(post.timestamp)}
                       </span>
                     </div>
-                    <span className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      {formatDate(post.timestamp)}
-                    </span>
                   </div>
-                </div>
+                </a>
               ))}
+              {selectedKOL.telegramPosts.length === 0 && (
+                <div className="text-center text-gray-500 py-8">
+                  No recent posts available
+                </div>
+              )}
             </div>
           </div>
         </div>
