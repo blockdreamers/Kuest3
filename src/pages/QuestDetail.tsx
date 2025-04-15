@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Twitter, MessageCircle, Send, DollarSign, CheckCircle, Timer, Users, ExternalLink, ArrowLeft } from 'lucide-react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Twitter, MessageCircle, Send, DollarSign, CheckCircle, Timer, Users, ExternalLink, ArrowLeft, ArrowRight, Info } from 'lucide-react';
 
 const QuestParticipants = () => {
   const mockParticipants = [
@@ -47,6 +47,54 @@ const QuestParticipants = () => {
     </div>
   );
 };
+
+// Mock data for related quests
+const relatedQuests = [
+  {
+    id: 2,
+    title: "Discord Community Engagement",
+    description: "Join our Discord server and participate in technical discussions",
+    reward: 15,
+    rewardType: "USDC",
+    platforms: ["discord"],
+    participants: 856,
+    deadline: "2024-03-26T00:00:00Z",
+    difficulty: "Easy"
+  },
+  {
+    id: 3,
+    title: "Multi-Platform Ambassador",
+    description: "Create and share content about our latest features across multiple platforms",
+    reward: 50,
+    rewardType: "USDT",
+    platforms: ["twitter", "telegram"],
+    participants: 567,
+    deadline: "2024-03-27T00:00:00Z",
+    difficulty: "Medium"
+  },
+  {
+    id: 4,
+    title: "Technical Documentation",
+    description: "Help improve our technical documentation and tutorials",
+    reward: 100,
+    rewardType: "USDC",
+    platforms: ["discord"],
+    participants: 234,
+    deadline: "2024-03-28T00:00:00Z",
+    difficulty: "Hard"
+  },
+  {
+    id: 5,
+    title: "Community Support",
+    description: "Provide support to new users in our Telegram group",
+    reward: 20,
+    rewardType: "USDT",
+    platforms: ["telegram"],
+    participants: 1567,
+    deadline: "2024-03-29T00:00:00Z",
+    difficulty: "Easy"
+  }
+];
 
 const QuestDetail = () => {
   const { id } = useParams();
@@ -95,6 +143,12 @@ const QuestDetail = () => {
         description: "Join our Discord community",
         link: "https://discord.gg/cryptoproject"
       }
+    ],
+    questGuide: [
+      "1. 트위터 계정을 팔로우하고 10포인트를 받으세요!",
+      "2. 공식 텔레그램 채널에 참여하고 15포인트를 받으세요!",
+      "3. 디스코드 서버에 참여하고 커뮤니티와 소통하세요! (20포인트)",
+      "4. 모든 미션을 완료하면 추가 보너스 5포인트가 지급됩니다!"
     ]
   };
 
@@ -184,6 +238,53 @@ const QuestDetail = () => {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Quest Guide Section */}
+            <div className="mt-8 border-t pt-6">
+              <div className="flex items-center space-x-2 mb-4">
+                <Info className="h-5 w-5 text-blue-600" />
+                <h2 className="text-lg font-semibold text-gray-900">퀘스트 상세 설명</h2>
+              </div>
+              <div className="bg-blue-50 rounded-lg p-4">
+                <ul className="space-y-2">
+                  {questData.questGuide.map((guide, index) => (
+                    <li key={index} className="text-gray-700 flex items-start">
+                      <span className="mr-2">•</span>
+                      {guide}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Related Quests Section */}
+            <div className="mt-8 border-t pt-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">다른 퀘스트 둘러보기</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {relatedQuests.slice(0, 4).map((quest) => (
+                  <Link
+                    key={quest.id}
+                    to={`/quest/${quest.id}`}
+                    className="block bg-white border rounded-lg p-4 hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium text-gray-900">{quest.title}</h3>
+                        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{quest.description}</p>
+                        <div className="flex items-center mt-2 text-sm text-gray-500">
+                          <Users className="h-4 w-4 mr-1" />
+                          <span>{quest.participants} participants</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center text-green-500 font-medium">
+                        <DollarSign className="h-4 w-4 mr-1" />
+                        <span>{quest.reward} {quest.rewardType}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
