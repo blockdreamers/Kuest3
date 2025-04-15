@@ -35,10 +35,10 @@ const Navbar = () => {
             
             <div className="hidden md:flex items-center space-x-6">
               <Link to="/kol" className="text-gray-900 hover:text-blue-600 transition-colors duration-200">
-                League of KOLs
+                리그 오브 KOL
               </Link>
               <Link to="/listing" className="text-gray-900 hover:text-blue-600 transition-colors duration-200">
-                Listing Application
+                리스팅 신청하기
               </Link>
               <Link to="/points" className="text-gray-900 hover:text-blue-600 transition-colors duration-200 flex items-center">
                 <Star className="h-4 w-4 mr-1" />
@@ -108,6 +108,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;
