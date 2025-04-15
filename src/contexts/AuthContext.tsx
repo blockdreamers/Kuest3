@@ -5,7 +5,7 @@ import {
   getRedirectResult,
   signOut as firebaseSignOut,
   onAuthStateChanged,
-  User
+  User,
 } from 'firebase/auth';
 import { usePrivy } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const result = await getRedirectResult(auth);
         if (result?.user) {
-          console.log("🔥 Redirect Result Success:", result.user);
+          console.log('🔥 Redirect Result Success:', result.user);
           setUser(result.user);
           if (!isPreview) {
             toast.success('로그인이 완료되었습니다!');
@@ -39,15 +39,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           window.location.href = '/';
         }
       } catch (error) {
-        console.error("🔥 Redirect Result Error:", error);
+        console.error('🔥 Redirect Result Error:', error);
         toast.error('로그인 중 오류가 발생했습니다');
       }
 
       const unsubscribe = onAuthStateChanged(auth, (user) => {
-        console.log("🔥 Auth State Changed:", {
+        console.log('🔥 Auth State Changed:', {
           loggedIn: !!user,
           email: user?.email,
-          uid: user?.uid
+          uid: user?.uid,
         });
         setUser(user);
         setLoading(false);
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async (isSignUp: boolean) => {
     try {
-      console.log("🔥 Google Sign In via", isPreview ? "Redirect" : "Popup");
+      console.log('🔥 Google Sign In via', isPreview ? 'Redirect' : 'Popup');
 
       if (isPreview) {
         await signInWithRedirect(auth, googleProvider);
@@ -69,15 +69,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const result = await signInWithPopup(auth, googleProvider);
-      const loggedInUser = result.user;
+      console.log('✅ Google Login Success:', result.user);
+      setUser(result.user);
 
-      console.log("🔥 Login Success:", loggedInUser);
-      setUser(loggedInUser);
-
-      if (isSignUp) {
+      // Only attempt Privy connection if this is a sign-up flow
+      if (isSignUp && !privyAuthenticated) {
         toast.loading('지갑 연결 중...', { id: 'wallet-connect' });
         try {
+          console.log('🔐 Privy login 시작');
           await privyLogin();
+          console.log('✅ Privy login 완료');
           toast.success('지갑이 연결되었습니다!', { id: 'wallet-connect' });
           toast.success('회원가입이 완료되었습니다!');
         } catch (error) {
@@ -89,9 +90,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         toast.success('로그인이 완료되었습니다!');
       }
 
+      // Redirect after auth + wallet flow
       window.location.href = '/';
     } catch (error: any) {
-      console.error("🔥 Auth Error:", error);
+      console.error('🔥 Auth Error:', error);
       throw error;
     }
   };
@@ -102,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null);
       toast.success('로그아웃되었습니다');
     } catch (error) {
-      console.error("🔥 Sign Out Error:", error);
+      console.error('🔥 Sign Out Error:', error);
       toast.error('로그아웃 중 오류가 발생했습니다');
       throw error;
     }
@@ -117,6 +119,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
   return context;
 };
