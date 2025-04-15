@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { User, ChevronDown, Star } from 'lucide-react';
+import { User, ChevronDown, Star, MessageCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
@@ -37,8 +37,9 @@ const Navbar = () => {
               <Link to="/kol" className="text-gray-900 hover:text-blue-600 transition-colors duration-200">
                 리그 오브 KOL
               </Link>
-              <Link to="/listing" className="text-gray-900 hover:text-blue-600 transition-colors duration-200">
-                리스팅 신청하기
+              <Link to="/telegram" className="text-gray-900 hover:text-blue-600 transition-colors duration-200 flex items-center">
+                <MessageCircle className="h-4 w-4 mr-1" />
+                텔레그램 모아보기
               </Link>
               <Link to="/points" className="text-gray-900 hover:text-blue-600 transition-colors duration-200 flex items-center">
                 <Star className="h-4 w-4 mr-1" />

@@ -10,6 +10,7 @@ import QuestDetail from './pages/QuestDetail';
 import KOL from './pages/KOL';
 import ListingApplication from './pages/ListingApplication';
 import Points from './pages/Points';
+import TelegramFeed from './pages/TelegramFeed';
 import { useAuth } from './contexts/AuthContext';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/kol" element={<KOL />} />
           <Route path="/listing" element={<ListingApplication />} />
           <Route path="/points" element={<Points />} />
+          <Route path="/telegram" element={<TelegramFeed />} />
         </Routes>
       </main>
       <Footer />
