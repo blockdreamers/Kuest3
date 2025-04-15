@@ -1,13 +1,33 @@
 import React from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { User, Mail, Wallet, ExternalLink, Star, Clock, Bell, Copy, Users } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
-  const { user, ready, authenticated } = usePrivy();
+  const { user: privyUser, ready: privyReady } = usePrivy();
+  const { user: firebaseUser, loading: firebaseLoading } = useAuth();
+  const navigate = useNavigate();
+
+  // Firebase 로딩이 완료되고 사용자가 없으면 로그인 페이지로 리다이렉트
+  React.useEffect(() => {
+    if (!firebaseLoading && !firebaseUser) {
+      navigate('/login');
+    }
+  }, [firebaseLoading, firebaseUser, navigate]);
+
+  // Firebase 로딩 중이거나 사용자가 없으면 로딩 표시
+  if (firebaseLoading || !firebaseUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   const pointsHistory = [
-    { id: 1, type: "전구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
-    { id: 2, type: "전구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
+    { id: 1, type: "친구구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
+    { id: 2, type: "친구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
     { id: 3, type: "1day 출석체크 포인트", amount: 60, date: "2024-05-17 23:11:05" },
     { id: 4, type: "2day 출석체크 포인트", amount: 20, date: "2024-05-17 23:11:05" },
     { id: 5, type: "3day 출석체크 포인트", amount: 20, date: "2024-05-17 23:11:05" },
@@ -18,14 +38,6 @@ function Profile() {
     // You could add a toast notification here
   };
 
-  if (!ready || !authenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
   const referralLink = "https://www.fl3x.ai/referral/ab97dh1i29yuddj";
 
   return (
@@ -35,10 +47,10 @@ function Profile() {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex flex-col items-center text-center">
-              {user?.avatar ? (
+              {firebaseUser.photoURL ? (
                 <img
-                  src={user.avatar}
-                  alt={user.email || ''}
+                  src={firebaseUser.photoURL}
+                  alt={firebaseUser.email || ''}
                   className="w-24 h-24 rounded-full"
                 />
               ) : (
@@ -47,7 +59,7 @@ function Profile() {
                 </div>
               )}
               <h2 className="mt-4 text-xl font-bold text-gray-900">
-                {user?.email || '사용자'}
+                {firebaseUser.email?.split('@')[0] || '사용자'}
               </h2>
               
               <div className="mt-4 w-full">
@@ -56,27 +68,29 @@ function Profile() {
                     <Mail className="h-5 w-5 mr-2" />
                     <span>이메일</span>
                   </div>
-                  <span className="text-gray-900">{user?.email}</span>
+                  <span className="text-gray-900">{firebaseUser.email}</span>
                 </div>
-                <div className="flex items-center justify-between py-3 border-b">
-                  <div className="flex items-center text-gray-600">
-                    <Wallet className="h-5 w-5 mr-2" />
-                    <span>지갑 주소</span>
+                {privyReady && privyUser?.wallet && (
+                  <div className="flex items-center justify-between py-3 border-b">
+                    <div className="flex items-center text-gray-600">
+                      <Wallet className="h-5 w-5 mr-2" />
+                      <span>지갑 주소</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-gray-900">
+                        {privyUser.wallet.address?.slice(0, 6)}...{privyUser.wallet.address?.slice(-4)}
+                      </span>
+                      <a
+                        href={`https://etherscan.io/address/${privyUser.wallet.address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2 text-blue-600 hover:text-blue-800"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <span className="text-gray-900">
-                      {user?.wallet?.address?.slice(0, 6)}...{user?.wallet?.address?.slice(-4)}
-                    </span>
-                    <a
-                      href={`https://etherscan.io/address/${user?.wallet?.address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-2 text-blue-600 hover:text-blue-800"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
