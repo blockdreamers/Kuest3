@@ -66,29 +66,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (isPreview) {
         await signInWithRedirect(auth, googleProvider);
-        return; // Result will be handled by getRedirectResult in useEffect
+        return;
       }
 
       const result = await signInWithPopup(auth, googleProvider);
-      console.log("🔥 Login Success", result.user);
-      setUser(result.user);
+      const currentUser = result.user;
+      setUser(currentUser);
 
-      // ✅ 회원가입 시에만 Privy 지갑 연결 유도
-      if (isSignUp && (!privyAuthenticated || wallets.length === 0)) {
+      const isNewUser = currentUser.metadata.creationTime === currentUser.metadata.lastSignInTime;
+      console.log("🔥 Is new user?", isNewUser);
+
+      if (isSignUp && isNewUser) {
         toast.loading('지갑 연결 중...', { id: 'wallet-connect' });
+
         try {
           await privyLogin();
 
-          if (wallets.length === 0) {
+          if (!privyAuthenticated || wallets.length === 0) {
             throw new Error('지갑 연결이 되지 않았습니다.');
           }
 
           toast.success('지갑이 연결되었습니다!', { id: 'wallet-connect' });
           toast.success('회원가입이 완료되었습니다!');
         } catch (error) {
-          console.error('Privy wallet connection failed:', error);
-          toast.error('지갑 연결에 실패했습니다', { id: 'wallet-connect' });
-          throw error;
+          console.error('❌ Privy wallet connection failed:', error);
+          toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
+          await firebaseSignOut(auth);
+          setUser(null);
+          window.location.href = '/login';
+          return;
         }
       } else {
         toast.success('로그인이 완료되었습니다!');
@@ -97,6 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.location.href = '/';
     } catch (error: any) {
       console.error("🔥 Auth Error:", error);
+      toast.error('로그인 중 오류가 발생했습니다');
       throw error;
     }
   };
