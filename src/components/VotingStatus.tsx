@@ -127,21 +127,21 @@ const VotingCard = ({ coin, rank }) => {
         </div>
         <div className="flex items-center space-x-8">
           <div className="text-right">
-            <p className="text-sm text-gray-500">Market Cap</p>
+            <p className="text-sm text-gray-500">시가총액</p>
             <p className="font-medium text-gray-900">${(coin.votes * 1000).toLocaleString()}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-500">Price</p>
+            <p className="text-sm text-gray-500">가격</p>
             <p className="font-medium text-gray-900">${(coin.votes / 100).toFixed(2)}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-500">Total Votes</p>
+            <p className="text-sm text-gray-500">총 투표수</p>
             <p className="font-medium text-gray-900">{coin.votes.toLocaleString()}</p>
           </div>
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
           >
-            Vote
+            투표하기
           </button>
         </div>
       </div>

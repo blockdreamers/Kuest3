@@ -156,7 +156,7 @@ const CryptoProjects = () => {
   return (
     <div className="mb-12">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Crypto Projects</h1>
+        <h1 className="text-3xl font-bold text-gray-900">암호화폐 프로젝트</h1>
         <button
           onClick={() => setShowWatchlist(!showWatchlist)}
           className="flex items-center space-x-2 text-gray-600 hover:text-blue-600"
@@ -165,7 +165,7 @@ const CryptoProjects = () => {
           <span>관심 목록{watchlist.length > 0 && ` (${watchlist.length})`}</span>
         </button>
       </div>
-      <p className="mt-2 text-gray-600">We introduce a promising new project to crypto users in South Korea</p>
+      <p className="mt-2 text-gray-600">한국 암호화폐 사용자들에게 유망한 신규 프로젝트를 소개합니다</p>
       
       <div className="mt-4 mb-6">
         <input

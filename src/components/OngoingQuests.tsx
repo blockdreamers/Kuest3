@@ -5,8 +5,8 @@ import { Timer, Users, Twitter, MessageCircle, Send, DollarSign } from 'lucide-r
 const mockQuestData = [
   {
     id: 1,
-    title: "Follow and Retweet Campaign",
-    description: "Follow our Twitter account and retweet the pinned post about our latest protocol upgrade",
+    title: "트위터 팔로우 & 리트윗 이벤트",
+    description: "공식 트위터 계정을 팔로우하고 최신 프로토콜 업데이트 관련 핀 게시물을 리트윗하세요",
     reward: 25,
     rewardType: "USDT",
     platforms: ["twitter"],
@@ -16,8 +16,8 @@ const mockQuestData = [
   },
   {
     id: 2,
-    title: "Discord Community Engagement",
-    description: "Join our Discord server and participate in technical discussions",
+    title: "디스코드 커뮤니티 참여",
+    description: "디스코드 서버에 참여하고 기술 토론에 참여하세요",
     reward: 15,
     rewardType: "USDC",
     platforms: ["discord"],
@@ -27,8 +27,8 @@ const mockQuestData = [
   },
   {
     id: 3,
-    title: "Multi-Platform Ambassador",
-    description: "Create and share content about our latest features across multiple platforms",
+    title: "멀티플랫폼 홍보대사",
+    description: "여러 플랫폼에서 우리의 최신 기능에 대한 콘텐츠를 제작하고 공유하세요",
     reward: 50,
     rewardType: "USDT",
     platforms: ["twitter", "telegram"],
@@ -38,8 +38,8 @@ const mockQuestData = [
   },
   {
     id: 4,
-    title: "Technical Documentation",
-    description: "Help improve our technical documentation and tutorials",
+    title: "기술 문서 작성",
+    description: "기술 문서와 튜토리얼 개선에 참여하세요",
     reward: 100,
     rewardType: "USDC",
     platforms: ["discord"],
@@ -49,8 +49,8 @@ const mockQuestData = [
   },
   {
     id: 5,
-    title: "Community Support",
-    description: "Provide support to new users in our Telegram group",
+    title: "커뮤니티 서포터",
+    description: "텔레그램 그룹에서 신규 사용자 지원에 참여하세요",
     reward: 20,
     rewardType: "USDT",
     platforms: ["telegram"],
@@ -60,8 +60,8 @@ const mockQuestData = [
   },
   {
     id: 6,
-    title: "Bug Bounty Program",
-    description: "Find and report security vulnerabilities in our smart contracts",
+    title: "버그 바운티 프로그램",
+    description: "스마트 컨트랙트의 보안 취약점을 찾아 리포트하세요",
     reward: 500,
     rewardType: "USDC",
     platforms: ["discord"],
@@ -71,8 +71,8 @@ const mockQuestData = [
   },
   {
     id: 7,
-    title: "Meme Contest",
-    description: "Create original memes about our project and share them",
+    title: "밈 콘테스트",
+    description: "프로젝트에 대한 독창적인 밈을 제작하고 공유하세요",
     reward: 30,
     rewardType: "USDT",
     platforms: ["twitter", "discord"],
@@ -82,8 +82,8 @@ const mockQuestData = [
   },
   {
     id: 8,
-    title: "Governance Participation",
-    description: "Participate in key governance votes and provide feedback",
+    title: "거버넌스 참여",
+    description: "주요 거버넌스 투표에 참여하고 피드백을 제공하세요",
     reward: 75,
     rewardType: "USDC",
     platforms: ["discord", "telegram"],
@@ -93,8 +93,8 @@ const mockQuestData = [
   },
   {
     id: 9,
-    title: "DeFi Strategy Contest",
-    description: "Design and share innovative DeFi strategies using our protocol",
+    title: "DeFi 전략 콘테스트",
+    description: "우리 프로토콜을 활용한 혁신적인 DeFi 전략을 설계하고 공유하세요",
     reward: 200,
     rewardType: "USDT",
     platforms: ["discord"],
@@ -104,8 +104,8 @@ const mockQuestData = [
   },
   {
     id: 10,
-    title: "Community Translation",
-    description: "Help translate our documentation into different languages",
+    title: "커뮤니티 번역",
+    description: "문서를 다양한 언어로 번역하는 작업에 참여하세요",
     reward: 60,
     rewardType: "USDC",
     platforms: ["discord", "telegram"],
@@ -115,8 +115,8 @@ const mockQuestData = [
   },
   {
     id: 11,
-    title: "NFT Design Challenge",
-    description: "Create unique NFT designs for our upcoming collection",
+    title: "NFT 디자인 챌린지",
+    description: "다가오는 컬렉션을 위한 독특한 NFT 디자인을 제작하세요",
     reward: 150,
     rewardType: "USDT",
     platforms: ["discord"],
@@ -126,8 +126,8 @@ const mockQuestData = [
   },
   {
     id: 12,
-    title: "Social Media Challenge",
-    description: "Create viral social media content about our ecosystem",
+    title: "소셜미디어 챌린지",
+    description: "우리 생태계에 대한 바이럴 소셜미디어 콘텐츠를 제작하세요",
     reward: 45,
     rewardType: "USDC",
     platforms: ["twitter", "telegram"],
@@ -166,6 +166,19 @@ const QuestCard = ({ quest }) => {
     }
   };
 
+  const getDifficultyText = (difficulty) => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        return '쉬움';
+      case 'medium':
+        return '보통';
+      case 'hard':
+        return '어려움';
+      default:
+        return difficulty;
+    }
+  };
+
   return (
     <div
       className="relative group cursor-pointer"
@@ -179,7 +192,7 @@ const QuestCard = ({ quest }) => {
               <p className="text-sm text-gray-600 line-clamp-2">{quest.description}</p>
             </div>
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(quest.difficulty)}`}>
-              {quest.difficulty}
+              {getDifficultyText(quest.difficulty)}
             </span>
           </div>
 
@@ -200,7 +213,7 @@ const QuestCard = ({ quest }) => {
           <div className="flex items-center justify-between text-sm text-gray-500">
             <div className="flex items-center space-x-1">
               <Users className="h-4 w-4" />
-              <span>{quest.participants.toLocaleString()} participants</span>
+              <span>{quest.participants.toLocaleString()}명 참여</span>
             </div>
             <div className="flex items-center space-x-1">
               <Timer className="h-4 w-4" />
@@ -217,10 +230,10 @@ const OngoingQuests = () => {
   return (
     <div className="mt-16">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Ongoing Quests</h2>
+        <h2 className="text-2xl font-bold text-gray-900">에어드롭 퀘스트</h2>
         <div className="flex items-center space-x-2 text-sm text-gray-500">
           <Timer className="w-4 h-4" />
-          <span>Updated daily</span>
+          <span>매일 업데이트</span>
         </div>
       </div>
 
