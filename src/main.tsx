@@ -1,18 +1,21 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { PrivyProvider } from '@privy-io/react-auth';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <AuthProvider>
-      <Router>
-        <App />
-        <Toaster position="top-right" />
-      </Router>
-    </AuthProvider>
-  </StrictMode>
+const privyAppId = import.meta.env.VITE_PRIVY_APP_ID;
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <PrivyProvider appId={privyAppId}>
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+    </PrivyProvider>
+  </React.StrictMode>
 );
