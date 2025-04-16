@@ -11,6 +11,7 @@ import KOL from './pages/KOL';
 import ListingApplication from './pages/ListingApplication';
 import Points from './pages/Points';
 import TelegramFeed from './pages/TelegramFeed';
+import SocialAccounts from './pages/SocialAccounts';
 import { useAuth } from './contexts/AuthContext';
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/listing" element={<ListingApplication />} />
           <Route path="/points" element={<Points />} />
           <Route path="/telegram" element={<TelegramFeed />} />
+          <Route path="/social-accounts" element={<SocialAccounts />} />
         </Routes>
       </main>
       <Footer />

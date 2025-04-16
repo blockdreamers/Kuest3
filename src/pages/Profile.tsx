@@ -1,8 +1,8 @@
 import React from 'react';
 import { usePrivy } from '@privy-io/react-auth';
-import { User, Mail, Wallet, ExternalLink, Star, Clock, Bell, Copy, Users } from 'lucide-react';
+import { User, Mail, Wallet, ExternalLink, Star, Clock, Bell, Copy, Users, Link as LinkIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Profile() {
   const { user: privyUser, ready: privyReady } = usePrivy();
@@ -63,6 +63,16 @@ function Profile() {
               </h2>
               
               <div className="mt-4 w-full">
+                <Link
+                  to="/social-accounts"
+                  className="flex items-center justify-between py-3 border-b hover:bg-gray-50 px-3 -mx-3 rounded-lg"
+                >
+                  <div className="flex items-center text-gray-600">
+                    <LinkIcon className="h-5 w-5 mr-2" />
+                    <span>SNS 계정 연동</span>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-gray-400" />
+                </Link>
                 <div className="flex items-center justify-between py-3 border-b">
                   <div className="flex items-center text-gray-600">
                     <Mail className="h-5 w-5 mr-2" />
