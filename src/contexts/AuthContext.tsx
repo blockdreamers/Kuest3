@@ -22,6 +22,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function handleSupabaseError(
+  error: any,
+  context: string = 'Supabase 에러',
+  toastId?: string
+) {
+  if (error) {
+    console.error(`❌ ${context}:`, error.message, error.details);
+    if (toastId) {
+      toast.error(`${context}: ${error.message}`, { id: toastId });
+    } else {
+      toast.error(`${context}: ${error.message}`);
+    }
+    throw error;
+  }
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,15 +92,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('id', currentUser.uid)
         .limit(1);
 
-      const existingUser = Array.isArray(existingUsers) ? existingUsers[0] : null;
+      handleSupabaseError(existingUserError, '유저 조회 오류');
 
-      if (existingUserError) {
-        console.error('❌ supabase 유저 조회 실패:', existingUserError);
-        toast.error('서버 에러가 발생했습니다.');
-        return;
-      }
-
-      const isNewUser = !existingUser;
+      const isNewUser = !(Array.isArray(existingUsers) && existingUsers.length > 0);
       console.log('🆕 Is new user:', isNewUser);
 
       if (isSignUp && isNewUser) {
@@ -103,36 +113,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (wallets.length === 0) throw new Error('지갑 연결이 되지 않았습니다.');
 
-          const { error: userInsertError } = await supabase
-            .from('users')
-            .insert({
-              id: currentUser.uid,
-              email: currentUser.email,
-              display_name: currentUser.displayName,
-              photo_url: currentUser.photoURL,
-              user_type: 'normal',
-              created_at: new Date().toISOString(),
-              last_login_at: new Date().toISOString(),
-              is_active: true,
-            });
+          const { error: userInsertError } = await supabase.from('users').insert({
+            id: currentUser.uid,
+            email: currentUser.email,
+            display_name: currentUser.displayName,
+            photo_url: currentUser.photoURL,
+            user_type: 'normal',
+            created_at: new Date().toISOString(),
+            last_login_at: new Date().toISOString(),
+            is_active: true,
+          });
+          handleSupabaseError(userInsertError, '유저 삽입 오류');
 
-          if (userInsertError) throw userInsertError;
-
-          const { error: walletInsertError } = await supabase
-            .from('user_wallets')
-            .insert({
-              user_id: currentUser.uid,
-              wallet_address: wallets[0].address,
-              created_at: new Date().toISOString(),
-            });
-
-          if (walletInsertError) throw walletInsertError;
+          const { error: walletInsertError } = await supabase.from('user_wallets').insert({
+            user_id: currentUser.uid,
+            wallet_address: wallets[0].address,
+            created_at: new Date().toISOString(),
+          });
+          handleSupabaseError(walletInsertError, '지갑 삽입 오류', 'wallet-connect');
 
           toast.success('회원가입이 완료되었습니다!', { id: 'wallet-connect' });
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 500);
-
+          setTimeout(() => (window.location.href = '/'), 500);
         } catch (error) {
           console.error('❌ 회원가입 실패 전체 에러:', error);
           toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
