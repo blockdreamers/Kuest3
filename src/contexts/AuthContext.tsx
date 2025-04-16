@@ -11,7 +11,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
 import { isPreview } from '../config/environment';
 import toast from 'react-hot-toast';
-import { superbase } from '../lib/superbase';
+import superbase from '../lib/superbase';
 
 interface AuthContextType {
   user: User | null;
