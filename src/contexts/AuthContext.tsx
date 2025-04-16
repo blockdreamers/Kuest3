@@ -5,7 +5,7 @@ import {
   getRedirectResult,
   signOut as firebaseSignOut,
   onAuthStateChanged,
-  User
+  User,
 } from 'firebase/auth';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(currentUser);
 
       const isNewUser = currentUser.metadata.creationTime === currentUser.metadata.lastSignInTime;
-      console.log("🔥 Is new user?", isNewUser);
+      console.log("🆕 Is New User?", isNewUser);
 
       if (isSignUp && isNewUser) {
         toast.loading('지갑 연결 중...', { id: 'wallet-connect' });
@@ -82,7 +82,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           await privyLogin();
 
-          if (!privyAuthenticated || wallets.length === 0) {
+          // ✅ Retry wallet fetch for up to 3 seconds (10 tries)
+          let retries = 0;
+          while (retries < 10) {
+            if (wallets.length > 0) break;
+            await new Promise((res) => setTimeout(res, 300));
+            retries++;
+          }
+
+          if (wallets.length === 0) {
             throw new Error('지갑 연결이 되지 않았습니다.');
           }
 
@@ -91,9 +99,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } catch (error) {
           console.error('❌ Privy wallet connection failed:', error);
           toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
+
+          // Firebase 로그아웃 + 상태 초기화 후 리다이렉트
           await firebaseSignOut(auth);
           setUser(null);
-          window.location.href = '/login';
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 1500);
           return;
         }
       } else {
@@ -103,13 +115,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.location.href = '/';
     } catch (error: any) {
       console.error("🔥 Auth Error:", error);
-      
+
       if (error.code === 'auth/popup-blocked') {
         toast.error('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해 주세요.');
       } else {
         toast.error('로그인 중 오류가 발생했습니다');
       }
-      
+
       throw error;
     }
   };
@@ -118,9 +130,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await Promise.all([
         firebaseSignOut(auth),
-        privyAuthenticated ? privyLogout() : Promise.resolve()
+        privyAuthenticated ? privyLogout() : Promise.resolve(),
       ]);
-      
       setUser(null);
       toast.success('로그아웃되었습니다');
     } catch (error) {
