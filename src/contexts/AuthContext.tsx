@@ -11,12 +11,9 @@ import { usePrivy } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
 import { isPreview } from '../config/environment';
 import toast from 'react-hot-toast';
+import { supabase } from '../lib/supabase'; // 또는 경로에 맞춰서
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
 
 interface AuthContextType {
   user: User | null;
@@ -81,10 +78,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('id', currentUser.uid)
         .limit(1);
 
-      const existingUser = existingUsers?.[0];
+      const existingUser = Array.isArray(existingUsers) ? existingUsers[0] : null;
 
       if (existingUserError) {
         console.error('❌ Supabase 유저 조회 실패:', existingUserError);
+        toast.error('서버 에러가 발생했습니다.');
+        return;
       }
 
       const isNewUser = !existingUser;
