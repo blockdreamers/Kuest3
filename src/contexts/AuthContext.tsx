@@ -116,6 +116,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             is_active: true,
           });
 
+          console.log('📤 users insert status:', userInsertStatus);
+          console.log('📤 users insert error:', userInsertError);
+
+
           console.log('📤 Supabase users insert:', userInsertStatus, userInsertError);
           if (userInsertError) throw userInsertError;
 
@@ -124,6 +128,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             wallet_address: wallets[0].address,
             created_at: new Date().toISOString(),
           });
+
+          console.log('📤 user_wallets insert status:', walletInsertStatus);
+          console.log('📤 user_wallets insert error:', walletInsertError);
 
           console.log('📤 Supabase wallet insert:', walletInsertStatus, walletInsertError);
           if (walletInsertError) throw walletInsertError;
