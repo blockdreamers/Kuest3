@@ -1,17 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
-  signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
   signOut as firebaseSignOut,
+  getRedirectResult,
   onAuthStateChanged,
   User,
 } from 'firebase/auth';
 import { usePrivy } from '@privy-io/react-auth';
-import { auth, googleProvider } from '../config/firebase';
+import { auth } from '../config/firebase';
 import { isPreview } from '../config/environment';
 import toast from 'react-hot-toast';
-import supabase from '../lib/supabase';
+import { signInWithGooglePopup } from '../lib/auth/googleAuth';
+import { connectPrivyWallet } from '../lib/auth/privyWallet';
+import { insertSupabaseUser, insertUserWallet } from '../lib/auth/supabaseUser';
 
 interface AuthContextType {
   user: User | null;
@@ -21,19 +21,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-function handleSupabaseError(
-  error: any,
-  context: string = 'Supabase 에러',
-  toastId?: string
-) {
-  if (error) {
-    const msg = typeof error === 'string' ? error : error?.message;
-    console.error(`❌ ${context}:`, msg, error?.details);
-    toast.error(`${context}: ${msg}`, { id: toastId });
-    throw error;
-  }
-}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -73,44 +60,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async (isSignUp: boolean) => {
     try {
-      if (isPreview) {
-        console.log('🧪 Preview 모드 → Redirect로 로그인');
-        await signInWithRedirect(auth, googleProvider);
-        return;
-      }
-
-      const result = await signInWithPopup(auth, googleProvider);
-      const currentUser = result.user;
-      console.log('✅ Firebase 로그인 성공:', currentUser);
+      const currentUser = await signInWithGooglePopup();
       setUser(currentUser);
 
-      console.log('🔍 Supabase 기존 유저 조회 중...');
-      const { data: existingUsers, error: existingUserError } = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', currentUser.uid)
-        .limit(1);
-
-      handleSupabaseError(existingUserError, 'Supabase 유저 조회 실패');
-      const isNewUser = !(Array.isArray(existingUsers) && existingUsers.length);
+      const isNewUser = await checkIfNewUser(currentUser.uid);
       console.log('🆕 Is new user:', isNewUser);
 
       if (isSignUp && isNewUser) {
         toast.loading('지갑 연결 중...', { id: 'wallet-connect' });
-        console.log('👛 Privy 지갑 연결 시도 중...');
-
         try {
-          if (!privyAuthenticated) await privyLogin();
-
-          let wallets = [];
-          for (let i = 0; i < 10; i++) {
-            wallets = await getWallets();
-            console.log(`🔁 Retry ${i + 1}: wallets =`, wallets);
-            if (wallets.length > 0) break;
-            await new Promise((res) => setTimeout(res, 300));
-          }
-
-          if (wallets.length === 0) throw new Error('❌ 지갑 연결 실패: 연결된 지갑이 없습니다.');
+          const wallet = await connectPrivyWallet(privyLogin, getWallets);
 
           const userPayload = {
             id: currentUser.uid,
@@ -122,38 +81,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             last_login_at: new Date().toISOString(),
             is_active: true,
           };
-          console.log('📤 유저 insert payload:', userPayload);
 
-          const { error: userInsertError } = await supabase
-            .from('users')
-            .insert(userPayload);
-          handleSupabaseError(userInsertError, '유저 삽입 오류', 'wallet-connect');
+          await insertSupabaseUser(userPayload);
 
           const walletPayload = {
             user_id: currentUser.uid,
-            wallet_address: wallets[0].address,
+            wallet_address: wallet.address,
             created_at: new Date().toISOString(),
           };
-          console.log('📤 지갑 insert payload:', walletPayload);
 
-          const { error: walletInsertError } = await supabase
-            .from('user_wallets')
-            .insert(walletPayload);
-          handleSupabaseError(walletInsertError, '지갑 삽입 오류', 'wallet-connect');
+          await insertUserWallet(walletPayload);
 
           toast.success('회원가입이 완료되었습니다!', { id: 'wallet-connect' });
+          window.location.href = '/';
         } catch (error: any) {
-          const msg = typeof error === 'string' ? error : error?.message;
-          console.error('❌ 회원가입 중 전체 에러:', error);
-          toast.error(`회원가입 실패: ${msg}`, { id: 'wallet-connect' });
+          console.error('❌ 회원가입 실패:', error);
+          toast.error(`회원가입 실패: ${error.message || '지갑 연결 실패'}`, {
+            id: 'wallet-connect',
+          });
           await firebaseSignOut(auth);
           setUser(null);
+          setTimeout(() => (window.location.href = '/login'), 1500);
         }
       } else {
         toast.success('로그인이 완료되었습니다!');
+        window.location.href = '/';
       }
     } catch (error: any) {
-      console.error('🔥 Firebase Auth 에러:', error);
+      console.error('🔥 Auth Error:', error);
       if (error.code === 'auth/popup-blocked') {
         toast.error('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해 주세요.');
       } else {
@@ -173,7 +128,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('🔥 Sign Out Error:', error);
       toast.error('로그아웃 중 오류가 발생했습니다');
-      throw error;
     }
   };
 
@@ -182,6 +136,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </AuthContext.Provider>
   );
+};
+
+const checkIfNewUser = async (uid: string) => {
+  try {
+    const { data, error } = await supabase.from('users').select('id').eq('id', uid).limit(1);
+    if (error) {
+      console.error('❌ Supabase 유저 조회 실패:', error.message, error.details);
+      return false;
+    }
+    return !data || data.length === 0;
+  } catch (e) {
+    console.error('❌ 유저 조회 에러:', e);
+    return false;
+  }
 };
 
 export const useAuth = () => {
