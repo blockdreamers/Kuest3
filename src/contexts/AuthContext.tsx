@@ -75,11 +75,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('✅ Firebase 로그인 성공:', currentUser);
       setUser(currentUser);
 
-      const { data: existingUser, error: existingUserError } = await supabase
+      const { data: existingUsers, error: existingUserError } = await supabase
         .from('users')
         .select('id')
         .eq('id', currentUser.uid)
         .limit(1)
+      const existingUser = existingUsers?.[0];
+
 
       if (existingUserError) {
         console.error('❌ Supabase 유저 조회 실패:', existingUserError);
