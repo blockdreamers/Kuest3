@@ -79,7 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('users')
         .select('id')
         .eq('id', currentUser.uid)
-        .maybeSingle(); // <-- ✅ 수정: .single() → .maybeSingle()
+        .limit(1)
 
       if (existingUserError) {
         console.error('❌ Supabase 유저 조회 실패:', existingUserError);
