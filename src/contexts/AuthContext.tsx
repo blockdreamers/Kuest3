@@ -11,9 +11,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
 import { isPreview } from '../config/environment';
 import toast from 'react-hot-toast';
-import { supabase } from '../lib/supabase'; // 또는 경로에 맞춰서
-import { createClient } from '@supabase/supabase-js';
-
+import { supabase } from '../lib/supabase'; 
 
 interface AuthContextType {
   user: User | null;
