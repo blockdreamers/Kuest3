@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
   User,
 } from 'firebase/auth';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
 import { isPreview } from '../config/environment';
 import toast from 'react-hot-toast';
@@ -30,8 +30,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { login: privyLogin, authenticated: privyAuthenticated, logout: privyLogout } = usePrivy();
-  const { wallets } = useWallets();
+  const { login: privyLogin, authenticated: privyAuthenticated, logout: privyLogout, getWallets } = usePrivy();
 
   useEffect(() => {
     const handleAuth = async () => {
@@ -69,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const currentUser = result.user;
       setUser(currentUser);
 
-      const { data: existingUser, error: fetchError } = await supabase
+      const { data: existingUser } = await supabase
         .from('users')
         .select('id')
         .eq('id', currentUser.uid)
@@ -83,14 +82,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           await privyLogin();
 
+          // ✅ 최신 지갑 정보 직접 가져오기
+          let wallets = [];
           let retries = 0;
           while (retries < 10 && wallets.length === 0) {
+            wallets = await getWallets();
+            if (wallets.length > 0) break;
             await new Promise((res) => setTimeout(res, 300));
             retries++;
           }
 
           if (wallets.length === 0) throw new Error('지갑 연결이 되지 않았습니다.');
 
+          // ✅ Supabase에 사용자 등록
           const { error: userInsertError } = await supabase.from('users').insert({
             id: currentUser.uid,
             email: currentUser.email,
