@@ -53,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const unsubscribe = onAuthStateChanged(auth, (user) => {
+        console.log("🌀 Firebase auth state changed:", user);
         setUser(user);
         setLoading(false);
       });
@@ -92,7 +93,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         toast.loading('지갑 연결 중...', { id: 'wallet-connect' });
 
         try {
+          console.log('🧭 Privy login 시작');
           await privyLogin();
+          console.log('✅ Privy login 완료');
 
           let wallets = [];
           let retries = 0;
@@ -105,6 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (wallets.length === 0) throw new Error('지갑 연결이 되지 않았습니다.');
 
+          console.log('🚀 Supabase users insert 시작');
           const { error: userInsertError, status: userInsertStatus } = await supabase.from('users').insert({
             id: currentUser.uid,
             email: currentUser.email,
@@ -118,9 +122,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           console.log('📤 users insert status:', userInsertStatus);
           console.log('📤 users insert error:', userInsertError);
-
-
-          console.log('📤 Supabase users insert:', userInsertStatus, userInsertError);
           if (userInsertError) throw userInsertError;
 
           const { error: walletInsertError, status: walletInsertStatus } = await supabase.from('user_wallets').insert({
@@ -131,11 +132,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           console.log('📤 user_wallets insert status:', walletInsertStatus);
           console.log('📤 user_wallets insert error:', walletInsertError);
-
-          console.log('📤 Supabase wallet insert:', walletInsertStatus, walletInsertError);
           if (walletInsertError) throw walletInsertError;
 
           toast.success('회원가입이 완료되었습니다!', { id: 'wallet-connect' });
+          setTimeout(() => (window.location.href = '/'), 300); // 💡 Privy 팝업 닫힘 후 리다이렉트
         } catch (error) {
           console.error('❌ 회원가입 실패 전체 에러:', error);
           toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
@@ -146,9 +146,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } else {
         toast.success('로그인이 완료되었습니다!');
+        setTimeout(() => (window.location.href = '/'), 300);
       }
 
-      window.location.href = '/';
     } catch (error: any) {
       console.error("🔥 Auth Error:", error);
       if (error.code === 'auth/popup-blocked') {
