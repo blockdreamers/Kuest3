@@ -79,9 +79,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('users')
         .select('id')
         .eq('id', currentUser.uid)
-        .limit(1)
-      const existingUser = existingUsers?.[0];
+        .limit(1);
 
+      const existingUser = existingUsers?.[0];
 
       if (existingUserError) {
         console.error('❌ Supabase 유저 조회 실패:', existingUserError);
@@ -105,7 +105,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             retries++;
           }
 
-          if (wallets.length === 0) throw new Error('지갑 연결이 되지 않았습니다.');
+          if (!wallets || wallets.length === 0 || !wallets[0]?.address) {
+            throw new Error('지갑 연결이 되지 않았습니다.');
+          }
+
+          console.log('🔥 currentUser:', currentUser);
 
           const { error: userInsertError, status: userInsertStatus } = await supabase
             .from('users')
@@ -138,12 +142,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           toast.success('회원가입이 완료되었습니다!', { id: 'wallet-connect' });
           window.location.href = '/';
-        } catch (error) {
+        } catch (error: any) {
           console.error('❌ 회원가입 실패 전체 에러:', error);
-          toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
+          toast.error(`회원가입 실패: ${(error as Error).message}`, { id: 'wallet-connect' });
           await firebaseSignOut(auth);
           setUser(null);
           setTimeout(() => (window.location.href = '/login'), 1500);
+          return;
         }
       } else {
         toast.success('로그인이 완료되었습니다!');
