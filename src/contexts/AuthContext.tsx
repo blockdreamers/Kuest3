@@ -30,7 +30,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { login: privyLogin, authenticated: privyAuthenticated, logout: privyLogout, getWallets } = usePrivy();
+  const {
+    login: privyLogin,
+    authenticated: privyAuthenticated,
+    logout: privyLogout,
+    getWallets,
+  } = usePrivy();
 
   useEffect(() => {
     const handleAuth = async () => {
@@ -38,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const result = await getRedirectResult(auth);
         if (result?.user) {
           setUser(result.user);
+          console.log("✅ Redirect 로그인 성공:", result.user);
           if (!isPreview) toast.success('로그인이 완료되었습니다!');
           window.location.href = '/';
         }
@@ -66,15 +72,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const result = await signInWithPopup(auth, googleProvider);
       const currentUser = result.user;
+      console.log("✅ Firebase 로그인 성공:", currentUser);
       setUser(currentUser);
 
-      const { data: existingUser } = await supabase
+      const { data: existingUser, error: existingUserError } = await supabase
         .from('users')
         .select('id')
         .eq('id', currentUser.uid)
         .single();
 
+      if (existingUserError) {
+        console.error("❌ Supabase 유저 조회 실패:", existingUserError);
+      }
+
       const isNewUser = !existingUser;
+      console.log("🆕 Is new user:", isNewUser);
 
       if (isSignUp && isNewUser) {
         toast.loading('지갑 연결 중...', { id: 'wallet-connect' });
@@ -82,20 +94,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           await privyLogin();
 
-          // ✅ 최신 지갑 정보 직접 가져오기
           let wallets = [];
           let retries = 0;
           while (retries < 10 && wallets.length === 0) {
             wallets = await getWallets();
-            if (wallets.length > 0) break;
+            console.log(`🔁 Retry ${retries + 1}: wallets=`, wallets);
             await new Promise((res) => setTimeout(res, 300));
             retries++;
           }
 
           if (wallets.length === 0) throw new Error('지갑 연결이 되지 않았습니다.');
 
-          // ✅ Supabase에 사용자 등록
-          const { error: userInsertError } = await supabase.from('users').insert({
+          const { error: userInsertError, status: userInsertStatus } = await supabase.from('users').insert({
             id: currentUser.uid,
             email: currentUser.email,
             display_name: currentUser.displayName,
@@ -106,19 +116,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             is_active: true,
           });
 
+          console.log('📤 Supabase users insert:', userInsertStatus, userInsertError);
           if (userInsertError) throw userInsertError;
 
-          const { error: walletInsertError } = await supabase.from('user_wallets').insert({
+          const { error: walletInsertError, status: walletInsertStatus } = await supabase.from('user_wallets').insert({
             user_id: currentUser.uid,
             wallet_address: wallets[0].address,
             created_at: new Date().toISOString(),
           });
 
+          console.log('📤 Supabase wallet insert:', walletInsertStatus, walletInsertError);
           if (walletInsertError) throw walletInsertError;
 
           toast.success('회원가입이 완료되었습니다!', { id: 'wallet-connect' });
         } catch (error) {
-          console.error('❌ 회원가입 실패:', error);
+          console.error('❌ 회원가입 실패 전체 에러:', error);
           toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
           await firebaseSignOut(auth);
           setUser(null);
