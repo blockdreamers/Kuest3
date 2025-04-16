@@ -11,7 +11,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import { auth, googleProvider } from '../config/firebase';
 import { isPreview } from '../config/environment';
 import toast from 'react-hot-toast';
-import { supabase } from '../lib/supabase'; 
+import { superbase } from '../lib/superbase';
 
 interface AuthContextType {
   user: User | null;
@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('✅ Firebase 로그인 성공:', currentUser);
       setUser(currentUser);
 
-      const { data: existingUsers, error: existingUserError } = await supabase
+      const { data: existingUsers, error: existingUserError } = await superbase
         .from('users')
         .select('id')
         .eq('id', currentUser.uid)
@@ -79,7 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const existingUser = Array.isArray(existingUsers) ? existingUsers[0] : null;
 
       if (existingUserError) {
-        console.error('❌ Supabase 유저 조회 실패:', existingUserError);
+        console.error('❌ superbase 유저 조회 실패:', existingUserError);
         toast.error('서버 에러가 발생했습니다.');
         return;
       }
@@ -102,13 +102,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             retries++;
           }
 
-          if (!wallets || wallets.length === 0 || !wallets[0]?.address) {
-            throw new Error('지갑 연결이 되지 않았습니다.');
-          }
+          if (wallets.length === 0) throw new Error('지갑 연결이 되지 않았습니다.');
 
-          console.log('🔥 currentUser:', currentUser);
-
-          const { error: userInsertError, status: userInsertStatus } = await supabase
+          const { error: userInsertError, status: userInsertStatus } = await superbase
             .from('users')
             .insert({
               id: currentUser.uid,
@@ -125,7 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.log('📤 users insert error:', userInsertError);
           if (userInsertError) throw userInsertError;
 
-          const { error: walletInsertError, status: walletInsertStatus } = await supabase
+          const { error: walletInsertError, status: walletInsertStatus } = await superbase
             .from('user_wallets')
             .insert({
               user_id: currentUser.uid,
@@ -139,13 +135,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           toast.success('회원가입이 완료되었습니다!', { id: 'wallet-connect' });
           window.location.href = '/';
-        } catch (error: any) {
+        } catch (error) {
           console.error('❌ 회원가입 실패 전체 에러:', error);
-          toast.error(`회원가입 실패: ${(error as Error).message}`, { id: 'wallet-connect' });
+          toast.error('회원가입 실패: 지갑 연결에 실패했습니다.', { id: 'wallet-connect' });
           await firebaseSignOut(auth);
           setUser(null);
           setTimeout(() => (window.location.href = '/login'), 1500);
-          return;
         }
       } else {
         toast.success('로그인이 완료되었습니다!');
