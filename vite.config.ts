@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: true,
     port: 5173,
+    strictPort: true, // 🚨 포트 충돌 시 다른 포트로 자동 변경하지 않도록 강제
     proxy: {
       '/api': {
         target: 'http://localhost:3000',

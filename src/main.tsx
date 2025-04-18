@@ -11,13 +11,29 @@ const PRIVY_APP_ID = 'clw5p039n0b4lhw5umwm163ua';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <PrivyProvider appId={PRIVY_APP_ID} config={{ appearance: { theme: 'light' } }}>
-      <AuthProvider>
-        <Router>
+    <PrivyProvider
+      appId={PRIVY_APP_ID}
+      config={{
+        appearance: { theme: 'light' },
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets',
+        },
+      }}
+      onSuccess={(user, context) => {
+        console.log('✅ [Privy] onSuccess triggered');
+        console.log('👤 User:', user);
+        console.log('📦 Context:', context);
+      }}
+      onError={(error) => {
+        console.error('❌ [Privy] onError 발생:', error);
+      }}
+    >
+      <Router>
+        <AuthProvider>
           <App />
           <Toaster position="top-right" />
-        </Router>
-      </AuthProvider>
+        </AuthProvider>
+      </Router>
     </PrivyProvider>
   </StrictMode>
 );

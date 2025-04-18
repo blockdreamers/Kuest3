@@ -1,10 +1,10 @@
 export const isPreview =
-  window.location.hostname.includes("localhost") ||
-  window.location.hostname.includes("local-credentialless.webcontainer-api.io") ||
+  (window.location.hostname.includes("netlify") || window.location.hostname.includes("preview")) &&
   window !== window.parent;
 
 export const isDevelopment = 
   import.meta.env.VITE_APP_ENV === 'development' ||
+  window.location.hostname.includes('localhost') ||
   window.location.hostname.includes('dev.kuest3.com');
 
 export const isProduction = 
