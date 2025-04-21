@@ -1,5 +1,3 @@
-// src/contexts/AuthContext.tsx
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   signOut as firebaseSignOut,
@@ -32,8 +30,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login: privyLogin,
     authenticated: privyAuthenticated,
     logout: privyLogout,
-    getWallets,
+    user: privyUser,
   } = usePrivy();
+
+  // ✅ 디버깅용: wallet이 준비된 순간 로그 확인
+  useEffect(() => {
+    if (privyUser?.wallet?.walletAddress) {
+      console.log('🟢 지갑 주소 준비 완료:', privyUser.wallet.walletAddress);
+    }
+  }, [privyUser]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -70,14 +75,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           const wallet = await connectPrivyWallet(
             () => privyLogin(),
-            () => {
-              const gw = getWallets;
-              console.log('🔍 getWallets 내부 확인:', gw);
-              return gw;
-            },
+            () => privyUser, // ✅ 실시간 polling 방식
             privyAuthenticated,
             currentUser
           );
+
+          if (!wallet || !wallet.address) {
+            throw new Error('Privy wallet 연결 후 지갑 주소가 없습니다.');
+          }
 
           console.log('✅ Privy Wallet 연결됨:', wallet);
 
@@ -105,6 +110,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.error('❌ Supabase 삽입 실패:', dbError);
           toast.dismiss('wallet-toast');
           toast.error(`회원정보 저장 실패: ${dbError.message || '알 수 없는 오류'}`);
+          await Promise.all([
+            firebaseSignOut(auth),
+            privyAuthenticated ? privyLogout() : Promise.resolve(),
+          ]);
+          setUser(null);
+          setTimeout(() => (window.location.href = '/login'), 1500);
         }
       } else {
         toast.success('로그인이 완료되었습니다!');
@@ -139,18 +150,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 const checkIfNewUser = async (uid: string): Promise<boolean> => {
-  try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('id')
-      .eq('id', uid)
-      .limit(1);
-    if (error) throw new Error(`Supabase 쿼리 실패: ${error.message}`);
-    return !data || data.length === 0;
-  } catch (e) {
-    console.error('❌ Supabase 유저 조회 중 예외 발생:', e);
-    throw e;
-  }
+  const { data, error } = await supabase
+    .from('users')
+    .select('id')
+    .eq('id', uid)
+    .limit(1);
+  if (error) throw new Error(`Supabase 쿼리 실패: ${error.message}`);
+  return !data || data.length === 0;
 };
 
 export const useAuth = () => {

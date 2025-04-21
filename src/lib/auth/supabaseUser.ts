@@ -1,66 +1,67 @@
-import supabaseAdmin from '../supabaseAdmin';
-import { toast } from 'react-hot-toast';
+// src/lib/auth/supabaseUser.ts
+import { supabaseAdmin } from '../supabaseAdmin';
 
-// 🔹 유저 정보 타입
-interface SupabaseUserPayload {
+export const insertSupabaseUser = async ({
+  id,
+  email,
+  nickname,
+  photo,
+  user_type,
+  created_at,
+  last_login_at,
+  is_active,
+}: {
   id: string;
-  email: string | null;
+  email: string;
   nickname: string | null;
   photo: string | null;
-  user_type?: string;
-  created_at?: string;
-  last_login_at?: string;
-  is_active?: boolean;
-}
+  user_type: string;
+  created_at: string;
+  last_login_at: string;
+  is_active: boolean;
+}) => {
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .insert([
+      {
+        id,
+        email,
+        nickname,
+        photo,
+        user_type,
+        created_at,
+        last_login_at,
+        is_active,
+      },
+    ]);
 
-// 🔹 지갑 정보 타입
-interface WalletPayload {
-  user_id: string;
-  wallet_address: string;
-  created_at?: string;
-}
-
-// ✅ Supabase users 테이블에 유저 삽입
-export const insertSupabaseUser = async (user: SupabaseUserPayload) => {
-  console.log('🟡 Supabase에 저장할 user:', user);
-
-  try {
-    const { error } = await supabaseAdmin.from('users').insert(user);
-    if (error) {
-      console.error('❌ userInsertError:', error.message, error.details);
-      toast.error(`회원 정보 저장 실패: ${error.message}`);
-      throw error;
-    }
-
-    console.log('✅ Supabase 유저 저장 성공');
-  } catch (err: any) {
-    console.error('🔥 insertSupabaseUser 실행 중 예외 발생:', err);
-    toast.error('회원 정보 저장 중 예외가 발생했습니다.');
+  if (error) {
+    console.error('❌ [admin] 유저 insert 실패:', error.message);
+    throw error;
   }
+
+  console.log('✅ [admin] 유저 insert 성공:', data);
 };
 
-// ✅ Supabase user_wallets 테이블에 지갑 삽입
-export const insertUserWallet = async (wallet: WalletPayload) => {
-  console.log('🟡 Supabase에 저장할 wallet:', wallet);
+export const insertUserWallet = async ({
+  user_id,
+  wallet_address,
+  created_at,
+  provider = 'privy',
+}: {
+  user_id: string;
+  wallet_address: string;
+  created_at: string;
+  provider?: string;
+}) => {
+  const { data, error } = await supabaseAdmin
+    .from('user_wallets')
+    .insert([{ user_id, wallet_address, created_at, provider }]);
 
-  // ✅ 값 유효성 사전 검사
-  if (!wallet.user_id || !wallet.wallet_address) {
-    console.error('⛔ 유효하지 않은 wallet payload:', wallet);
-    toast.error('지갑 정보가 누락되었습니다.');
-    return;
+  if (error) {
+    console.error('❌ [admin] 지갑 insert 실패:', error.message);
+    throw error;
   }
 
-  try {
-    const { error } = await supabaseAdmin.from('user_wallets').insert(wallet);
-    if (error) {
-      console.error('❌ walletInsertError:', error.message, error.details);
-      toast.error(`지갑 정보 저장 실패: ${error.message}`);
-      throw error;
-    }
-
-    console.log('✅ Supabase 지갑 저장 성공');
-  } catch (err: any) {
-    console.error('🔥 insertUserWallet 실행 중 예외 발생:', err);
-    toast.error('지갑 정보 저장 중 예외가 발생했습니다.');
-  }
+  console.log('✅ [admin] 지갑 insert 성공:', data);
 };
