@@ -1,0 +1,17 @@
+/* CryptoProjects.css */
+.coin-box {
+  background-color: #242424;
+  color: white;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+}
+
+.coin-box:hover {
+  transform: translateY(-3px) scale(1.02);
+  border: 2px solid black;
+  box-shadow: 0 0 0 3px #DFFF67;
+}

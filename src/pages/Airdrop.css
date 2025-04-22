@@ -1,0 +1,29 @@
+/* src/pages/Airdrop.css */
+
+.airdrop-page {
+    font-family: 'Montserrat', 'Pretendard', sans-serif;
+  }
+  
+  .claim-button {
+    background-color: black;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 1rem;
+    border: 2px solid black;
+    transition: all 0.2s ease;
+  }
+  
+  .claim-button:hover {
+    background-color: #1a1a1a;
+  }
+  
+  .wallet-info {
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+  }
+  

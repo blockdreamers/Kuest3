@@ -14,40 +14,56 @@ const Navbar = () => {
         setIsDropdownOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="bg-white border-b border-gray-200 font-['Montserrat','Pretendard',sans-serif]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* 왼쪽: 로고 + 메뉴 */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center">
-              <img 
-                src="https://raw.githubusercontent.com/blockdreamers/Kuest3/dev/222.png" 
-                alt="Kuest3" 
+              <img
+                src="https://raw.githubusercontent.com/blockdreamers/Kuest3/dev/222.png"
+                alt="Kuest3"
                 className="h-12 w-auto object-contain"
                 style={{ objectFit: 'contain', objectPosition: 'center' }}
               />
             </Link>
-            
-            <div className="hidden md:flex items-center space-x-6">
-              <Link to="/kol" className="text-gray-900 hover:text-blue-600 transition-colors duration-200">
+
+            <div className="hidden md:flex items-center space-x-3">
+              <Link
+                to="/kol"
+                className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200"
+              >
                 리그 오브 KOL
               </Link>
-              <Link to="/telegram" className="text-gray-900 hover:text-blue-600 transition-colors duration-200 flex items-center">
+              <Link
+                to="/telegram"
+                className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200 flex items-center"
+              >
                 <MessageCircle className="h-4 w-4 mr-1" />
                 텔레그램 모아보기
               </Link>
-              <Link to="/points" className="text-gray-900 hover:text-blue-600 transition-colors duration-200 flex items-center">
+              <Link
+                to="/points"
+                className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200 flex items-center"
+              >
                 <Star className="h-4 w-4 mr-1" />
                 포인트 모으기
+              </Link>
+              <Link
+                to="/airdrop"
+                className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200"
+              >
+                에어드롭
               </Link>
             </div>
           </div>
 
+          {/* 오른쪽: 로그인 or 프로필 */}
           <div className="flex items-center space-x-4">
             {user ? (
               <div className="relative" ref={dropdownRef}>
@@ -70,7 +86,11 @@ const Navbar = () => {
                     <span className="text-sm font-medium text-gray-900">
                       {user.email?.split('@')[0] || 'User'}
                     </span>
-                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'transform rotate-180' : ''}`} />
+                    <ChevronDown
+                      className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${
+                        isDropdownOpen ? 'rotate-180' : ''
+                      }`}
+                    />
                   </div>
                 </button>
 

@@ -12,8 +12,8 @@ import ListingApplication from './pages/ListingApplication';
 import Points from './pages/Points';
 import TelegramFeed from './pages/TelegramFeed';
 import SocialAccounts from './pages/SocialAccounts';
+import Airdrop from './pages/Airdrop'; // ✅ 추가한 부분
 import { useAuth } from './contexts/AuthContext';
-
 
 function App() {
   const { loading } = useAuth();
@@ -41,6 +41,7 @@ function App() {
           <Route path="/points" element={<Points />} />
           <Route path="/telegram" element={<TelegramFeed />} />
           <Route path="/social-accounts" element={<SocialAccounts />} />
+          <Route path="/airdrop" element={<Airdrop />} /> {/* ✅ 에어드롭 경로 추가 */}
         </Routes>
       </main>
       <Footer />
