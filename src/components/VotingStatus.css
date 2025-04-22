@@ -1,3 +1,9 @@
+.voting-wrapper {
+  max-width: 100%;
+  overflow-x: hidden; /* 횡스크롤 제거 */
+  padding: 0 1rem;
+}
+
 .voting-card {
   background-color: #242424;
   color: #ffffff;
@@ -7,18 +13,23 @@
   transition: all 0.3s ease;
   font-family: 'Montserrat', 'Pretendard', sans-serif;
   min-height: 72px;
-  box-shadow: none;
-
-  /* ✅ 카드 최대 너비 제한 및 중앙 정렬 */
   max-width: 100%;
-  width: 100%;
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .voting-card:hover {
-  transform: translateY(-2px) scale(1.01);
-  border: 2px solid black;
-  box-shadow: 0 0 0 3px #DFFF67;
+  background-color: #DFFF67;
+  color: #000;
+}
+
+.voting-card:hover .vote-button {
+  opacity: 1;
+  visibility: visible;
 }
 
 .voting-rank {
@@ -32,18 +43,20 @@
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
+  margin-right: 0.75rem;
 }
 
 .voting-coin-logo {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 9999px;
+  margin-right: 0.75rem;
 }
 
 .voting-name {
   font-weight: 600;
   font-size: 0.95rem;
-  color: white;
+  color: inherit;
 }
 
 .voting-symbol {
@@ -58,28 +71,47 @@
 
 .vote-stat-value {
   font-weight: 500;
-  color: #ffffff;
+  color: inherit;
 }
 
-/* ✅ 좌측 정렬과 간격 축소 */
-.vote-stats {
+/* 카드 내용 좌측 정렬 */
+.vote-info {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
+  gap: 0.75rem;
 }
 
+.vote-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 숨겨진 버튼 */
 .vote-button {
-  background-color: #DFFF67;
-  color: black;
-  padding: 0.45rem 0.9rem;
+  background-color: #000000;
+  color: #fff;
+  padding: 0.4rem 1rem;
   font-weight: 600;
   border-radius: 8px;
   font-size: 0.875rem;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
 }
 
-.vote-button:hover {
-  background-color: #cce84c;
+.voting-card:hover .vote-button {
+  background-color: #000000;
+  color: #fff;
+}
+
+/* 외곽 컨테이너 안에서 리스트 안넘치게 */
+.voting-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 100%;
+  margin: 0 auto;
 }

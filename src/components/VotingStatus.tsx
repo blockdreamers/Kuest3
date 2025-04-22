@@ -3,11 +3,15 @@ import { votingInfo } from '../lib/data/votingInfo';
 import './VotingStatus.css';
 
 const VotingCard = ({ coin, rank }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
-      className="voting-card flex items-center justify-between px-4 py-2"
+      className={`voting-card flex items-center justify-between px-4 py-2 ${isHovered ? 'hovered' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 overflow-hidden">
         <div className="voting-rank">{rank}</div>
         <img
           src={coin.logo}
@@ -20,7 +24,7 @@ const VotingCard = ({ coin, rank }) => {
         </div>
       </div>
 
-      <div className="flex items-center space-x-8">
+      <div className="flex items-center space-x-8 min-w-fit">
         <div className="text-right">
           <p className="vote-stat-label">시가총액</p>
           <p className="vote-stat-value">${(coin.votes * 1000).toLocaleString()}</p>
@@ -33,7 +37,7 @@ const VotingCard = ({ coin, rank }) => {
           <p className="vote-stat-label">총 투표수</p>
           <p className="vote-stat-value">{coin.votes.toLocaleString()}</p>
         </div>
-        <button className="vote-button">투표하기</button>
+        {isHovered && <button className="vote-button">투표하기</button>}
       </div>
     </div>
   );
@@ -80,13 +84,13 @@ const CountdownTimer = () => {
 
 const VotingStatus = () => {
   return (
-    <div className="mb-16">
+    <div className="mb-16 px-2">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-black">🗳️인기 투표</h1>
         <CountdownTimer />
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
         <div className="space-y-3 max-h-[600px] overflow-y-auto">
           {votingInfo.slice(0, 10).map((coin, index) => (
             <VotingCard key={coin.id} coin={coin} rank={index + 1} />
