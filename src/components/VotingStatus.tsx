@@ -82,7 +82,7 @@ const VotingStatus = () => {
   return (
     <div className="mb-16">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">인기 투표</h2>
+        <h1 className="text-2xl font-bold text-black">🗳️인기 투표</h1>
         <CountdownTimer />
       </div>
 

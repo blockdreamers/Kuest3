@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
       config={{
         appearance: { theme: 'light' },
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets',
+          createOnLogin: false, 
         },
       }}
       onSuccess={(user, context) => {
