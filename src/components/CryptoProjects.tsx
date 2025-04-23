@@ -39,13 +39,13 @@ const CryptoProjects = () => {
       </div>
 
       <div className="flex items-center justify-between mt-2 mb-2 text-sm text-gray-400">
-        <p>한국 암호화폐 사용자들에게 유망한 신규 프로젝트를 소개합니다</p>
+        <p>한 번 눈여겨 볼만한 코인 프로젝트를 추려봤어요</p>
         <button
           onClick={() => setShowWatchlist(!showWatchlist)}
           className="flex items-center space-x-2 hover:text-[#C7EB3E]"
         >
           <Star className={`h-5 w-5 ${showWatchlist ? 'text-yellow-400 fill-current' : ''}`} />
-          <span>관심 목록{watchlist.length > 0 && ` (${watchlist.length})`}</span>
+          <span>관심{watchlist.length > 0 && ` (${watchlist.length})`}</span>
         </button>
       </div>
 

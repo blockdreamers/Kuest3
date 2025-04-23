@@ -1,54 +1,72 @@
-/* TelegramFeed.css */
-
+/* 카드 레이아웃 */
 .telegram-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 1rem;
-  }
-  
-  .telegram-card {
-    background-color: #1b1b1b;
-    border: 1px solid #2a2a2a;
-    border-radius: 16px;
-    padding: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: none;
-    font-family: 'Montserrat', 'Pretendard', sans-serif;
-    height: 100%; /* 높이 고정 */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .telegram-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    border: 2px solid black;
-    box-shadow: 0 0 0 3px #dfff67;
-  }
-  
-  .telegram-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 9999px;
-  }
-  
-  .telegram-content {
-    color: #e5e5e5;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
-    white-space: pre-line;
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .telegram-meta {
-    font-size: 0.75rem;
-    color: #888;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1rem;
+}
+
+/* 텔레그램 카드 기본 스타일 */
+.telegram-card {
+  background-color: #1b1b1b;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  height: 240px; /* ✅ 높이 고정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 마우스 오버 효과 */
+.telegram-card:hover {
+  background-color: #DFFF67;     /* 형광 배경 */
+  color: #000000;                /* 전체 텍스트 검정색 */
+  border: 1px solid black;       /* 검은 테두리 (얇게) */
+  box-shadow: none;              /* box-shadow 제거 */
+  transform: translateY(-4px) scale(1.02); /* 살짝 떠오르게 */
+}
+
+/* 유지할 색상 오버라이드 */
+.telegram-card:hover .text-gray-400 {
+  color: #9ca3af;  /* 날짜, 좋아요 등은 회색 유지 */
+}
+.telegram-card:hover .text-white {
+  color: #000000;  /* 채널명은 검정색으로 */
+}
+.telegram-card:hover .telegram-content {
+  color: #000000;  /* 본문 내용은 검정색으로 */
+}
+
+/* 아바타 */
+.telegram-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+}
+
+/* 본문 텍스트 */
+.telegram-content {
+  color: #e5e5e5;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  white-space: pre-line;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 5;           /* ✅ 최대 5줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 하단 메타 정보 */
+.telegram-meta {
+  font-size: 0.75rem;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

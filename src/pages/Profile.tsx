@@ -1,177 +1,145 @@
-import React from 'react';
-import { usePrivy } from '@privy-io/react-auth';
-import { User, Mail, Wallet, ExternalLink, Star, Clock, Bell, Copy, Users, Link as LinkIcon } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Star, Gift, Trophy, ArrowRight, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import './Points.css';
 
-function Profile() {
-  const { user: privyUser, ready: privyReady } = usePrivy();
-  const { user: firebaseUser, loading: firebaseLoading } = useAuth();
-  const navigate = useNavigate();
+const Points = () => {
+  const [checkedDays, setCheckedDays] = useState<number[]>([]);
 
-  // Firebase 로딩이 완료되고 사용자가 없으면 로그인 페이지로 리다이렉트
-  React.useEffect(() => {
-    if (!firebaseLoading && !firebaseUser) {
-      navigate('/login');
-    }
-  }, [firebaseLoading, firebaseUser, navigate]);
-
-  // Firebase 로딩 중이거나 사용자가 없으면 로딩 표시
-  if (firebaseLoading || !firebaseUser) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  const pointsHistory = [
-    { id: 1, type: "전구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
-    { id: 2, type: "전구 조대 포인트", amount: 35, date: "2024-05-17 23:11:05" },
-    { id: 3, type: "1day 출석체크 포인트", amount: 60, date: "2024-05-17 23:11:05" },
-    { id: 4, type: "2day 출석체크 포인트", amount: 20, date: "2024-05-17 23:11:05" },
-    { id: 5, type: "3day 출석체크 포인트", amount: 20, date: "2024-05-17 23:11:05" },
+  const dailyRewards = [
+    { day: 1, points: 10 },
+    { day: 2, points: 12 },
+    { day: 3, points: 14 },
+    { day: 4, points: 16 },
+    { day: 5, points: 18 },
+    { day: 6, points: 20 },
+    { day: 7, points: 72 }
   ];
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // You could add a toast notification here
+  const handleCheckIn = (day: number) => {
+    if (checkedDays.includes(day)) {
+      toast.error('이미 출석체크를 완료했습니다');
+      return;
+    }
+
+    if (day > 1 && !checkedDays.includes(day - 1)) {
+      toast.error('이전 날짜의 출석체크를 먼저 완료해주세요');
+      return;
+    }
+
+    setCheckedDays(prev => [...prev, day]);
+    toast.success(`${day}일차 출석체크 완료! +${dailyRewards[day - 1].points} 포인트`);
   };
 
-  const referralLink = "https://www.fl3x.ai/referral/ab97dh1i29yuddj";
+  const pointActivities = [
+    {
+      id: 2,
+      title: '퀘스트 완료',
+      description: '다양한 퀘스트를 완료하고 포인트를 획득하세요',
+      points: 500,
+      icon: Trophy,
+      link: '/quests'
+    },
+    {
+      id: 3,
+      title: '투표 참여',
+      description: '코인 투표에 참여하고 포인트를 받으세요',
+      points: 200,
+      icon: Star,
+      link: '/'
+    },
+    {
+      id: 4,
+      title: '친구 초대',
+      description: '친구를 초대하고 추가 포인트를 받으세요',
+      points: 1000,
+      icon: Gift,
+      link: '/profile'
+    }
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Profile Info */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex flex-col items-center text-center">
-              {firebaseUser.photoURL ? (
-                <img
-                  src={firebaseUser.photoURL}
-                  alt={firebaseUser.email || ''}
-                  className="w-24 h-24 rounded-full"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                  <User className="h-12 w-12 text-white" />
-                </div>
-              )}
-              <h2 className="mt-4 text-xl font-bold text-gray-900">
-                {firebaseUser.email?.split('@')[0] || '사용자'}
-              </h2>
-              
-              <div className="mt-4 w-full">
-                <Link
-                  to="/social-accounts"
-                  className="flex items-center justify-between py-3 border-b hover:bg-gray-50 px-3 -mx-3 rounded-lg"
-                >
-                  <div className="flex items-center text-gray-600">
-                    <LinkIcon className="h-5 w-5 mr-2" />
-                    <span>SNS 계정 연동</span>
-                  </div>
-                  <ExternalLink className="h-4 w-4 text-gray-400" />
-                </Link>
-                <div className="flex items-center justify-between py-3 border-b">
-                  <div className="flex items-center text-gray-600">
-                    <Mail className="h-5 w-5 mr-2" />
-                    <span>이메일</span>
-                  </div>
-                  <span className="text-gray-900">{firebaseUser.email}</span>
-                </div>
-                {privyReady && privyUser?.wallet && (
-                  <div className="flex items-center justify-between py-3 border-b">
-                    <div className="flex items-center text-gray-600">
-                      <Wallet className="h-5 w-5 mr-2" />
-                      <span>지갑 주소</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-gray-900">
-                        {privyUser.wallet.address?.slice(0, 6)}...{privyUser.wallet.address?.slice(-4)}
-                      </span>
-                      <a
-                        href={`https://etherscan.io/address/${privyUser.wallet.address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-2 text-blue-600 hover:text-blue-800"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+    <div className="points-container font-['Montserrat','Pretendard']">
+      {/* Header */}
+      <div className="points-header">
+        <h1 className="points-title">포인트 현황</h1>
+        <p className="points-subtitle">현재 내가 모은 포인트예요</p>
+      </div>
 
-          {/* Referral Section */}
-          <div className="mt-6 bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold mb-4">레퍼럴 프로그램</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">초대한 친구</span>
-                <span className="font-semibold">123명</span>
-              </div>
-              <div>
-                <label className="text-sm text-gray-600 mb-2 block">나의 레퍼럴 링크</label>
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    value={referralLink}
-                    readOnly
-                    className="flex-1 bg-gray-50 rounded-l-lg px-3 py-2 text-sm border focus:outline-none"
-                  />
-                  <button
-                    onClick={() => copyToClipboard(referralLink)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </button>
+      {/* Summary */}
+      <div className="points-summary">
+        <div>
+          <p className="points-label">현재 보유 포인트</p>
+          <h2 className="points-value">12,350 P</h2>
+        </div>
+        <Link to="/profile" className="points-history-btn">
+          포인트 내역 <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+
+      {/* Body Section */}
+      <div className="points-body">
+        {/* Check-in Section */}
+        <div className="points-checkin">
+          <h2 className="section-title">출석체크 포인트</h2>
+          <p className="section-subtitle">
+            매일 출석체크하고 포인트를 받으세요. 7일 연속 시 보너스!
+          </p>
+
+          <div className="checkin-grid">
+            {dailyRewards.map(({ day, points }) => (
+              <div
+                key={day}
+                className={`checkin-box ${checkedDays.includes(day) ? 'checked' : ''} ${
+                  day === 7 ? 'day7-box' : ''
+                }`}
+                onClick={() => handleCheckIn(day)}
+              >
+                {checkedDays.includes(day) && (
+                  <Check className="checkin-check" />
+                )}
+                <img
+                  src="https://raw.githubusercontent.com/blockdreamers/Kuest3/dev/m2H7i8d3b1K9G6N4%20(1)%201.png"
+                  alt="chest"
+                  className={`checkin-img ${day === 7 ? 'big' : ''}`}
+                />
+                <div className="checkin-day">Day{day}</div>
+                <div className="checkin-points">
+                  <Star className="h-3 w-3" /> +{points}
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Points History */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold">포인트 적립 내역</h3>
-              <div className="flex items-center space-x-2">
-                <span className="text-gray-600">총 보유 포인트:</span>
-                <span className="font-bold text-blue-600">12,350 P</span>
-              </div>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 text-gray-600">구분</th>
-                    <th className="text-right py-3 px-4 text-gray-600">포인트 누적 내용</th>
-                    <th className="text-right py-3 px-4 text-gray-600">지급된 포인트</th>
-                    <th className="text-right py-3 px-4 text-gray-600">포인트 지급 시각</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pointsHistory.map((history, index) => (
-                    <tr key={history.id} className="border-b last:border-0">
-                      <td className="py-3 px-4">{index + 1}</td>
-                      <td className="py-3 px-4 text-right">{history.type}</td>
-                      <td className="py-3 px-4 text-right font-medium">{history.amount} P</td>
-                      <td className="py-3 px-4 text-right text-gray-600">{history.date}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* Quests Section */}
+        <div className="points-quests">
+          <h2 className="section-title">퀘스트 포인트</h2>
+          <p className="section-subtitle">퀘스트를 수행하고 포인트를 모을 수 있어요</p>
+          <div className="quest-list">
+            {pointActivities.map((activity) => (
+              <Link
+                key={activity.id}
+                to={activity.link}
+                className="quest-card"
+              >
+                <activity.icon className="h-6 w-6 text-blue-500 quest-card-icon" />
+                <div className="flex flex-col">
+                  <span className="quest-title">{activity.title}</span>
+                  <span className="quest-desc">{activity.description}</span>
+                  <span className="quest-points">
+                    <Star className="h-3 w-3" />
+                    {activity.points} P
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Profile;
+export default Points;

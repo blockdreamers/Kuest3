@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Star, Gift, Trophy, Clock, ArrowRight, Check } from 'lucide-react';
+import { Star, Gift, Trophy, ArrowRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import './Points.css';
 
 const Points = () => {
   const [checkedDays, setCheckedDays] = useState<number[]>([]);
@@ -27,132 +28,101 @@ const Points = () => {
       return;
     }
 
-    setCheckedDays(prev => [...prev, day]);
+    setCheckedDays((prev) => [...prev, day]);
     toast.success(`${day}일차 출석체크 완료! +${dailyRewards[day - 1].points} 포인트`);
   };
 
   const pointActivities = [
     {
-      id: 2,
+      id: 1,
       title: '퀘스트 완료',
       description: '다양한 퀘스트를 완료하고 포인트를 획득하세요',
       points: 500,
-      icon: Trophy,
-      link: '/quests',
-      type: 'quest'
+      icon: Trophy
     },
     {
-      id: 3,
+      id: 2,
       title: '투표 참여',
       description: '코인 투표에 참여하고 포인트를 받으세요',
       points: 200,
-      icon: Star,
-      link: '/',
-      type: 'vote'
+      icon: Star
     },
     {
-      id: 4,
+      id: 3,
       title: '친구 초대',
       description: '친구를 초대하고 추가 포인트를 받으세요',
       points: 1000,
-      icon: Gift,
-      link: '/profile',
-      type: 'referral'
+      icon: Gift
     }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">포인트 모으기</h1>
-        <p className="mt-2 text-gray-600">다양한 활동을 통해 포인트를 모아보세요</p>
+    <div className="points-container">
+      <div className="points-header">
+        <h1 className="points-title">포인트 모으기</h1>
+        <p className="points-subtitle">다양한 활동을 통해 포인트를 모아보세요</p>
       </div>
 
-      {/* Points Summary */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 mb-8 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-lg opacity-90">현재 보유 포인트</p>
-            <h2 className="text-4xl font-bold mt-2">12,350 P</h2>
-          </div>
-          <Link
-            to="/profile"
-            className="flex items-center space-x-2 bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-colors duration-200"
-          >
-            <span>포인트 내역</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+      <div className="points-summary">
+        <div>
+          <p className="points-label">현재 보유 포인트</p>
+          <h2 className="points-value">12,350 P</h2>
         </div>
+        <Link to="/profile" className="points-history-btn">
+          포인트 내역 <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
 
-      {/* Daily Check-in Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4">출석 체크</h2>
-        <p className="text-gray-600 mb-6">매일 출석체크하고 포인트를 받으세요. 7일 연속 출석시 보너스 포인트!</p>
-        
-        <div className="grid grid-cols-3 md:grid-cols-7 gap-4">
-          {dailyRewards.map(({ day, points }) => (
-            <button
-              key={day}
-              onClick={() => handleCheckIn(day)}
-              disabled={checkedDays.includes(day)}
-              className={`relative group ${
-                day === 7 ? 'col-span-3 md:col-span-1' : ''
-              }`}
-            >
+      <div className="points-body">
+        {/* 출석체크 왼쪽 */}
+        <div className="points-checkin">
+          <h2 className="section-title">출석체크 포인트</h2>
+          <p className="section-subtitle">매일 출석체크하고 포인트를 받으세요. 7일 연속 시 보너스!</p>
+          <div className="checkin-grid">
+            {dailyRewards.map(({ day, points }) => (
               <div
-                className={`
-                  aspect-square rounded-lg p-4 flex flex-col items-center justify-center
-                  transition-all duration-200 transform
-                  ${
-                    checkedDays.includes(day)
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-purple-100 hover:bg-purple-200 hover:scale-105'
-                  }
-                `}
+                key={day}
+                className={`checkin-box ${checkedDays.includes(day) ? 'checked' : ''} ${day === 7 ? 'day7-box' : ''}`}
+                onClick={() => handleCheckIn(day)}
               >
-                <div className="text-lg font-semibold mb-1">Day {day}</div>
-                <div className="flex items-center">
-                  <Star className="h-4 w-4 mr-1" />
+                <img
+                  src="https://github.com/blockdreamers/Kuest3/blob/dev/m2H7i8d3b1K9G6N4%20(1)%201.png?raw=true"
+                  alt="treasure"
+                  className={`checkin-img ${day === 7 ? 'big' : ''}`}
+                />
+                <div className="checkin-day">{`Day${day}`}</div>
+                {checkedDays.includes(day) && <Check className="checkin-check" />}
+                <div className="checkin-points">
+                  <Star className="h-3 w-3 text-yellow-400" />
                   <span>+{points}</span>
                 </div>
-                {checkedDays.includes(day) && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-purple-600 bg-opacity-90 rounded-lg">
-                    <Check className="h-8 w-8 text-white" />
-                  </div>
-                )}
               </div>
-            </button>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Other Activities Grid */}
-      <h2 className="text-xl font-semibold mb-4">추가 포인트 획득</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {pointActivities.map((activity) => (
-          <Link
-            key={activity.id}
-            to={activity.link}
-            className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center space-x-3">
-                  <activity.icon className="h-6 w-6 text-blue-600" />
-                  <h3 className="text-lg font-semibold text-gray-900">{activity.title}</h3>
+        {/* 퀘스트 포인트 우측 */}
+        <div className="points-quests">
+          <h2 className="section-title">퀘스트 포인트</h2>
+          <p className="section-subtitle">퀘스트를 수행하고 포인트를 모을 수 있어요</p>
+          <div className="quest-list">
+            {pointActivities.map((activity) => (
+              <div key={activity.id} className="quest-card">
+                <div className="quest-card-icon">
+                  <activity.icon className="h-5 w-5 text-blue-400" />
                 </div>
-                <p className="mt-2 text-gray-600">{activity.description}</p>
-                <div className="mt-4 flex items-center space-x-2">
-                  <Star className="h-5 w-5 text-yellow-400" />
-                  <span className="font-semibold text-gray-900">{activity.points} P</span>
+                <div className="quest-card-content">
+                  <h3 className="quest-title">{activity.title}</h3>
+                  <p className="quest-desc">{activity.description}</p>
+                  <div className="quest-points">
+                    <Star className="h-4 w-4 text-yellow-400" />
+                    <span>{activity.points} P</span>
+                  </div>
                 </div>
               </div>
-              <ArrowRight className="h-5 w-5 text-gray-400" />
-            </div>
-          </Link>
-        ))}
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

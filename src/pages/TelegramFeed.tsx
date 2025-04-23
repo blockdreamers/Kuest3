@@ -7,7 +7,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import telegramChannels from '../lib/data/telegramchannels';
-import './TelegramFeed.css'; // ✅ 스타일 적용
+import './TelegramFeed.css';
 
 const TelegramFeed = () => {
   const posts = telegramChannels.slice(0, 20);
@@ -31,10 +31,10 @@ const TelegramFeed = () => {
                   className="telegram-avatar"
                 />
                 <div>
-                  <h3 className="text-sm font-semibold text-white">
+                  <h3 className="telegram-author text-sm font-semibold text-white">
                     {post.channelName}
                   </h3>
-                  <p className="text-xs text-gray-400">@{post.username}</p>
+                  <p className="telegram-handle text-xs text-gray-400">@{post.username}</p>
                 </div>
               </div>
               <a
