@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Timer, Users, Twitter, MessageCircle, Send, DollarSign } from 'lucide-react';
-import { ongoingQuestInfo } from '../lib/data/ongoingQuestInfo'; // ✅ 정확한 파일명 일치
+import { ongoingQuestInfo } from '../lib/data/ongoingQuestInfo'; // ✅ 경로 및 이름 정확히
 import './OngoingQuests.css';
 
 const QuestCard = ({ quest }) => {
@@ -17,12 +17,12 @@ const QuestCard = ({ quest }) => {
     }
   };
 
-  const getDifficultyColor = (difficulty) => {
+  const getDifficultyBadgeClass = (difficulty) => {
     switch (difficulty.toLowerCase()) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'easy': return 'difficulty-badge difficulty-easy';
+      case 'medium': return 'difficulty-badge difficulty-medium';
+      case 'hard': return 'difficulty-badge difficulty-hard';
+      default: return 'difficulty-badge';
     }
   };
 
@@ -36,19 +36,24 @@ const QuestCard = ({ quest }) => {
   };
 
   return (
-    <div className="quest-box" onClick={() => navigate(`/quest/${quest.id}`)}>
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
+    <div className="quest-box relative" onClick={() => navigate(`/quest/${quest.id}`)}>
+      {/* 난이도 배지 */}
+      <span
+        className={getDifficultyBadgeClass(quest.difficulty)}
+        data-tooltip={getDifficultyText(quest.difficulty)}
+      >
+        ✓
+      </span>
+
+      <div className="p-4">
+        <div className="flex justify-between items-start mb-3">
           <div>
             <h3 className="text-lg font-semibold text-white mb-1">{quest.title}</h3>
-            <p className="text-sm text-gray-400 line-clamp-2">{quest.description}</p>
+            <p className="text-sm text-gray-400 quest-description">{quest.description}</p>
           </div>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(quest.difficulty)}`}>
-            {getDifficultyText(quest.difficulty)}
-          </span>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">
             {quest.platforms.map((platform, index) => (
               <div key={index} className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">

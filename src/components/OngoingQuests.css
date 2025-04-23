@@ -1,17 +1,89 @@
 .quest-box {
-    background-color: #242424;
-    color: white;
-    border: 1px solid #222;
-    border-radius: 16px;
-    padding: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: none;
-    font-family: 'Montserrat', 'Pretendard', sans-serif;
-  }
-  
-  .quest-box:hover {
-    transform: translateY(-3px) scale(1.02);
-    border: 2px solid black;
-    box-shadow: 0 0 0 3px #DFFF67;
-  }
-  
+  background-color: #242424;
+  color: white;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  min-height: 180px; /* 높이 줄임 */
+  position: relative;
+}
+
+.quest-box:hover {
+  transform: translateY(-3px) scale(1.02);
+  border: 1.2px solid black; /* 더 얇은 테두리 */
+  background-color: #DFFF67;
+  color: black;
+}
+
+/* 기본 상태의 플랫폼 아이콘, 난이도, 보상금액 등은 색상 유지 */
+.quest-box:hover .text-gray-400,
+.quest-box:hover .text-white,
+.quest-box:hover .text-sm,
+.quest-box:hover .font-medium {
+  color: black !important;
+}
+
+.quest-box:hover .text-green-400,
+.quest-box:hover .text-red-400,
+.quest-box:hover .text-gray-400.difficulty-symbol {
+  color: inherit; /* 기존 색상 유지 */
+}
+
+/* 난이도 배지 */
+.difficulty-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+  cursor: default;
+  position: absolute;
+}
+
+.difficulty-easy {
+  background-color: #DFFF67;
+  color: black;
+}
+
+.difficulty-medium {
+  background-color: #FDE047;
+  color: black;
+}
+
+.difficulty-hard {
+  background-color: #FDA4AF;
+  color: black;
+}
+
+/* 툴팁 */
+.difficulty-badge[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #111;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.difficulty-badge:hover::after {
+  opacity: 1;
+}
