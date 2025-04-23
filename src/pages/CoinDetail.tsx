@@ -1,199 +1,154 @@
+// src/pages/CoinDetail.tsx
+
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Globe, MessageCircle, Twitter, Github, ExternalLink, Star, Vote, ArrowLeft } from 'lucide-react';
+import {
+  Globe,
+  Twitter,
+  Github,
+  ExternalLink,
+  Star,
+  Vote,
+  ArrowLeft
+} from 'lucide-react';
+import { projectInfo } from '../lib/data/projectInfo';
+import styles from './CoinDetail.module.css';
 
 const CoinDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Mock data - will be replaced with real API data
-  const coinData = {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: 65432.10,
-    priceChange24h: -5.31,
-    marketCap: 1284567890123,
-    circulatingSupply: 19.84,
-    maxSupply: 21,
-    fdv: 2.33,
-    volume24h: 72.92,
-    volumeMarketCap: 3.25,
-    profileScore: 100,
-    rating: 4.6,
-    description: 'Bitcoin is the first decentralized cryptocurrency. It was created in 2009 by an unknown person or group using the name Satoshi Nakamoto.',
-    links: {
-      website: 'https://bitcoin.org',
-      discord: 'https://discord.gg/bitcoin',
-      telegram: 'https://t.me/bitcoin',
-      twitter: 'https://twitter.com/bitcoin',
-      reddit: 'https://reddit.com/r/bitcoin',
-      github: 'https://github.com/bitcoin',
-      whitepaper: 'https://bitcoin.org/bitcoin.pdf',
-    }
-  };
+  const coin = projectInfo.find((c) => c.id === id);
+
+  if (!coin) {
+    return (
+      <div className={styles['coin-detail-container']}>
+        <button onClick={() => navigate(-1)} className={styles['coin-detail-back-btn']}>
+          <ArrowLeft className="h-5 w-5 mr-2" /> 목록으로 돌아가기
+        </button>
+        <p className="text-red-500">해당 코인 정보를 찾을 수 없습니다.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <button
-        onClick={() => navigate(-1)}
-        className="mb-6 flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
-      >
-        <ArrowLeft className="h-5 w-5 mr-2" />
-        Back to list
+    <div className={styles['coin-detail-container']}>
+      <button onClick={() => navigate(-1)} className={styles['coin-detail-back-btn']}>
+        <ArrowLeft className="h-5 w-5 mr-2" /> 목록으로 돌아가기
       </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Coin Information */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <img
-                  src={`https://assets.coingecko.com/coins/images/1/large/bitcoin.png`}
-                  alt={coinData.name}
-                  className="w-12 h-12"
-                />
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {coinData.name}
-                    <span className="ml-2 text-gray-500 text-lg">{coinData.symbol}</span>
-                  </h1>
-                  <div className="flex items-center space-x-2">
-                    <Star className="w-4 h-4 text-yellow-400" />
-                    <span className="text-sm text-gray-600">Rank #1</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-3xl font-bold text-gray-900">${coinData.price.toLocaleString()}</p>
-                <p className="text-red-500">
-                  {coinData.priceChange24h}% (24h)
-                </p>
-              </div>
-            </div>
-
-            {/* Price Statistics */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-500">Market Cap</p>
-                  <p className="text-lg font-semibold">₩{coinData.marketCap.toLocaleString()}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">FDV</p>
-                  <p className="text-lg font-semibold">₩{coinData.fdv}P</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Circulating Supply</p>
-                  <p className="text-lg font-semibold">{coinData.circulatingSupply}M BTC</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-500">24h Volume</p>
-                  <p className="text-lg font-semibold">₩{coinData.volume24h}T</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Volume/Market Cap</p>
-                  <p className="text-lg font-semibold">{coinData.volumeMarketCap}%</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Max Supply</p>
-                  <p className="text-lg font-semibold">{coinData.maxSupply}M BTC</p>
+      <div className={styles['coin-detail-layout']}>
+        <div className={styles['coin-detail-card']}>
+          <div className={styles['coin-detail-top']}>
+            <div className={styles['coin-detail-info-box']}>
+              <img src={coin.logo} alt={coin.name} className={styles['coin-detail-logo']} />
+              <div>
+                <h1 className={styles['coin-detail-title']}>
+                  {coin.name} <span className={styles['coin-detail-ticker']}>{coin.symbol}</span>
+                </h1>
+                <div className={styles['coin-detail-rank']}>
+                  <Star className={styles['coin-detail-star']} />
+                  <span className={styles['coin-detail-rank-text']}>랭킹 1위</span>
                 </div>
               </div>
             </div>
 
-            {/* Profile Score */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-3">Profile Score</h2>
-              <div className="bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-500 h-2 rounded-full" 
-                  style={{ width: `${coinData.profileScore}%` }}
-                ></div>
-              </div>
-              <p className="text-right text-sm text-gray-600 mt-1">{coinData.profileScore}%</p>
+            <div className={styles['coin-detail-price-box']}>
+              <p className={styles['coin-detail-price']}>₩{coin.price.toLocaleString()}</p>
+              <p
+                className={`${styles['coin-detail-diff']} ${
+                  coin.priceChange >= 0 ? styles['up'] : styles['down']
+                }`}
+              >
+                {coin.priceChange >= 0 ? '+' : ''}{coin.priceChange}% (24시간)
+              </p>
             </div>
+          </div>
 
-            {/* Links */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-4">Links</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <a
-                  href={coinData.links.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600"
-                >
-                  <Globe className="w-5 h-5" />
-                  <span>Website</span>
-                </a>
-                <a
-                  href={coinData.links.whitepaper}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600"
-                >
-                  <ExternalLink className="w-5 h-5" />
-                  <span>Whitepaper</span>
-                </a>
-                <a
-                  href={coinData.links.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600"
-                >
-                  <Github className="w-5 h-5" />
-                  <span>Github</span>
-                </a>
-                <a
-                  href={coinData.links.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600"
-                >
-                  <Twitter className="w-5 h-5" />
-                  <span>Twitter</span>
-                </a>
+          <div className={styles['coin-detail-stats-block']}>
+            <div className={styles['coin-detail-stats-col']}>
+              <div>
+                <p className={styles['coin-detail-label']}>시가총액</p>
+                <p className={styles['coin-detail-value']}>₩{coin.marketCap.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className={styles['coin-detail-label']}>FDV</p>
+                <p className={styles['coin-detail-value']}>₩{coin.fdv.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className={styles['coin-detail-label']}>유통량</p>
+                <p className={styles['coin-detail-value']}>{coin.circulatingSupply}M {coin.symbol}</p>
               </div>
             </div>
 
-            {/* Description */}
-            <div>
-              <h2 className="text-lg font-semibold mb-3">About {coinData.name}</h2>
-              <p className="text-gray-600 leading-relaxed">{coinData.description}</p>
+            <div className={styles['coin-detail-stats-col']}>
+              <div>
+                <p className={styles['coin-detail-label']}>24시간 거래량</p>
+                <p className={styles['coin-detail-value']}>₩{coin.volume.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className={styles['coin-detail-label']}>거래량/시총</p>
+                <p className={styles['coin-detail-value']}>{coin.volumeMarketCap}%</p>
+              </div>
+              <div>
+                <p className={styles['coin-detail-label']}>최대 발행량</p>
+                <p className={styles['coin-detail-value']}>{coin.maxSupply}M {coin.symbol}</p>
+              </div>
             </div>
+          </div>
+
+          <div className={styles['coin-detail-score-section']}>
+            <h2 className={styles['coin-detail-subtitle']}>프로필 점수</h2>
+            <div className={styles['coin-detail-bar']}>
+              <div
+                className={styles['coin-detail-bar-fill']}
+                style={{ width: `${coin.profileScore}%` }}
+              ></div>
+            </div>
+            <p className={styles['coin-detail-bar-label']}>{coin.profileScore}%</p>
+          </div>
+
+          <div className={styles['coin-detail-links-section']}>
+            <h2 className={styles['coin-detail-subtitle']}>관련 링크</h2>
+            <div className={styles['coin-detail-link-grid']}>
+              <a href={coin.links.website} target="_blank" rel="noopener noreferrer">
+                <Globe className={styles['coin-detail-icon']} /> <span>공식 홈페이지</span>
+              </a>
+              <a href={coin.links.whitepaper} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className={styles['coin-detail-icon']} /> <span>백서</span>
+              </a>
+              <a href={coin.links.github} target="_blank" rel="noopener noreferrer">
+                <Github className={styles['coin-detail-icon']} /> <span>GitHub</span>
+              </a>
+              <a href={coin.links.twitter} target="_blank" rel="noopener noreferrer">
+                <Twitter className={styles['coin-detail-icon']} /> <span>Twitter</span>
+              </a>
+            </div>
+          </div>
+
+          <div className={styles['coin-detail-desc']}>
+            <h2 className={styles['coin-detail-subtitle']}>{coin.name} 소개</h2>
+            <p className={styles['coin-detail-text']}>{coin.description}</p>
           </div>
         </div>
 
-        {/* Right Column - Twitter Feed */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <Twitter className="w-5 h-5 text-blue-400" />
-              <h2 className="text-lg font-semibold">Latest Tweets</h2>
-            </div>
-            <div className="space-y-4">
-              {/* Twitter feed will be integrated here */}
-              <div className="border rounded-lg p-4">
-                <p className="text-gray-500 text-sm mb-2">Loading tweets...</p>
-              </div>
-              
-              {/* Vote Button */}
-              <button
-                className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2"
-              >
-                <Vote className="w-5 h-5" />
-                <span>투표하러 가기</span>
-              </button>
-            </div>
+        <div className={styles['coin-detail-right-box']}>
+          <div className={styles['coin-detail-tweet-head']}>
+            <Twitter className="text-blue-400 w-5 h-5" />
+            <h2 className="text-lg font-semibold">최신 트윗</h2>
           </div>
+          <div className={styles['coin-detail-tweet-loading']}>
+            <p className="text-gray-500 text-sm mb-2">트윗을 불러오는 중입니다...</p>
+          </div>
+
+          <button className={styles['coin-detail-vote-btn']}>
+            <Vote className="w-5 h-5" />
+            <span>투표하러 가기</span>
+          </button>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default CoinDetail;

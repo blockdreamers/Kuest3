@@ -6,22 +6,28 @@ import {
   Repeat2,
   ExternalLink,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import telegramChannels from '../lib/data/telegramchannels';
 import './TelegramFeed.css';
 
 const TelegramFeed = () => {
+  const navigate = useNavigate();
   const posts = telegramChannels.slice(0, 20);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-black">📡 최신 텔레그램 포스팅</h1>
-        <p className="mt-2 text-black">최근 텔레그램 포스팅을 확인하세요!</p>
+        <h1 className="text-2xl font-bold text-black">📡텔레그램 모아보기</h1>
+        <p className="mt-2 text-black">중요한 텔레그램 소식을 한 번에 확인해보세요!</p>
       </div>
 
       <div className="telegram-grid">
         {posts.map((post) => (
-          <div key={post.id} className="telegram-card">
+          <div
+            key={post.id}
+            className="telegram-card cursor-pointer hover:shadow-lg transition"
+            onClick={() => navigate(`/telegram/${post.username}`)} // ✅ 이동 로직 추가
+          >
             {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-3">
@@ -42,6 +48,7 @@ const TelegramFeed = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-400 hover:text-blue-600"
+                onClick={(e) => e.stopPropagation()} // ✅ 클릭 이벤트 분리
               >
                 <ExternalLink className="h-4 w-4" />
               </a>
