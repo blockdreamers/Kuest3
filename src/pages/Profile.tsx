@@ -29,13 +29,13 @@ function Profile() {
   console.log('👤 Privy User:', privyUser);
 
   useEffect(() => {
-    if (privyUser?.wallet?.address) {
-      console.log('✅ [Privy] wallet.address 확보됨:', privyUser.wallet.address);
+    if (privyReady && privyUser?.wallet?.address) {
       setWalletAddress(privyUser.wallet.address);
+      console.log('✅ [Profile] wallet.address 확보됨:', privyUser.wallet.address);
     } else {
-      console.warn('❌ [Privy] wallet.address 없음');
+      console.warn('❌ [Profile] wallet.address 없음');
     }
-  }, [privyUser]);
+  }, [privyReady, privyUser?.wallet?.address]);
 
   const handleReconnect = async () => {
     try {
