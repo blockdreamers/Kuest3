@@ -15,6 +15,9 @@ import SocialAccounts from './pages/SocialAccounts';
 import Airdrop from './pages/Airdrop'; // ✅ 추가한 부분
 import { useAuth } from './contexts/AuthContext';
 import TelegramFeedDetail from "./pages/TelegramFeedDetail";
+import UserAgreements from './pages/UserAgreements';
+import PrivacyPolicies from './pages/PrivacyPolicies';
+
 
 function App() {
   const { loading } = useAuth();
@@ -44,6 +47,8 @@ function App() {
           <Route path="/social-accounts" element={<SocialAccounts />} />
           <Route path="/airdrop" element={<Airdrop />} /> {/* ✅ 에어드롭 경로 추가 */}
           <Route path="/telegram/:username" element={<TelegramFeedDetail />} />
+          <Route path="/user-agreements" element={<UserAgreements />} />
+          <Route path="/privacy-policies" element={<PrivacyPolicies />} />
         </Routes>
       </main>
       <Footer />

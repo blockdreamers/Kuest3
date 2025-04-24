@@ -62,10 +62,10 @@ const Footer = () => {
           <h3 className="footer-heading">법적 고지</h3>
           <ul className="space-y-3">
             <li>
-              <Link to="/terms" className="footer-link">이용약관</Link>
+            <Link to="/user-agreements" className="hover:underline">이용약관</Link>
             </li>
             <li>
-              <Link to="/privacy" className="footer-link">개인정보처리방침</Link>
+              <Link to="/privacy-policies" className="hover:underline">개인정보처리방침</Link>
             </li>
           </ul>
         </div>
