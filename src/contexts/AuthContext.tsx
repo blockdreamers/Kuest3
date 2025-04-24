@@ -1,3 +1,5 @@
+// src/contexts/AuthContext.tsx
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   signOut as firebaseSignOut,
@@ -10,8 +12,7 @@ import toast from 'react-hot-toast';
 import { auth } from '../config/firebase';
 import supabase from '../lib/supabase';
 import { signInWithGooglePopup } from '../lib/auth/googleAuth';
-import { connectPrivyWallet } from '../lib/auth/privyWallet';
-import { insertSupabaseUser, insertUserWallet } from '../lib/auth/supabaseUser';
+import { insertSupabaseUser } from '../lib/auth/supabaseUser';
 
 interface AuthContextType {
   user: User | null;
@@ -27,18 +28,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const {
-    login: privyLogin,
     authenticated: privyAuthenticated,
     logout: privyLogout,
-    user: privyUser,
   } = usePrivy();
-
-  // ✅ 디버깅용: wallet이 준비된 순간 로그 확인
-  useEffect(() => {
-    if (privyUser?.wallet?.walletAddress) {
-      console.log('🟢 지갑 주소 준비 완료:', privyUser.wallet.walletAddress);
-    }
-  }, [privyUser]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -58,67 +50,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('🧾 Supabase 기준 isNewUser:', isNewUser);
 
       if (!isNewUser && isSignUp) {
-        toast.dismiss('wallet-toast');
-        toast.error('이미 가입된 사용자입니다. 로그인만 해주세요.');
-        await Promise.all([
-          firebaseSignOut(auth),
-          privyAuthenticated ? privyLogout() : Promise.resolve(),
-        ]);
-        setUser(null);
-        setTimeout(() => (window.location.href = '/login'), 1500);
+        toast.dismiss();
+        toast.success('로그인 성공!');
+        setTimeout(() => (window.location.href = '/'), 1000);
         return;
       }
 
       if (isSignUp && isNewUser) {
-        try {
-          console.log('🔁 Privy login + wallet 연결 시도');
+        await insertSupabaseUser({
+          id: currentUser.uid,
+          email: currentUser.email,
+          nickname: currentUser.displayName,
+          photo: currentUser.photoURL,
+          user_type: 'normal',
+          created_at: new Date().toISOString(),
+          last_login_at: new Date().toISOString(),
+          is_active: true,
+        });
 
-          const wallet = await connectPrivyWallet(
-            () => privyLogin(),
-            () => privyUser, // ✅ 실시간 polling 방식
-            privyAuthenticated,
-            currentUser
-          );
+        toast.dismiss();
+        toast.success('회원가입 완료! 🎉');
+        setTimeout(() => (window.location.href = '/'), 1000);
+      } else if (!isSignUp && isNewUser) {
+        // 로그인 버튼 클릭했지만 실제로는 신규 가입자일 경우
+        await insertSupabaseUser({
+          id: currentUser.uid,
+          email: currentUser.email,
+          nickname: currentUser.displayName,
+          photo: currentUser.photoURL,
+          user_type: 'normal',
+          created_at: new Date().toISOString(),
+          last_login_at: new Date().toISOString(),
+          is_active: true,
+        });
 
-          if (!wallet || !wallet.address) {
-            throw new Error('Privy wallet 연결 후 지갑 주소가 없습니다.');
-          }
-
-          console.log('✅ Privy Wallet 연결됨:', wallet);
-
-          await insertSupabaseUser({
-            id: currentUser.uid,
-            email: currentUser.email,
-            nickname: currentUser.displayName,
-            photo: currentUser.photoURL,
-            user_type: 'normal',
-            created_at: new Date().toISOString(),
-            last_login_at: new Date().toISOString(),
-            is_active: true,
-          });
-
-          await insertUserWallet({
-            user_id: currentUser.uid,
-            wallet_address: wallet.address,
-            created_at: new Date().toISOString(),
-          });
-
-          toast.dismiss('wallet-toast');
-          toast.success('회원가입이 완료되었습니다! 🎉');
-          setTimeout(() => (window.location.href = '/'), 1500);
-        } catch (dbError: any) {
-          console.error('❌ Supabase 삽입 실패:', dbError);
-          toast.dismiss('wallet-toast');
-          toast.error(`회원정보 저장 실패: ${dbError.message || '알 수 없는 오류'}`);
-          await Promise.all([
-            firebaseSignOut(auth),
-            privyAuthenticated ? privyLogout() : Promise.resolve(),
-          ]);
-          setUser(null);
-          setTimeout(() => (window.location.href = '/login'), 1500);
-        }
+        toast.dismiss();
+        toast.success('로그인 완료! 🎉');
+        setTimeout(() => (window.location.href = '/'), 1000);
       } else {
-        toast.success('로그인이 완료되었습니다!');
+        toast.success('로그인 완료!');
+        setTimeout(() => (window.location.href = '/'), 1000);
       }
     } catch (error: any) {
       console.error('🔥 signInWithGoogle 전체 실패:', error);

@@ -87,11 +87,11 @@
   color: #000000;
 }
 
-.cryptoCardHover:hover .cryptoGreen {
+.cryptoGreen {
   color: #22c55e !important;
 }
 
-.cryptoCardHover:hover .cryptoRed {
+.cryptoRed {
   color: #ef4444 !important;
 }
 

@@ -1,25 +1,25 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   MessageCircle,
   Repeat2,
   Heart,
   Share2,
+  ArrowLeft,
 } from 'lucide-react';
-import styles from "./TelegramFeedDetail.module.css"; // ✅ 모듈 import
+import styles from "./TelegramFeedDetail.module.css";
 
 const TelegramFeedDetail = () => {
   const { username } = useParams();
+  const navigate = useNavigate();
 
   if (!username) {
     return <div className="text-white p-8">채널이 선택되지 않았습니다.</div>;
   }
 
-  // Mock channel info (추후 백엔드에서 받아올 부분)
   const channelName = '가즈아주의자';
   const avatar = `https://www.hola.com/us/celebrities/20241205734386/barron-trump-video-games-nyu/`;
 
-  // ✅ mock 피드 8개 생성
   const mockFeeds = Array.from({ length: 8 }, (_, i) => ({
     id: i + 1,
     username,
@@ -34,6 +34,10 @@ const TelegramFeedDetail = () => {
     <div className={styles["details-container"]}>
       {/* Sidebar */}
       <aside className={styles.sidebar}>
+        <button onClick={() => navigate(-1)} className={styles["back-button"]}>
+          <ArrowLeft className={styles["back-icon"]} /> 목록으로 돌아가기
+        </button>
+
         <div className={styles["channel-info"]}>
           <img src={avatar} alt={channelName} className={styles.avatar} />
           <h2 className={styles["channel-name"]}>{channelName}</h2>

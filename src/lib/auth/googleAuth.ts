@@ -9,7 +9,6 @@ import {
 import { auth, googleProvider } from '../../config/firebase';
 import { isPreview } from '../../config/environment';
 import toast from 'react-hot-toast';
-import { insertSupabaseUser } from './supabaseUser'; // ✅ 추가: Supabase 삽입 함수
 
 /**
  * Firebase 팝업 로그인 실행
@@ -30,17 +29,6 @@ export const signInWithGooglePopup = async (): Promise<User> => {
     const user = result.user;
 
     console.log('✅ Firebase 로그인 성공 (팝업):', user);
-
-    // ✅ Supabase에 유저 정보 삽입
-    await insertSupabaseUser({
-      id: user.uid,
-      email: user.email ?? null,
-      nickname: user.displayName ?? null,
-      photo: user.photoURL ?? null,
-      user_type: 'normal',
-      is_active: true,
-    });
-
     return user;
   } catch (error: any) {
     console.error('🔥 Firebase Auth 에러:', error);

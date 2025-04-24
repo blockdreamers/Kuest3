@@ -33,32 +33,25 @@ const Navbar = () => {
               />
             </Link>
 
+            {/* 메뉴: 좌측 정렬 */}
             <div className="hidden md:flex items-center space-x-3">
-              <Link
-                to="/kol"
-                className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200"
-              >
-                리그 오브 KOL
-              </Link>
               <Link
                 to="/telegram"
                 className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200 flex items-center"
               >
-                <MessageCircle className="h-4 w-4 mr-1" />
-                텔레그램 모아보기
+                ➣텔레그램 모아보기
               </Link>
               <Link
                 to="/points"
                 className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200 flex items-center"
               >
-                <Star className="h-4 w-4 mr-1" />
-                포인트 모으기
+                🌱포인트 모으기
               </Link>
               <Link
                 to="/airdrop"
                 className="text-sm text-gray-900 px-3 py-1 rounded-xl hover:bg-black hover:text-white transition-all duration-200"
               >
-                에어드롭
+                🪂에어드롭
               </Link>
             </div>
           </div>

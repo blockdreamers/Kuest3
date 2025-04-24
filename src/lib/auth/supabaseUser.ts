@@ -1,4 +1,5 @@
 // src/lib/auth/supabaseUser.ts
+
 import { supabaseAdmin } from '../supabaseAdmin';
 
 export const insertSupabaseUser = async ({
@@ -16,24 +17,37 @@ export const insertSupabaseUser = async ({
   nickname: string | null;
   photo: string | null;
   user_type: string;
-  created_at: string;
-  last_login_at: string;
+  created_at?: string;
+  last_login_at?: string;
   is_active: boolean;
 }) => {
-  const { data, error } = await supabaseAdmin
+  // ✅ 중복 삽입 방지용 사전 확인
+  const { data: existingUser, error: checkError } = await supabaseAdmin
     .from('users')
-    .insert([
-      {
-        id,
-        email,
-        nickname,
-        photo,
-        user_type,
-        created_at,
-        last_login_at,
-        is_active,
-      },
-    ]);
+    .select('id')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (checkError) throw checkError;
+  if (existingUser) {
+    console.log('⚠️ 이미 존재하는 사용자, insert 생략');
+    return;
+  }
+
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabaseAdmin.from('users').insert([
+    {
+      id,
+      email,
+      nickname,
+      photo,
+      user_type,
+      created_at: created_at ?? now,
+      last_login_at: last_login_at ?? now,
+      is_active,
+    },
+  ]);
 
   if (error) {
     console.error('❌ [admin] 유저 insert 실패:', error.message);
