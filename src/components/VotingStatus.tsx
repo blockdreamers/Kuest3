@@ -45,7 +45,7 @@ const VotingCard = ({ coin, rank }) => {
 
 const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState('');
-  const targetDate = new Date('2025-5-1T03:00:00.000Z');
+  const targetDate = new Date('2025-05-01T03:00:00.000Z');
 
   useEffect(() => {
     const calculateTimeLeft = () => {
