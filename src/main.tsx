@@ -21,18 +21,31 @@ createRoot(document.getElementById('root')!).render(
       }}
       onSuccess={async (user, context) => {
         console.log('✅ [Privy] onSuccess triggered');
-        console.log('👤 User:', user);
-        console.log('📦 Context:', context);
+        console.log('👤 user:', user);
+        console.log('📦 context:', context);
+
         try {
-          const wallets = await user.getWallets();
-          console.log('💼 Wallets:', wallets);
-          if (wallets.length > 0) {
-            console.log('✅ [Privy] 지갑 주소 확보됨:', wallets[0].address);
+          console.log('🔍 user.wallet:', user?.wallet);
+          const walletAddr = user?.wallet?.walletAddress;
+          if (walletAddr) {
+            console.log('✅ [main.tsx] user.wallet.walletAddress:', walletAddr);
           } else {
-            console.warn('❌ [Privy] 지갑 없음');
+            console.warn('❌ [main.tsx] user.wallet.walletAddress 없음');
+          }
+
+          if (typeof user.getWallets === 'function') {
+            const wallets = await user.getWallets();
+            console.log('🧾 [main.tsx] user.getWallets():', wallets);
+            if (wallets?.[0]?.address) {
+              console.log('✅ [main.tsx] getWallets 첫 주소:', wallets[0].address);
+            } else {
+              console.warn('⚠️ [main.tsx] getWallets 결과에 주소 없음');
+            }
+          } else {
+            console.warn('⚠️ [main.tsx] getWallets 함수가 없음 (함수 미정의)');
           }
         } catch (err) {
-          console.error('❌ [Privy] wallet fetch 실패:', err);
+          console.error('❌ [main.tsx] wallet 정보 디버깅 중 오류:', err);
         }
       }}
       onError={(error) => {

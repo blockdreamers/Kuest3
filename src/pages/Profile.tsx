@@ -25,14 +25,17 @@ function Profile() {
   const [walletInserted, setWalletInserted] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
+  console.log('🔁 Privy Ready 상태:', privyReady);
+  console.log('👤 Privy User:', privyUser);
+
   useEffect(() => {
-    if (privyUser?.wallet?.walletAddress) {
-      setWalletAddress(privyUser.wallet.walletAddress);
-      console.log('✅ 지갑 주소 확보됨:', privyUser.wallet.walletAddress);
+    if (privyUser?.wallet?.address) {
+      console.log('✅ [Privy] wallet.address 확보됨:', privyUser.wallet.address);
+      setWalletAddress(privyUser.wallet.address);
     } else {
-      console.log('❌ Privy에서 지갑 주소 없음');
+      console.warn('❌ [Privy] wallet.address 없음');
     }
-  }, [privyUser?.wallet?.walletAddress]);
+  }, [privyUser]);
 
   const handleReconnect = async () => {
     try {
@@ -53,7 +56,11 @@ function Profile() {
 
   useEffect(() => {
     const tryInsertWallet = async () => {
-      if (firebaseUser && walletAddress && !walletInserted) {
+      if (
+        firebaseUser &&
+        walletAddress &&
+        !walletInserted
+      ) {
         try {
           await insertUserWallet({
             user_id: firebaseUser.uid,
@@ -91,11 +98,7 @@ function Profile() {
           <div className={styles.profileBox}>
             <div className={styles.profileCenter}>
               {firebaseUser.photoURL ? (
-                <img
-                  src={firebaseUser.photoURL}
-                  alt={firebaseUser.email || ''}
-                  className={styles.profileAvatar}
-                />
+                <img src={firebaseUser.photoURL} alt={firebaseUser.email || ''} className={styles.profileAvatar} />
               ) : (
                 <div className={styles.profileFallback}>
                   <User className="h-12 w-12 text-white" />
