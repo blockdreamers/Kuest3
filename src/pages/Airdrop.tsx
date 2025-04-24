@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
+import { usePrivy } from '@privy-io/react-auth';
 import { useAuth } from '../contexts/AuthContext';
 import AirdropAbi from '../abis/AirdropClaim.json';
 import './Airdrop.css';
 
-const AIRDROP_CONTRACT_ADDRESS = '0x83f954578bc8B4732E1957a439dB1Cb60A47Fc5A'; // ⚠️ 본인 컨트랙트 주소로 수정
+const AIRDROP_CONTRACT_ADDRESS = '0x85B1A621e4c46a9c59E5C51f2CA7245244AD3FB8';
+const INFURA_SEPOLIA_URL = import.meta.env.VITE_INFURA_SEPOLIA_URL;
 
 const Airdrop = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user: firebaseUser } = useAuth();
+  const { user: privyUser, ready: privyReady, login: privyLogin } = usePrivy();
 
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [userBalance, setUserBalance] = useState(0);
   const [claimableAmount, setClaimableAmount] = useState(0);
   const [claiming, setClaiming] = useState(false);
@@ -20,72 +24,103 @@ const Airdrop = () => {
   const remainingAmount = airdropTotal - claimedAmount;
   const progress = (claimedAmount / airdropTotal) * 100;
 
-  // 로그인 안 된 유저는 바로 login 페이지로 튕기기
   useEffect(() => {
-    if (!user) {
+    if (!firebaseUser) {
       navigate('/login', { replace: true });
     }
-  }, [user, navigate]);
+  }, [firebaseUser, navigate]);
 
-  const getProvider = (): ethers.providers.Web3Provider | null => {
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
-      console.log('✅ MetaMask detected');
-      return new ethers.providers.Web3Provider((window as any).ethereum);
+  useEffect(() => {
+    if (privyReady && privyUser?.wallet?.address) {
+      const addr = privyUser.wallet.address;
+      console.log('✅ [Privy] 지갑 주소 확보됨:', addr);
+      setWalletAddress(addr);
+    } else {
+      console.warn('❌ [Privy] 지갑 주소 없음');
     }
-    console.warn('🛑 MetaMask가 감지되지 않았습니다.');
+  }, [privyReady, privyUser]);
+
+  const getInfuraProvider = () => {
+    try {
+      const provider = new ethers.JsonRpcProvider(INFURA_SEPOLIA_URL);
+      return provider;
+    } catch (err) {
+      console.error('❌ Infura Provider 생성 실패:', err);
+      return null;
+    }
+  };
+
+  const getMetamaskProvider = () => {
+    if (typeof window !== 'undefined' && (window as any).ethereum) {
+      console.log('✅ MetaMask 감지됨');
+      return new ethers.BrowserProvider((window as any).ethereum);
+    }
+    console.warn('🛑 MetaMask 미탑재');
     return null;
   };
 
   const fetchAirdropInfo = async () => {
     try {
-      const provider = getProvider();
+      if (!walletAddress) return;
+
+      console.log('📡 [Infura] 컨트랙트 조회 시작...');
+      const provider = getInfuraProvider();
       if (!provider) return;
 
-      await provider.send('eth_requestAccounts', []);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      console.log('👛 현재 지갑:', address);
-
       const contract = new ethers.Contract(AIRDROP_CONTRACT_ADDRESS, AirdropAbi, provider);
-      const amount = await contract.airdropAmount(address);
-      const claimed = await contract.claimed(address);
 
-      const amountFormatted = Number(ethers.utils.formatUnits(amount, 18));
+      const rawAmount = await contract.airdropAmount(walletAddress);
+      const claimed = await contract.claimed(walletAddress);
+
+      const amountFormatted = Number(ethers.formatUnits(rawAmount, 18));
+      console.log(`📍 Address: ${walletAddress}`);
+      console.log(`💰 Claimable: ${amountFormatted} KST`);
+      console.log(`✅ Already Claimed: ${claimed}`);
+
       setUserBalance(amountFormatted);
       setClaimableAmount(claimed ? 0 : amountFormatted);
     } catch (error) {
-      console.error('📛 에어드랍 정보 조회 실패:', error);
+      console.error('❌ [에어드랍 조회 실패]', error);
     }
   };
 
   const handleClaim = async () => {
     try {
       setClaiming(true);
-      const provider = getProvider();
+      const provider = getMetamaskProvider();
       if (!provider) return;
 
-      const signer = provider.getSigner();
+      const signer = await provider.getSigner();
       const contract = new ethers.Contract(AIRDROP_CONTRACT_ADDRESS, AirdropAbi, signer);
-      const tx = await contract.claim();
-      await tx.wait();
 
+      console.log('🚀 Claim 트랜잭션 시작...');
+      const tx = await contract.claim();
+      console.log('📝 트랜잭션 전송됨:', tx.hash);
+
+      await tx.wait();
       alert('✅ 클레임 성공!');
       setClaimableAmount(0);
     } catch (err) {
-      console.error('📛 클레임 실패:', err);
-      alert('클레임 처리 중 오류가 발생했습니다.');
+      console.error('❌ [클레임 실패]', err);
+      alert('클레임 중 오류 발생');
     } finally {
       setClaiming(false);
     }
   };
 
   useEffect(() => {
-    if (user) {
+    if (walletAddress) {
       fetchAirdropInfo();
     }
-  }, [user]);
+  }, [walletAddress]);
 
-  if (!user) return null; // 로그인 전 렌더 방지
+  const handleConnectWallet = async () => {
+    try {
+      await privyLogin({ forceLogin: true });
+    } catch (err) {
+      console.error('❌ [지갑 연결 실패]', err);
+    }
+  };
 
   return (
     <div className="airdrop-page max-w-xl mx-auto px-6 py-12 font-['Montserrat','Pretendard'] text-black">
@@ -130,13 +165,23 @@ const Airdrop = () => {
             <span>클레임 가능 수량</span>
             <span>{claimableAmount.toLocaleString()} KST</span>
           </div>
-          <button
-            onClick={handleClaim}
-            disabled={claiming || claimableAmount === 0}
-            className="w-full py-3 mt-4 rounded-lg bg-black text-white font-semibold text-lg hover:bg-gray-900 transition flex items-center justify-center space-x-2"
-          >
-            🪙 <span>{claiming ? 'Claim 중...' : 'Claim 하기'}</span>
-          </button>
+
+          {walletAddress ? (
+            <button
+              onClick={handleClaim}
+              disabled={claiming || claimableAmount === 0}
+              className="w-full py-3 mt-4 rounded-lg bg-black text-white font-semibold text-lg hover:bg-gray-900 transition flex items-center justify-center space-x-2"
+            >
+              🪙 <span>{claiming ? 'Claim 중...' : 'Claim 하기'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleConnectWallet}
+              className="w-full py-3 mt-4 rounded-lg bg-black text-white font-semibold text-lg hover:bg-gray-900 transition"
+            >
+              🔌 지갑 연결하기
+            </button>
+          )}
         </div>
       </div>
     </div>

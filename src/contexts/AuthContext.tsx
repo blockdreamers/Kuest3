@@ -1,5 +1,3 @@
-// src/contexts/AuthContext.tsx
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   signOut as firebaseSignOut,
@@ -8,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { usePrivy } from '@privy-io/react-auth';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import { auth } from '../config/firebase';
 import supabase from '../lib/supabase';
@@ -26,6 +25,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authProcessed, setAuthProcessed] = useState(false);
+
+  const navigate = useNavigate();
 
   const {
     authenticated: privyAuthenticated,
@@ -41,6 +43,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signInWithGoogle = async (isSignUp: boolean) => {
+    if (authProcessed) return;
+    setAuthProcessed(true);
+
     try {
       const currentUser = await signInWithGooglePopup();
       setUser(currentUser);
@@ -52,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!isNewUser && isSignUp) {
         toast.dismiss();
         toast.success('로그인 성공!');
-        setTimeout(() => (window.location.href = '/'), 1000);
+        navigate('/');
         return;
       }
 
@@ -70,9 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         toast.dismiss();
         toast.success('회원가입 완료! 🎉');
-        setTimeout(() => (window.location.href = '/'), 1000);
+        navigate('/');
       } else if (!isSignUp && isNewUser) {
-        // 로그인 버튼 클릭했지만 실제로는 신규 가입자일 경우
         await insertSupabaseUser({
           id: currentUser.uid,
           email: currentUser.email,
@@ -86,10 +90,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         toast.dismiss();
         toast.success('로그인 완료! 🎉');
-        setTimeout(() => (window.location.href = '/'), 1000);
+        navigate('/');
       } else {
+        // ✅ 기존 유저인 경우 마지막 로그인 시간 업데이트
+        await supabase
+          .from('users')
+          .update({ last_login_at: new Date().toISOString() })
+          .eq('id', currentUser.uid);
+
         toast.success('로그인 완료!');
-        setTimeout(() => (window.location.href = '/'), 1000);
+        navigate('/');
       }
     } catch (error: any) {
       console.error('🔥 signInWithGoogle 전체 실패:', error);
