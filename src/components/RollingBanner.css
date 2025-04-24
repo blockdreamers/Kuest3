@@ -62,3 +62,12 @@
 .rolling-change.down {
   color: #ef4444;
 }
+
+.flicker {
+  animation: flickerAnimation 1.5s infinite;
+}
+
+@keyframes flickerAnimation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

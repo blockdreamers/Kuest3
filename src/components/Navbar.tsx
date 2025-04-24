@@ -111,7 +111,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="inline-flex items-center px-4 py-2 rounded-xl text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200"
+                className="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold bg-black text-white hover:bg-[#C7EB3E] hover:text-black active:scale-[0.97] transition-all duration-200 shadow-md"
               >
                 <User className="h-5 w-5 mr-2" />
                 로그인
