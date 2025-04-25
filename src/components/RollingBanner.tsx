@@ -23,7 +23,7 @@ const RollingBanner = () => {
         .from('coin_prices')
         .select('*')
         .order('id');
-      if (!error && data) setCoins([...data, ...data]); // 무한 스크롤용 중복
+      if (!error && data) setCoins([...data, ...data]); // 무한 스크롤용 복제
     };
     fetchData();
   }, []);
@@ -36,7 +36,7 @@ const RollingBanner = () => {
       if (el.scrollLeft >= el.scrollWidth / 2) {
         el.scrollLeft = 0;
       } else {
-        el.scrollLeft += 2; // 속도 조절
+        el.scrollLeft += 2;
       }
     };
 
@@ -82,15 +82,7 @@ const RollingBanner = () => {
           <div className="inline-flex space-x-6">
             {coins.map((coin, index) => {
               const price = Number(coin.price);
-              const priceChange = Number(coin.price_change_24h);
-              const isValid = !isNaN(price) && !isNaN(priceChange);
-              const prevPrice = price - priceChange;
-
-              const percentChange =
-                isValid && prevPrice !== 0
-                  ? (priceChange / prevPrice) * 100
-                  : 0;
-
+              const percentChange = Number(coin.price_change_24h);
               const isUp = percentChange >= 0;
 
               return (
@@ -103,7 +95,10 @@ const RollingBanner = () => {
                   <span className="rolling-name">{coin.name}</span>
                   <span className="rolling-symbol">{coin.symbol}</span>
                   <span className="rolling-price flicker">
-                    ${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${price.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </span>
                   <span className={`rolling-change ${isUp ? 'up' : 'down'} flicker`}>
                     {isUp ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
