@@ -73,7 +73,6 @@ const CoinDetail = () => {
         <button onClick={() => navigate(-1)} className={styles['coin-detail-back-btn']}>
           <ArrowLeft className="h-5 w-5 mr-2" /> 목록으로 돌아가기
         </button>
-        <p className="text-red-500">해당 코인 정보를 찾을 수 없습니다.</p>
       </div>
     );
   }
