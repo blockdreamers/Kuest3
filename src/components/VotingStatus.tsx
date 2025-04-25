@@ -1,9 +1,42 @@
+// src/pages/VotingStatus.tsx
 import React, { useEffect, useState } from 'react';
 import supabase from '../lib/supabase';
 import { fetchUSDKRW } from '../lib/utils/getExchangeRate';
 import './VotingStatus.css';
 
-const formatNumber = (value: number): string => value.toLocaleString();
+const formatNumber = (value: number): string => {
+  return value.toLocaleString();
+};
+
+const formatKRW = (value: number): string => {
+  if (value < 10) {
+    return `${value.toFixed(2)} 원`;
+  }
+  return `${Math.round(value).toLocaleString()} 원`;
+};
+
+const getFireBadgeColor = (rank: number): string => {
+  const colors = [
+    'bg-red-600',  // 1위
+    'bg-red-500',  // 2위
+    'bg-red-400',  // 3위
+    'bg-red-300',  // 4위
+    'bg-red-200',  // 5위
+  ];
+  return colors[rank - 1] || '';
+};
+
+const ProgressBar = ({ percent, isHovered }: { percent: number; isHovered: boolean }) => (
+  <div className="w-24 h-2 rounded-full overflow-hidden bg-white hover:bg-black transition-colors duration-300">
+    <div
+      className="h-full transition-all duration-300"
+      style={{
+        width: `${percent}%`,
+        backgroundColor: isHovered ? '#FFFFFF' : '#C7EB3E',
+      }}
+    />
+  </div>
+);
 
 const VotingCard = ({ coin, rank }: any) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -15,18 +48,20 @@ const VotingCard = ({ coin, rank }: any) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-center space-x-4 overflow-hidden">
-        <div className="voting-rank">{rank}</div>
-        <img src={coin.logo} alt={coin.name} className="voting-coin-logo" />
-        <div>
-          <div className="voting-name">{coin.name}</div>
-          <div className="voting-symbol">{coin.symbol}</div>
+        <div className={`flex items-center justify-center w-10 h-10 rounded-full text-white font-bold text-xs ${getFireBadgeColor(rank)}`}>
+          {rank <= 5 ? <>🔥 {rank}위</> : <>{rank}</>}
+        </div>
+        <img src={coin.logo} alt={coin.name_ko} className="voting-coin-logo w-12 h-12" />
+        <div className={`transition-colors duration-300 ${isHovered ? 'text-black' : 'text-white'}`}>
+          <div className="text-sm">{coin.name_ko}</div>
+          <div className="text-xs text-gray-400">{coin.symbol}</div>
         </div>
       </div>
 
-      <div className="flex items-center space-x-8 min-w-fit">
+      <div className="flex items-center space-x-6 min-w-fit">
         <div className="text-right">
           <p className="vote-stat-label">가격</p>
-          <p className="vote-stat-value">{formatNumber(coin.price)} 원</p>
+          <p className="vote-stat-value">{formatKRW(coin.price)}</p>
         </div>
         <div className="text-right">
           <p className="vote-stat-label">총 Pick</p>
@@ -37,18 +72,18 @@ const VotingCard = ({ coin, rank }: any) => {
           <p className="vote-stat-value">{formatNumber(coin.daily_pick)}</p>
         </div>
         <div className="text-right">
-          <p className="vote-stat-label">에어드랍 총량</p>
+          <p className="vote-stat-label">에어드랍</p>
           <p className="vote-stat-value">{formatNumber(coin.total_airdrop)}</p>
         </div>
         <div className="text-right">
-          <p className="vote-stat-label">소진율</p>
-          <p className="vote-stat-value">{coin.airdrop_utilization.toFixed(2)}%</p>
-        </div>
-        <div className="text-right">
           <p className="vote-stat-label">잔여율</p>
-          <p className="vote-stat-value">{coin.airdrop_remaining.toFixed(2)}%</p>
+          <ProgressBar percent={coin.airdrop_remaining} isHovered={isHovered} />
         </div>
-        {isHovered && <button className="vote-button">투표하기</button>}
+        {isHovered && (
+          <button className="vote-button transition-transform hover:scale-95">
+            투표하기
+          </button>
+        )}
       </div>
     </div>
   );
@@ -57,45 +92,40 @@ const VotingCard = ({ coin, rank }: any) => {
 const VotingStatus = () => {
   const [coins, setCoins] = useState<any[]>([]);
   const [exchangeRate, setExchangeRate] = useState<number>(1350);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true);
-      try {
-        const rate = await fetchUSDKRW();
-        setExchangeRate(rate);
+      const rate = await fetchUSDKRW();
+      setExchangeRate(rate);
 
-        const { data: votes, error: voteError } = await supabase
-          .from('voting_status')
-          .select('*')
-          .order('total_pick', { ascending: false });
+      const { data, error } = await supabase
+        .from('voting_status')
+        .select(`
+          project_id,
+          total_pick,
+          daily_pick,
+          total_airdrop,
+          airdrop_utilization,
+          airdrop_remaining,
+          date,
+          project_info:project_info (
+            name_ko,
+            symbol,
+            logo,
+            price
+          )
+        `)
+        .order('total_pick', { ascending: false });
 
-        const { data: projects, error: projectError } = await supabase
-          .from('project_info')
-          .select('slug, name, symbol, logo, price');
-
-        if (voteError || projectError) {
-          console.error('❌ 데이터 오류:', voteError || projectError);
-          return;
-        }
-
-        const merged = votes.map((v) => {
-          const p = projects.find((p) => p.slug === v.project_id);
-          return p
-            ? {
-                ...v,
-                ...p,
-                price: Math.round((p.price || 0) * rate),
-              }
-            : null;
-        }).filter(Boolean);
-
-        setCoins(merged);
-      } catch (err) {
-        console.error('❌ 로딩 실패:', err);
-      } finally {
-        setLoading(false);
+      if (error) {
+        console.error('투표 데이터 불러오기 오류:', error.message);
+      } else {
+        const parsed = data.map((item: any) => ({
+          ...item.project_info,
+          ...item,
+          price: Math.round((item.project_info?.price || 0) * rate),
+        }));
+        setCoins(parsed);
       }
     };
 
@@ -109,17 +139,11 @@ const VotingStatus = () => {
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-        {loading ? (
-          <div className="text-center text-gray-500">로딩 중...</div>
-        ) : coins.length === 0 ? (
-          <div className="text-center text-gray-500">📭 표시할 데이터가 없습니다.</div>
-        ) : (
-          <div className="space-y-3 max-h-[600px] overflow-y-auto">
-            {coins.map((coin, index) => (
-              <VotingCard key={coin.project_id} coin={coin} rank={index + 1} />
-            ))}
-          </div>
-        )}
+        <div className="space-y-3 max-h-[900px] overflow-y-auto voting-scroll-hide">
+          {coins.slice(0, 15).map((coin, index) => (
+            <VotingCard key={coin.project_id} coin={coin} rank={index + 1} />
+          ))}
+        </div>
       </div>
     </div>
   );
