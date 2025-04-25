@@ -1,13 +1,13 @@
 name: Fetch Coin Prices
 
 on:
-  workflow_dispatch:        # 수동 실행 가능
+  workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'    # 매 5분마다 실행 (UTC 기준)
+    - cron: '*/5 * * * *'
 
 jobs:
   fetch:
-    if: github.ref == 'refs/heads/main'  # 👉 main 브랜치에서만 실행
+    if: github.event_name == 'schedule' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
