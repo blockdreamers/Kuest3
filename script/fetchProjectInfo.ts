@@ -1,20 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 import fetch from 'node-fetch';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+// Supabase 설정
+const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+// CoinMarketCap 설정
 const cmcApiKey = process.env.CMC_API_KEY!;
 const headers = {
   'X-CMC_PRO_API_KEY': cmcApiKey,
 };
 
+// 요청 간 시간 간격을 두기 위한 대기 함수
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// ✅ 정적 정보 (최초 1회만 호출)
+// 정적 정보 (최초 1회 호출)
 async function fetchInfoData(slug: string) {
   const res = await fetch(
     `https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?slug=${slug}`,
@@ -39,7 +42,7 @@ async function fetchInfoData(slug: string) {
   };
 }
 
-// ✅ 동적 정보 (매번 호출)
+// 동적 정보 (매번 호출)
 async function fetchQuotesData(slug: string) {
   const res = await fetch(
     `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?slug=${slug}`,
@@ -72,7 +75,7 @@ async function fetchQuotesData(slug: string) {
   };
 }
 
-// ✅ Supabase에서 slug 목록 가져오기
+// Supabase에서 slug 목록 가져오기
 async function getSlugs(): Promise<string[]> {
   const { data, error } = await supabase
     .from('project_info')
@@ -87,7 +90,7 @@ async function getSlugs(): Promise<string[]> {
   return data.map((item) => item.slug);
 }
 
-// ✅ Supabase에 upsert
+// Supabase에 upsert
 async function upsertProjectInfo(record: any) {
   const { error } = await supabase
     .from('project_info')
@@ -100,7 +103,7 @@ async function upsertProjectInfo(record: any) {
   }
 }
 
-// ✅ slug 1개에 대한 full fetch & upsert
+// slug 1개에 대한 full fetch & upsert
 async function updateProject(slug: string) {
   // 정적 정보는 존재할 경우 생략
   const { data: existing } = await supabase
@@ -124,7 +127,7 @@ async function updateProject(slug: string) {
   });
 }
 
-// ✅ 메인 함수: 재시도 포함
+// 메인 함수: 재시도 포함
 async function main() {
   const slugs = await getSlugs();
   const failed: string[] = [];
