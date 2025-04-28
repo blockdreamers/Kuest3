@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../lib/supabase';
 import { fetchUSDKRW } from '../lib/utils/getExchangeRate';
-import './VotingStatus.css';
+import './VotingStatus.css'; // voting-scroll 적용
 
 const formatNumber = (value: number): string => {
   return value.toLocaleString();
@@ -17,11 +17,7 @@ const formatKRW = (value: number): string => {
 
 const getFireBadgeColor = (rank: number): string => {
   const colors = [
-    'bg-red-600',  // 1위
-    'bg-red-500',  // 2위
-    'bg-red-400',  // 3위
-    'bg-red-300',  // 4위
-    'bg-red-200',  // 5위
+    'bg-red-600', 'bg-red-500', 'bg-red-400', 'bg-red-300', 'bg-red-200',
   ];
   return colors[rank - 1] || '';
 };
@@ -92,6 +88,7 @@ const VotingCard = ({ coin, rank }: any) => {
 const VotingStatus = () => {
   const [coins, setCoins] = useState<any[]>([]);
   const [exchangeRate, setExchangeRate] = useState<number>(1350);
+  const [selectedSeason, setSelectedSeason] = useState<string>('1');
 
   useEffect(() => {
     const loadData = async () => {
@@ -99,9 +96,10 @@ const VotingStatus = () => {
       setExchangeRate(rate);
 
       const { data, error } = await supabase
-        .from('voting_status')
+        .from('voting_season_status')
         .select(`
           project_id,
+          season,
           total_pick,
           daily_pick,
           total_airdrop,
@@ -123,6 +121,7 @@ const VotingStatus = () => {
         const parsed = data.map((item: any) => ({
           ...item.project_info,
           ...item,
+          name_ko: item.project_info?.name_ko ? JSON.parse(`"${item.project_info.name_ko}"`) : '',
           price: Math.round((item.project_info?.price || 0) * rate),
         }));
         setCoins(parsed);
@@ -132,16 +131,33 @@ const VotingStatus = () => {
     loadData();
   }, []);
 
+  const handleSeasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSeason(e.target.value);
+  };
+
+  const filteredCoins = coins.filter((coin) => String(coin.season) === selectedSeason);
+
+
   return (
     <div className="mb-16 px-2">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-black">🗳️인기 투표</h1>
+        <select
+          value={selectedSeason}
+          onChange={handleSeasonChange}
+          className="ml-4 px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#C7EB3E]"
+        >
+          <option value="1">시즌 1</option>
+          <option value="2">시즌 2</option>
+          <option value="3">시즌 3</option>
+        </select>
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-        <div className="space-y-3 max-h-[900px] overflow-y-auto voting-scroll-hide">
-          {coins.slice(0, 15).map((coin, index) => (
-            <VotingCard key={coin.project_id} coin={coin} rank={index + 1} />
+        {/* ✨ 여기 voting-scroll 클래스 적용 */}
+        <div className="voting-scroll space-y-3">
+          {filteredCoins.map((coin, index) => (
+            <VotingCard key={`${coin.project_id}-${coin.season}`} coin={coin} rank={index + 1} />
           ))}
         </div>
       </div>

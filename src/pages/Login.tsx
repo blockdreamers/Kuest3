@@ -49,12 +49,7 @@ const Login = () => {
   return (
     <div className="min-h-[calc(40vh-4rem)] flex flex-col items-center justify-center bg-gray-50 font-['Pretendard','Montserrat'] px-3 mt-[5rem]">
       {/* 상단 로고 + 문구 */}
-      <div className="text-center mb-10">
-        <img
-          src="https://github.com/blockdreamers/Kuest3/blob/dev/222.png?raw=true"
-          alt="Kuest Logo"
-          className="h-14 mx-auto mb-2"
-        />
+      <div className="text-center mb-6">
         <h1 className="text-xl font-bold text-black">🌟퀘스트하고 에어드롭받자!</h1>
       </div>
 
