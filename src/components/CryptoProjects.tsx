@@ -139,14 +139,14 @@ const CryptoProjects = () => {
                 </div>
               </div>
 
-              <div className={`grid grid-cols-2 gap-2 text-xs text-white mt-[0.2rem] ${styles.cryptoStatsGrid}`}>
+              <div className={`grid grid-cols-2 gap-2 text-xs mt-[0.2rem] ${styles.cryptoStatsGrid}`}>
                 <div>
                   <p className="text-gray-400">시가총액</p>
-                  <p className="font-medium">{formatMarketCapKRW(coin.marketCap, exchangeRate)}</p>
+                  <p className="cryptoStatValue">{formatVolumeKRW(coin.volume, exchangeRate)}</p>
                 </div>
                 <div>
                   <p className="text-gray-400">거래량 (24h)</p>
-                  <p className="font-medium">{formatVolumeKRW(coin.volume, exchangeRate)}</p>
+                  <p className="cryptoStatValue">{formatVolumeKRW(coin.volume, exchangeRate)}</p>
                 </div>
               </div>
             </div>

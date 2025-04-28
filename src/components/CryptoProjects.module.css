@@ -1,10 +1,9 @@
-/* CryptoProjects.module.css - Tailwind-safe scoped 스타일 */
-
 .cryptoCard {
+  position: relative;
   background-color: #242424;
   color: white;
-  border: 1px solid #222;
-  border-radius: 16px;
+  border: none; /* 원래 테두리 제거 */
+  border-radius: 20px;
   padding: 1.3rem 1rem 1rem 1.3rem;
   transition: all 0.3s ease;
   font-family: 'Montserrat', 'Pretendard', sans-serif;
@@ -12,10 +11,21 @@
   max-width: 300px;
   height: 180px;
   overflow: hidden;
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  box-shadow: 4px 4px 0 #000000; /* ✨ 핵심: 기울어진 검정 테두리 느낌 */
+}
+
+.cryptoCardHover:hover {
+  background-color: #DFFF67; /* 노란색 */
+  color: #000000;
+  box-shadow: 4px 4px 0 #000000; /* hover해도 테두리 유지 */
+  transform: translateY(-2px);
+}
+
+.cryptoCardHover:active {
+  transform: scale(0.98);
 }
 
 .cryptoCardInner {
@@ -45,22 +55,11 @@
   margin-bottom: 0.1rem;
 }
 
-.cryptoTextSm {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .cryptoTextBase {
   font-size: 1rem;
   font-weight: 600;
   color: white;
   transition: color 0.3s ease;
-}
-
-.cryptoPriceChange {
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  transition: none !important; /* 고정 색상 유지 */
 }
 
 .cryptoStatsGrid {
@@ -72,17 +71,7 @@
   transition: color 0.3s ease;
 }
 
-.cryptoCardHover:hover {
-  background-color: #DFFF67;
-  color: #000000;
-  border: 1px solid black;
-  box-shadow: none;
-}
-
-.cryptoCardHover:hover .cryptoTextBase {
-  color: #000000;
-}
-
+.cryptoCardHover:hover .cryptoTextBase,
 .cryptoCardHover:hover .cryptoStatValue {
   color: #000000;
 }
@@ -95,10 +84,12 @@
   color: #ef4444 !important;
 }
 
-.cryptoCardHover:hover .cryptoGray {
-  color: #9ca3af;
+.cryptoStatValue {
+  color: white; /* 기본 흰색 */
+  font-weight: 500;
+  transition: color 0.3s ease; /* 부드럽게 색 변화 */
 }
 
-.cryptoCardHover:hover .cryptoWhite {
-  color: #000000;
+.cryptoCardHover:hover .cryptoStatValue {
+  color: #000000; /* hover 시 검정색으로 변환 */
 }
