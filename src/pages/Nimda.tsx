@@ -8,6 +8,8 @@ import NimdaUserManagement from '@/components/nimda/NimdaUserManagement';
 
 const Nimda = () => {
   const { user } = useAuth();
+  console.log('✅ 현재 user:', user);
+
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState<string>('dashboard');
 

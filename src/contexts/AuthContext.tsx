@@ -9,12 +9,22 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 import { auth } from '../config/firebase';
-import supabase from '../lib/supabase';
 import { signInWithGooglePopup } from '../lib/auth/googleAuth';
 import { insertSupabaseUser } from '../lib/auth/supabaseUser';
+import { createClient } from '@supabase/supabase-js';
+
+// Supabase 클라이언트 생성
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// ✨ ExtendedUser 타입
+interface ExtendedUser extends User {
+  user_type?: string;
+}
 
 interface AuthContextType {
-  user: User | null;
+  user: ExtendedUser | null;
   loading: boolean;
   signInWithGoogle: (isSignUp: boolean) => Promise<void>;
   signOut: () => Promise<void>;
@@ -23,22 +33,42 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ExtendedUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [authProcessed, setAuthProcessed] = useState(false);
 
   const navigate = useNavigate();
-
-  const {
-    authenticated: privyAuthenticated,
-    logout: privyLogout,
-  } = usePrivy();
+  const { authenticated: privyAuthenticated, logout: privyLogout } = usePrivy();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          const token = await firebaseUser.getIdToken();
+          const response = await fetch('/.netlify/functions/userType', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const { user_type } = await response.json();
+            setUser({ ...firebaseUser, user_type });
+          } else {
+            console.warn('❓ userType 호출 실패, fallback');
+            setUser(firebaseUser);
+          }
+        } catch (error) {
+          console.error('🔥 user_type 조회 에러:', error);
+          setUser(firebaseUser);
+        }
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -48,61 +78,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       const currentUser = await signInWithGooglePopup();
-      setUser(currentUser);
       console.log('✅ Firebase 로그인 성공:', currentUser);
 
       const isNewUser = await checkIfNewUser(currentUser.uid);
       console.log('🧾 Supabase 기준 isNewUser:', isNewUser);
 
-      if (!isNewUser && isSignUp) {
-        toast.dismiss();
-        toast.success('로그인 성공!');
-        navigate('/');
-        return;
-      }
-
       if (isSignUp && isNewUser) {
         await insertSupabaseUser({
           id: currentUser.uid,
-          email: currentUser.email,
-          nickname: currentUser.displayName,
-          photo: currentUser.photoURL,
+          email: currentUser.email || '',
+          nickname: currentUser.displayName || '',
+          photo: currentUser.photoURL || '',
           user_type: 'normal',
           created_at: new Date().toISOString(),
           last_login_at: new Date().toISOString(),
           is_active: true,
         });
-
-        toast.dismiss();
         toast.success('회원가입 완료! 🎉');
-        navigate('/');
       } else if (!isSignUp && isNewUser) {
         await insertSupabaseUser({
           id: currentUser.uid,
-          email: currentUser.email,
-          nickname: currentUser.displayName,
-          photo: currentUser.photoURL,
+          email: currentUser.email || '',
+          nickname: currentUser.displayName || '',
+          photo: currentUser.photoURL || '',
           user_type: 'normal',
           created_at: new Date().toISOString(),
           last_login_at: new Date().toISOString(),
           is_active: true,
         });
-
-        toast.dismiss();
         toast.success('로그인 완료! 🎉');
-        navigate('/');
       } else {
-        // ✅ 기존 유저인 경우 마지막 로그인 시간 업데이트
         await supabase
           .from('users')
           .update({ last_login_at: new Date().toISOString() })
           .eq('id', currentUser.uid);
-
         toast.success('로그인 완료!');
-        navigate('/');
       }
+
+      navigate('/');
     } catch (error: any) {
-      console.error('🔥 signInWithGoogle 전체 실패:', error);
+      console.error('🔥 signInWithGoogle 실패:', error);
       toast.error(`로그인 실패: ${error.message || '알 수 없는 오류'}`);
       await firebaseSignOut(auth);
       setUser(null);
@@ -135,9 +150,10 @@ const checkIfNewUser = async (uid: string): Promise<boolean> => {
     .from('users')
     .select('id')
     .eq('id', uid)
-    .limit(1);
+    .maybeSingle();
+
   if (error) throw new Error(`Supabase 쿼리 실패: ${error.message}`);
-  return !data || data.length === 0;
+  return !data;
 };
 
 export const useAuth = () => {

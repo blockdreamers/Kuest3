@@ -15,6 +15,7 @@
     "deploy:prod": "npm run build:prod && netlify deploy --dir=dist --prod"
   },
   "dependencies": {
+    "@netlify/functions": "^3.1.2",
     "@privy-io/react-auth": "^2.9.1",
     "@supabase/supabase-js": "^2.49.4",
     "axios": "^1.8.4",

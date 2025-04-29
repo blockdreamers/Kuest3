@@ -17,6 +17,7 @@ import { useAuth } from './contexts/AuthContext';
 import TelegramFeedDetail from "./pages/TelegramFeedDetail";
 import UserAgreements from './pages/UserAgreements';
 import PrivacyPolicies from './pages/PrivacyPolicies';
+import Nimda from '@/pages/Nimda'; 
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="/telegram/:username" element={<TelegramFeedDetail />} />
           <Route path="/user-agreements" element={<UserAgreements />} />
           <Route path="/privacy-policies" element={<PrivacyPolicies />} />
+          <Route path="/nimda" element={<Nimda />} />
         </Routes>
       </main>
       <Footer />
