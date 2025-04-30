@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -12,16 +12,20 @@ import ListingApplication from './pages/ListingApplication';
 import Points from './pages/Points';
 import TelegramFeed from './pages/TelegramFeed';
 import SocialAccounts from './pages/SocialAccounts';
-import Airdrop from './pages/Airdrop'; // ✅ 추가한 부분
+import Airdrop from './pages/Airdrop';
 import { useAuth } from './contexts/AuthContext';
-import TelegramFeedDetail from "./pages/TelegramFeedDetail";
+import TelegramFeedDetail from './pages/TelegramFeedDetail';
 import UserAgreements from './pages/UserAgreements';
 import PrivacyPolicies from './pages/PrivacyPolicies';
-import Nimda from '@/pages/Nimda'; 
+import Nimda from '@/pages/Nimda';
+import UserDetail from './pages/nimda/UserDetail';
 
 
 function App() {
   const { loading } = useAuth();
+  const location = useLocation();
+
+  const isNimdaPage = location.pathname.startsWith('/nimda');
 
   if (loading) {
     return (
@@ -32,8 +36,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
+    <div className={`min-h-screen ${isNimdaPage ? 'bg-black' : 'bg-gray-50'} flex flex-col`}>
+      {!isNimdaPage && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -46,14 +50,15 @@ function App() {
           <Route path="/points" element={<Points />} />
           <Route path="/telegram" element={<TelegramFeed />} />
           <Route path="/social-accounts" element={<SocialAccounts />} />
-          <Route path="/airdrop" element={<Airdrop />} /> {/* ✅ 에어드롭 경로 추가 */}
+          <Route path="/airdrop" element={<Airdrop />} />
           <Route path="/telegram/:username" element={<TelegramFeedDetail />} />
           <Route path="/user-agreements" element={<UserAgreements />} />
           <Route path="/privacy-policies" element={<PrivacyPolicies />} />
           <Route path="/nimda" element={<Nimda />} />
+          <Route path="/nimda/users/:id" element={<UserDetail />} />
         </Routes>
       </main>
-      <Footer />
+      {!isNimdaPage && <Footer />}
     </div>
   );
 }

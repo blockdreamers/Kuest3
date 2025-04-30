@@ -61,3 +61,7 @@
 [context.branch-deploy.environment]
   VITE_APP_ENV = "development"
   NODE_ENV = "development"
+
+[functions]
+directory = "netlify/functions"
+node_bundler = "esbuild"

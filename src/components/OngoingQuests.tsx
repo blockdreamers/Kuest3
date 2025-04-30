@@ -86,7 +86,7 @@ const OngoingQuests = () => {
   return (
     <div className="mt-16">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-black">💎에어드롭 퀘스트</h1>
+        <h1 className="text-2xl font-bold text-white">💎에어드롭 퀘스트</h1>
         <div className="flex items-center space-x-2 text-sm text-gray-400">
           <Timer className="w-4 h-4" />
           <span>매일 업데이트</span>

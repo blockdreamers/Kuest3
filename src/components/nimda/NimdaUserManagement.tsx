@@ -1,5 +1,7 @@
+// src/components/nimda/NimdaUserManagement.tsx
 import React, { useEffect, useState } from 'react';
-import supabase from '@/lib/supabase';
+import { getAuth } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const NimdaUserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);
@@ -7,24 +9,29 @@ const NimdaUserManagement = () => {
   const [userTypeFilter, setUserTypeFilter] = useState('전체');
   const [itemsPerPage, setItemsPerPage] = useState(50);
 
+  const navigate = useNavigate(); // ✅ 추가된 부분
+
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data, error } = await supabase
-        .from('users')
-        .select(`
-          id,
-          email,
-          user_type,
-          last_login_at,
-          user_wallets(wallet_address, provider)
-        `);
+      try {
+        const currentUser = getAuth().currentUser;
+        const token = currentUser ? await currentUser.getIdToken() : null;
 
-      if (error) {
-        console.error('유저 불러오기 실패:', error.message);
-        return;
-      }
-      if (data) {
-        setUsers(data);
+        const res = await fetch('/.netlify/functions/fetchUsers', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const json = await res.json();
+
+        if (res.ok) {
+          setUsers(json);
+        } else {
+          console.error('❌ 유저 불러오기 실패:', json.message || json.error);
+        }
+      } catch (err) {
+        console.error('❌ 유저 불러오기 중 에러:', err);
       }
     };
 
@@ -58,7 +65,6 @@ const NimdaUserManagement = () => {
         <h2 className="text-2xl font-bold">유저 관리</h2>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* 이메일 검색 */}
           <input
             type="text"
             placeholder="이메일 검색"
@@ -67,7 +73,6 @@ const NimdaUserManagement = () => {
             className="bg-[#1e1e1e] border border-gray-600 rounded-md px-3 py-1 text-sm focus:ring-2 focus:ring-[#C7EB3E]"
           />
 
-          {/* 타입 필터 */}
           <select
             value={userTypeFilter}
             onChange={(e) => setUserTypeFilter(e.target.value)}
@@ -79,7 +84,6 @@ const NimdaUserManagement = () => {
             <option value="project">Project</option>
           </select>
 
-          {/* 페이지 수 선택 */}
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
@@ -109,7 +113,8 @@ const NimdaUserManagement = () => {
             {filteredUsers.slice(0, itemsPerPage).map((user) => (
               <tr
                 key={user.id}
-                className="border-t border-gray-700 hover:bg-[#1e1e1e] transition-colors"
+                onClick={() => navigate(`/nimda/users/${user.id}`)}
+                className="border-t border-gray-700 hover:bg-[#1e1e1e] transition-colors cursor-pointer"
               >
                 <td className="p-2 truncate max-w-[200px]">{user.id}</td>
                 <td className="p-2 truncate max-w-[200px]">{user.email}</td>

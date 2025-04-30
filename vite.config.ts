@@ -1,12 +1,13 @@
+// src/vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path'; // ✅ 추가 필요
+import path from 'path';
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // ✅ alias 추가
+      '@': path.resolve(__dirname, 'src'),
     },
   },
   optimizeDeps: {
@@ -15,20 +16,20 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: true,
     port: 5173,
-    strictPort: true, // 🚨 포트 충돌 시 다른 포트로 자동 변경하지 않도록 강제
+    strictPort: true,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
+      '/.netlify/functions': {
+        target: 'http://localhost:9999',    // ✅ Netlify Functions 서버
         changeOrigin: true,
-        secure: false,
-      }
-    }
+        rewrite: (path) => path.replace(/^\/\.netlify\/functions/, '/.netlify/functions'),
+      },
+    },
   },
   preview: {
     port: 5173,
-    host: true
+    host: true,
   },
   define: {
-    'process.env.NODE_ENV': JSON.stringify(mode)
-  }
+    'process.env.NODE_ENV': JSON.stringify(mode),
+  },
 }));

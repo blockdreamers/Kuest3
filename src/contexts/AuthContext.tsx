@@ -44,7 +44,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          const token = await firebaseUser.getIdToken();
+          let token = await firebaseUser.getIdToken();
+          if (!token) {
+            console.warn('❗ 토큰이 비어있음. 강제 재발급 시도');
+            token = await firebaseUser.getIdToken(true);
+          }
+
           const response = await fetch('/.netlify/functions/userType', {
             method: 'GET',
             headers: {
@@ -56,7 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const { user_type } = await response.json();
             setUser({ ...firebaseUser, user_type });
           } else {
-            console.warn('❓ userType 호출 실패, fallback');
+            const errorText = await response.text();
+            console.warn('❓ userType 호출 실패, fallback', response.status, errorText);
             setUser(firebaseUser);
           }
         } catch (error) {

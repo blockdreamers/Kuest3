@@ -141,7 +141,7 @@ const VotingStatus = () => {
   return (
     <div className="mb-16 px-2">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-black">🗳️인기 투표</h1>
+        <h1 className="text-2xl font-bold text-white">🗳️인기 투표</h1>
         <select
           value={selectedSeason}
           onChange={handleSeasonChange}
