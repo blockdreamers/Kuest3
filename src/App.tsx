@@ -19,6 +19,7 @@ import UserAgreements from './pages/UserAgreements';
 import PrivacyPolicies from './pages/PrivacyPolicies';
 import Nimda from '@/pages/Nimda';
 import UserDetail from './pages/nimda/UserDetail';
+import ProjectApplications from "@/components/nimda/ProjectApplications";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
           <Route path="/privacy-policies" element={<PrivacyPolicies />} />
           <Route path="/nimda" element={<Nimda />} />
           <Route path="/nimda/users/:id" element={<UserDetail />} />
+          <Route path="/nimda/project-applications" element={<ProjectApplications />} />
         </Routes>
       </main>
       {!isNimdaPage && <Footer />}

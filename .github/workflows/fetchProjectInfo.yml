@@ -5,6 +5,10 @@ on:
     - cron: '0 * * * *'  # 매 정각마다 실행 (UTC 기준 → 한국시간 +9시)
   workflow_dispatch:      # 수동 실행도 가능
 
+permissions:
+  contents: read
+  actions: write  # 👉 GitHub Action API 호출을 통해 트리거할 수 있도록 설정
+
 jobs:
   fetch:
     runs-on: ubuntu-latest

@@ -1,4 +1,3 @@
-// src/components/nimda/NimdaSidebar.tsx
 import React from 'react';
 
 interface NimdaSidebarProps {
@@ -39,6 +38,7 @@ const NimdaSidebar = ({ activePage, setActivePage }: NimdaSidebarProps) => {
           >
             프로젝트 현황
           </button>
+
           <button
             onClick={() => setActivePage('projects-register')}
             className={`ml-4 text-left w-[calc(100%-1rem)] p-2 rounded-lg text-sm transition-colors duration-200 ${
@@ -48,6 +48,17 @@ const NimdaSidebar = ({ activePage, setActivePage }: NimdaSidebarProps) => {
             }`}
           >
             ▸ 프로젝트 등록
+          </button>
+
+          <button
+            onClick={() => setActivePage('projects-applications')}
+            className={`ml-4 text-left w-[calc(100%-1rem)] p-2 rounded-lg text-sm transition-colors duration-200 ${
+              activePage === 'projects-applications'
+                ? 'bg-[#C7EB3E] text-black font-bold'
+                : 'hover:bg-gray-700'
+            }`}
+          >
+            ▸ 프로젝트 접수 현황
           </button>
         </div>
       </nav>
