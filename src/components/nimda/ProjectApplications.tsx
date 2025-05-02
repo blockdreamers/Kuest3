@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import styles from "./ProjectApplications.module.css";
+
+console.log("🚨 ProjectApplications.tsx 파일이 실행되고 있음");
 
 type Application = {
   id: string;
@@ -21,15 +23,13 @@ const ProjectApplications = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const navigate = useNavigate();
 
-  const fetchApplications = async () => {
+  const fetchApplications = async (user: User) => {
     try {
-      const currentUser = getAuth().currentUser;
-      const token = currentUser ? await currentUser.getIdToken() : null;
+      console.log("🚀 [fetchApplications] 함수 시작");
+      console.log("👤 넘겨받은 user 객체:", user);
 
-      if (!token) {
-        toast.error("로그인이 필요합니다.");
-        return;
-      }
+      const token = await user.getIdToken();
+      console.log("🔑 Firebase ID Token:", token);
 
       const res = await fetch("/.netlify/functions/fetchApplications", {
         headers: {
@@ -37,8 +37,12 @@ const ProjectApplications = () => {
         },
       });
 
+      console.log("🌐 API 응답 상태:", res.status);
       const json = await res.json();
+
       console.log("📦 전체 응답 구조 확인:", JSON.stringify(json, null, 2));
+      console.log("📦 json.applications 존재 여부:", json.applications !== undefined);
+      console.log("📦 Array.isArray(json.applications):", Array.isArray(json.applications));
 
       if (!res.ok) {
         toast.error("불러오기 실패: " + (json.message || json.error));
@@ -52,15 +56,16 @@ const ProjectApplications = () => {
       }
 
       setApplications(json.applications || []);
-      console.log("✅ applications.length:", json.applications?.length);
+      console.log("✅ setApplications 실행됨, 길이:", json.applications.length);
     } catch (err: any) {
-      console.error("❌ fetchApplications 에러:", err.message);
+      console.error("❌ fetchApplications 예외 발생:", err.message);
       toast.error("네트워크 오류가 발생했습니다.");
     }
   };
 
   const updateStatus = async (id: string, status: string) => {
     try {
+      console.log(`🔄 상태 업데이트 요청: id=${id}, status=${status}`);
       const res = await fetch("/.netlify/functions/updateApplicationStatus", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,12 +74,17 @@ const ProjectApplications = () => {
 
       const json = await res.json();
       if (res.ok) {
+        console.log("✅ 상태 업데이트 성공:", json);
         toast.success("상태가 업데이트되었습니다.");
-        fetchApplications();
+        // 🔁 상태 업데이트 후 다시 조회
+        const user = getAuth().currentUser;
+        if (user) await fetchApplications(user);
       } else {
+        console.error("❌ 상태 업데이트 실패:", json.error);
         toast.error("상태 변경 실패: " + json.error);
       }
     } catch (err: any) {
+      console.error("❌ 상태 업데이트 중 예외 발생:", err.message);
       toast.error("업데이트 중 오류 발생");
     }
   };
@@ -105,17 +115,29 @@ const ProjectApplications = () => {
   };
 
   useEffect(() => {
-    console.log("📍 useEffect 진입");
-    fetchApplications();
+    console.log("📍 useEffect 진입 (onAuthStateChanged 등록)");
+    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+      console.log("👀 onAuthStateChanged 사용자 상태:", user);
+      if (user) {
+        fetchApplications(user);
+      } else {
+        console.warn("❗ Firebase 인증되지 않음. fetchApplications 실행 안 됨.");
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    console.log("📦 최종 applications 상태:", applications);
+    console.log("📦 [useEffect] applications 상태 변경됨:", applications);
   }, [applications]);
 
   return (
     <div className={styles.wrapper}>
       <h2 className={styles.title}>🗂 프로젝트 접수 현황</h2>
+      <p style={{ color: "#0f0" }}>
+        🔢 현재 applications.length: {applications?.length ?? "undefined"}
+      </p>
       <div className={styles.list}>
         {applications.length === 0 ? (
           <p className={styles.empty}>등록된 신청이 없습니다.</p>
