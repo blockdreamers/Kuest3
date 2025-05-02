@@ -1,0 +1,73 @@
+/* src/components/RollingBanner.css */
+
+.rolling-banner-container {
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.rolling-scroll-area {
+  overflow: hidden;
+  white-space: nowrap;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.rolling-coin-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.rolling-coin-box:hover {
+  background-color: #eee;
+}
+
+.rolling-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.rolling-name {
+  color: #111;
+}
+
+.rolling-symbol {
+  color: #666;
+}
+
+.rolling-price {
+  font-weight: 600;
+  color: #111;
+}
+
+.rolling-change {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.rolling-change.up {
+  color: #22c55e;
+}
+
+.rolling-change.down {
+  color: #ef4444;
+}
+
+.flicker {
+  animation: flickerAnimation 1.5s infinite;
+}
+
+@keyframes flickerAnimation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

@@ -1,0 +1,145 @@
+/* Points.css */
+
+.points-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.points-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #111827;
+}
+
+.points-header p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.points-summary {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.points-summary h2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.points-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.checkin-block {
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.checkin-block h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.checkin-block p {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.checkin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.checkin-button {
+  background-color: #1b1b1b;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  aspect-ratio: 1/1;
+  font-size: 0.85rem;
+  text-align: center;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkin-button:hover {
+  background-color: #dfff67;
+  color: #000;
+  border: 1px solid black;
+}
+
+.checkin-button.checked {
+  background-color: #9333ea;
+  color: white;
+}
+
+.checkin-button .checkin-checkmark {
+  position: absolute;
+  inset: 0;
+  background: rgba(147, 51, 234, 0.85);
+  border-radius: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkin-button.bonus {
+  grid-column: span 3;
+  background: #111;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  font-weight: bold;
+}
+
+.quest-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quest-box {
+  background-color: #1b1b1b;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+}
+
+.quest-box:hover {
+  background-color: #dfff67;
+  color: #000;
+  border: 1px solid black;
+}
+
+.quest-box:hover .text-gray-900 {
+  color: #000;
+}
+
+.quest-box:hover .text-gray-400 {
+  color: #9ca3af;
+}
+
+.quest-box:hover .text-yellow-400 {
+  color: #facc15;
+}

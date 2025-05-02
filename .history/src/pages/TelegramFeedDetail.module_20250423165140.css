@@ -1,0 +1,105 @@
+/* TelegramFeedDetails.module.css */
+
+.details-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    gap: 2rem;
+    color: white;
+  }
+  
+  .sidebar {
+    width: 300px;
+    background-color: #1f1f1f;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .channel-info {
+    text-align: center;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+  }
+  
+  .channel-name {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .handle {
+    color: #aaa;
+    margin-bottom: 1rem;
+  }
+  
+  .subscriber-chart {
+    margin-top: 1rem;
+    height: 200px;
+    background-color: #2b2b2b;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+  
+  .feed-section {
+    flex-grow: 1;
+  }
+  
+  .feed-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  
+  .feed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  
+  .feed-card {
+    background-color: #1e1e1e;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .feed-card:hover {
+    background-color: #2c2c2c;
+  }
+  
+  .feed-content {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  
+  .feed-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #bbb;
+  }
+  
+  .meta-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .icon {
+    width: 14px;
+    height: 14px;
+  }
+  

@@ -1,0 +1,50 @@
+.rolling-coin-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+}
+
+.rolling-coin-box:hover {
+  background-color: #DFFF67;
+  border: 2px solid black;
+  color: black;
+  transform: scale(1.03);
+}
+
+.rolling-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.rolling-name,
+.rolling-symbol,
+.rolling-price,
+.rolling-change {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.rolling-change.up {
+  color: #16a34a;
+}
+
+.rolling-change.down {
+  color: #dc2626;
+}
+
+/* Flicker animation for price */
+@keyframes flicker {
+  0% { opacity: 1; }
+  45% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.flicker {
+  animation: flicker 1s infinite alternate;
+}

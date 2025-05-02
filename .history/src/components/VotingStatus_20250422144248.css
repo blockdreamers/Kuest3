@@ -1,0 +1,54 @@
+.voting-card {
+  background-color: #242424; /* ✅ 카드 배경 어둡게 */
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 1rem;
+  height: 120px; /* ✅ 카드 높이 줄임 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+}
+
+.voting-card.hovered {
+  transform: translateY(-3px) scale(1.02);
+  border: 2px solid black;
+  box-shadow: 0 0 0 3px #DFFF67;
+}
+
+.voting-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+}
+
+.voting-name {
+  font-weight: bold;
+  color: white;
+}
+
+.voting-symbol,
+.voting-label {
+  font-size: 0.875rem;
+  color: #b0b0b0;
+}
+
+.voting-value {
+  font-weight: 500;
+  color: white;
+}
+
+.voting-button {
+  padding: 0.5rem 1rem;
+  background-color: #DFFF67;
+  color: black;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.voting-button:hover {
+  background-color: #c7eb3e;
+}

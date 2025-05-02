@@ -1,0 +1,85 @@
+// src/lib/data/rollingBannerInfo.ts
+
+export const rollingBannerInfo = [
+  {
+    id: 'bitcoin',
+    name: '비트코인',
+    symbol: 'BTC',
+    logo: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png',
+    price: 85951.27,
+    priceChange: 0.84,
+  },
+  {
+    id: 'ethereum',
+    name: '이더리움',
+    symbol: 'ETH',
+    logo: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png',
+    price: 1645.34,
+    priceChange: -0.28,
+  },
+  {
+    id: 'solana',
+    name: '솔라나',
+    symbol: 'SOL',
+    logo: 'https://assets.coingecko.com/coins/images/4128/large/solana.png',
+    price: 132.53,
+    priceChange: -0.57,
+  },
+  {
+    id: 'ripple',
+    name: '리플',
+    symbol: 'XRP',
+    logo: 'https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png',
+    price: 0.61,
+    priceChange: 1.25,
+  },
+  {
+    id: 'cardano',
+    name: '카르다노',
+    symbol: 'ADA',
+    logo: 'https://assets.coingecko.com/coins/images/975/large/cardano.png',
+    price: 0.69,
+    priceChange: 0.00,
+  },
+  {
+    id: 'avalanche',
+    name: '아발란체',
+    symbol: 'AVAX',
+    logo: 'https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png',
+    price: 0.161,
+    priceChange: -2.10,
+  },
+  {
+    id: 'polkadot',
+    name: '폴카닷',
+    symbol: 'DOT',
+    logo: 'https://assets.coingecko.com/coins/images/12171/large/polkadot.png',
+    price: 28.48,
+    priceChange: 3.33,
+  },
+  {
+    id: 'chainlink',
+    name: '체인링크',
+    symbol: 'LINK',
+    logo: 'https://assets.coingecko.com/coins/images/877/large/chainlink-new-logo.png',
+    price: 0.161,
+    priceChange: 2.72,
+  },
+  {
+    id: 'polygon',
+    name: '폴리곤',
+    symbol: 'MATIC',
+    logo: 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png',
+    price: 1.01,
+    priceChange: -0.44,
+  },
+  {
+    id: 'cosmos',
+    name: '코스모스',
+    symbol: 'ATOM',
+    logo: 'https://assets.coingecko.com/coins/images/1481/large/cosmos_hub.png',
+    price: 792.00,
+    priceChange: -0.57,
+  }
+  ];
+  

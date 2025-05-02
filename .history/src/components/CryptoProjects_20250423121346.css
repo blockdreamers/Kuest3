@@ -1,0 +1,85 @@
+.coin-box {
+  background-color: #242424;
+  color: white;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 0.75rem 1rem 0.75rem 1rem; /* 상단과 좌측 밀착 */
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+
+  width: 100%;
+  max-width: 260px;
+  height: auto;             /* ✅ 높이 자동으로 설정 */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: none;
+}
+
+/* ✅ 별표 아이콘 우측 상단 고정 */
+.coin-box button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+}
+
+/* ✅ 코인명: 굵기 제거 + 폰트 크기 축소 */
+.coin-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.25;
+  margin-bottom: 0.1rem;
+}
+
+/* ✅ 티커, 기타 작은 글자 */
+.coin-box .text-sm {
+  font-size: 0.72rem;
+  line-height: 1rem;
+}
+
+/* ✅ 가격 폰트 크기 소폭 조정 */
+.coin-box .text-lg {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+}
+
+/* ✅ 아이콘 크기 줄임 */
+.coin-box img {
+  width: 28px;
+  height: 28px;
+  margin-right: 6px;
+}
+
+/* ✅ 시가총액 & 거래량 텍스트 간격 */
+.coin-box .grid.grid-cols-2 {
+  gap: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.coin-box .font-medium {
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+
+/* ✅ hover 효과 동일 유지 */
+.coin-box:hover {
+  background-color: #DFFF67;
+  color: #000000;
+  border: 1px solid black;
+}
+
+.coin-box:hover .text-green-400 {
+  color: #22c55e;
+}
+.coin-box:hover .text-red-400 {
+  color: #ef4444;
+}
+.coin-box:hover .text-gray-400 {
+  color: #9ca3af;
+}
+.coin-box:hover .text-white {
+  color: #000000;
+}

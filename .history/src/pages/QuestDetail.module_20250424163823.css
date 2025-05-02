@@ -1,0 +1,79 @@
+.questBox {
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', 'Pretendard', sans-serif;
+  }
+  
+  .questBox:hover {
+    background-color: #DFFF67;
+    border: 2px solid black;
+    transform: translateY(-2px) scale(1.02);
+    color: black;
+  }
+  
+  .questBox:hover h3,
+  .questBox:hover p {
+    color: black !important;
+  }
+  
+  .taskButton {
+    background-color: #DFFF67;
+    color: black;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 16px;
+    transition: all 0.2s ease;
+  }
+  
+  .taskButton:hover {
+    background-color: #000000;
+    color: white;
+    transform: scale(0.97);
+  }
+  
+  .sidebarBox {
+    background-color: #242424;
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebarBox:hover {
+    background-color: #DFFF67;
+    color: black;
+    transform: translateY(-2px) scale(1.01);
+    border: 2px solid black;
+  }
+  
+  .progressBar {
+    background-color: #3b82f6;
+    height: 0.5rem;
+    border-radius: 9999px;
+  }
+  
+  .progressTrack {
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    height: 0.5rem;
+  }
+  
+  .participantTable th,
+  .participantTable td {
+    font-family: 'Pretendard', 'Montserrat', sans-serif;
+    font-size: 0.875rem;
+  }
+  
+  .participantTable th {
+    background-color: #f9fafb;
+    color: #6b7280;
+  }
+  
+  .participantTable td {
+    color: #111827;
+  }
+  
