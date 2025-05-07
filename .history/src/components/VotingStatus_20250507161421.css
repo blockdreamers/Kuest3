@@ -40,7 +40,7 @@
   position: relative;
   overflow: visible !important;
   box-sizing: border-box;
-  box-shadow: 4px 4px 0 #000000;
+  box-shadow: 4px 4px 0 #000000; /* 그림자 효과 */
 }
 
 .voting-card:hover {
@@ -160,7 +160,7 @@
   background-color: #C7EB3E;
 }
 
-/* ✅ 카운트다운 타이머 */
+
 .timerWrapper {
   text-align: right;
   margin-top: 4px;
@@ -188,3 +188,4 @@
     text-shadow: 0 0 10px #C7EB3E;
   }
 }
+

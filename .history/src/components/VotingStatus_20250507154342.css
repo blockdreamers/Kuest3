@@ -40,7 +40,7 @@
   position: relative;
   overflow: visible !important;
   box-sizing: border-box;
-  box-shadow: 4px 4px 0 #000000;
+  box-shadow: 4px 4px 0 #000000; /* 그림자 효과 */
 }
 
 .voting-card:hover {
@@ -133,10 +133,10 @@
 /* ✅ 1~3위 순위 뱃지 */
 .rank-badge {
   position: absolute;
-  top: -50px;
-  left: -50px;
-  width: 50px !important;
-  height: 50px !important;
+  top: -36px;
+  left: -36px;
+  width: 64px !important;
+  height: 64px !important;
   z-index: 20;
 }
 
@@ -158,33 +158,4 @@
 }
 .voting-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #C7EB3E;
-}
-
-/* ✅ 카운트다운 타이머 */
-.timerWrapper {
-  text-align: right;
-  margin-top: 4px;
-}
-
-.timerText {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.875rem; /* text-sm */
-  font-weight: bold;
-  color: #C7EB3E;
-  letter-spacing: 0.05em;
-  background-color: #111;
-  padding: 4px 8px;
-  border-radius: 4px;
-  display: inline-block;
-  box-shadow: 0 0 8px #C7EB3E33;
-  animation: glow 1.5s infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    text-shadow: 0 0 4px #C7EB3E99;
-  }
-  to {
-    text-shadow: 0 0 10px #C7EB3E;
-  }
 }

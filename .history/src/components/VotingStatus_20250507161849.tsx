@@ -119,7 +119,7 @@ const VotingStatus = () => {
               </option>
             ))}
           </select>
-          <div className="timerWrapper">
+          <div className="timerWrapper}>
             <span className="timerText">{renderTimer()}</span>
           </div>
         </div>

@@ -1,0 +1,164 @@
+.voting-wrapper {
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: 0 1rem;
+  scrollbar-width: none;
+}
+.voting-wrapper::-webkit-scrollbar,
+.voting-scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+.voting-scroll-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.voting-pyramid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-top: 1rem;
+}
+
+/* 기본 카드 스타일 */
+.voting-card {
+  background-color: #242424;
+  color: white;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  width: 260px;
+  height: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.voting-card:hover {
+  background-color: #DFFF67;
+  color: black;
+  transform: scale(1.05);
+}
+
+/* 카드 내부 구성 */
+.voting-coin-logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  margin-right: 1rem;
+}
+
+.voting-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: inherit;
+}
+
+.voting-symbol {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.vote-stat-label {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.vote-stat-value {
+  font-weight: 600;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.vote-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vote-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.4;
+}
+
+.vote-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #C7EB3E;
+  color: black;
+  font-weight: bold;
+  transition: transform 0.1s ease-in-out;
+  font-size: 0.875rem;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.vote-button:active {
+  transform: scale(0.95);
+}
+
+.voting-card:hover .vote-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 스크롤바 스타일 */
+.voting-scroll {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+.voting-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.voting-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.voting-scroll::-webkit-scrollbar-thumb {
+  background-color: #41423c;
+  border-radius: 9999px;
+}
+.voting-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #C7EB3E;
+}
+
+/* 피라미드 카드 전용 스타일 */
+.pyramid-card {
+  background-color: #242424;
+  color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 220px;
+  height: 130px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.pyramid-card:hover {
+  background-color: #DFFF67;
+  color: black;
+}
+
+.pyramid-card:hover .voting-name,
+.pyramid-card:hover .voting-symbol,
+.pyramid-card:hover .voting-count {
+  color: black !important;
+}
+
+/* 순위 뱃지 위치 고정 (카드 위 레이어로 겹치도록) */
+.rank-badge {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 32px;
+  height: 32px;
+  z-index: 20;
+}

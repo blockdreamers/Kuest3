@@ -40,7 +40,7 @@
   position: relative;
   overflow: visible !important;
   box-sizing: border-box;
-  box-shadow: 4px 4px 0 #000000;
+  box-shadow: 4px 4px 0 #000000; /* 그림자 효과 */
 }
 
 .voting-card:hover {
@@ -160,7 +160,7 @@
   background-color: #C7EB3E;
 }
 
-/* ✅ 카운트다운 타이머 */
+
 .timerWrapper {
   text-align: right;
   margin-top: 4px;
@@ -187,4 +187,19 @@
   to {
     text-shadow: 0 0 10px #C7EB3E;
   }
+}
+
+.timerWrapper {
+  margin-top: 0.25rem;
+  text-align: right;
+}
+
+.timerText {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  color: #C7EB3E;
+  background-color: #1a1a1a;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
 }

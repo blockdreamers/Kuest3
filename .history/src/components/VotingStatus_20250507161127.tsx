@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import supabase from '../lib/supabase';
 import { fetchUSDKRW } from '../lib/utils/getExchangeRate';
 import './VotingStatus.css';
+import styles from './CountdownTimer.module.css';
+
 
 interface Season {
   season_number: number;
@@ -45,7 +47,7 @@ const VotingStatus = () => {
         supabase
           .from('voting_seasons')
           .select('*')
-          .order('season_number', { ascending: true }),
+          .order('season_number', { ascending: true })
       ]);
 
       if (voteData) {
@@ -62,6 +64,7 @@ const VotingStatus = () => {
     };
 
     loadData();
+
     const interval = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
@@ -119,9 +122,7 @@ const VotingStatus = () => {
               </option>
             ))}
           </select>
-          <div className="timerWrapper">
-            <span className="timerText">{renderTimer()}</span>
-          </div>
+          <span className="text-sm text-gray-300 mt-1 text-right">{renderTimer()}</span>
         </div>
       </div>
 
@@ -176,6 +177,10 @@ const VotingStatus = () => {
         ))}
       </div>
     </div>
+
+    <div className={styles.timerWrapper}>
+  <div className={styles.timerText}>{timeLeft}</div>
+</div>
   );
 };
 

@@ -119,8 +119,8 @@ const VotingStatus = () => {
               </option>
             ))}
           </select>
-          <div className="timerWrapper">
-            <span className="timerText">{renderTimer()}</span>
+          <div className={styles.timerWrapper}>
+            <<span className="timerText">{renderTimer()}</span>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import supabase from '../lib/supabase';
 import { fetchUSDKRW } from '../lib/utils/getExchangeRate';
 import './VotingStatus.css';
+import styles from './CountdownTimer.module.css';
 
 interface Season {
   season_number: number;
@@ -119,8 +120,8 @@ const VotingStatus = () => {
               </option>
             ))}
           </select>
-          <div className="timerWrapper">
-            <span className="timerText">{renderTimer()}</span>
+          <div className={styles.timerWrapper}>
+            <span className={styles.timerText}>{renderTimer()}</span>
           </div>
         </div>
       </div>

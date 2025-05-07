@@ -1,4 +1,4 @@
-/* ✅ 전체 래퍼 */
+/* 전체 래퍼 */
 .voting-wrapper {
   max-width: 100%;
   overflow-x: hidden;
@@ -14,7 +14,7 @@
   -ms-overflow-style: none;
 }
 
-/* ✅ 피라미드 레이아웃 */
+/* 피라미드 레이아웃 */
 .voting-pyramid {
   display: flex;
   flex-wrap: wrap;
@@ -23,11 +23,11 @@
   padding-top: 1rem;
 }
 
-/* ✅ 카드 공통 스타일 */
+/* 카드 공통 스타일 */
 .voting-card {
   background-color: #242424;
   color: white;
-  border: none;
+  border: 1px solid #222;
   border-radius: 12px;
   padding: 1rem 1.25rem;
   width: 260px;
@@ -38,19 +38,17 @@
   font-family: 'Montserrat', 'Pretendard', sans-serif;
   transition: all 0.3s ease;
   position: relative;
-  overflow: visible !important;
+  overflow: visible;
   box-sizing: border-box;
-  box-shadow: 4px 4px 0 #000000;
 }
 
 .voting-card:hover {
   background-color: #DFFF67;
   color: black;
   transform: scale(1.05);
-  box-shadow: 4px 4px 0 #000000;
 }
 
-/* ✅ 카드 내부 로고 */
+/* 카드 내부 로고 */
 .voting-coin-logo {
   width: 3rem;
   height: 3rem;
@@ -58,33 +56,36 @@
   margin-right: 1rem;
 }
 
-/* ✅ 프로젝트 이름 */
+/* 프로젝트 이름 */
 .voting-name {
   font-weight: 600;
   font-size: 1rem;
   color: inherit;
 }
 
-/* ✅ 티커 */
+/* 티커 */
 .voting-symbol {
   font-size: 0.8rem;
   color: #aaa;
 }
+
 .voting-card:hover .voting-symbol {
-  color: #666;
+  color: #666; /* 마우스 오버 시 회색 유지 */
 }
 
-/* ✅ 득표수 */
+/* 득표수 */
 .voting-count {
   font-weight: bold;
   font-size: 0.9rem;
-  color: #f97316;
+  color: #f97316; /* 주황색 */
 }
+
+/* 마우스 오버 시 득표수 색상 유지 */
 .voting-card:hover .voting-count {
   color: #f97316 !important;
 }
 
-/* ✅ 투표하러 가기 버튼 */
+/* 투표하러 가기 버튼 - 기본은 숨김 */
 .vote-button {
   position: absolute;
   left: 1rem;
@@ -101,13 +102,15 @@
   visibility: hidden;
   transition: all 0.3s ease;
 }
+
+/* 그룹 호버 시 버튼 등장 */
 .voting-card.group:hover .vote-button {
   bottom: 0.5rem;
   opacity: 1;
   visibility: visible;
 }
 
-/* ✅ 피라미드 카드 */
+/* 피라미드 카드용 */
 .pyramid-card {
   background-color: #242424;
   color: white;
@@ -117,30 +120,30 @@
   height: 130px;
   position: relative;
   transition: all 0.3s ease;
-  overflow: visible !important;
-  box-shadow: 4px 4px 0 #000000;
 }
+
+/* 호버 시 형광 배경 + 텍스트 반전 */
 .pyramid-card:hover {
   background-color: #DFFF67;
   color: black;
-  box-shadow: 4px 4px 0 #000000;
 }
+
 .pyramid-card:hover .voting-name,
 .pyramid-card:hover .voting-symbol {
   color: black !important;
 }
 
-/* ✅ 1~3위 순위 뱃지 */
+/* 1~3위 순위 뱃지 */
 .rank-badge {
   position: absolute;
-  top: -50px;
-  left: -50px;
-  width: 50px !important;
-  height: 50px !important;
+  top: -12px;
+  left: -12px;
+  width: 60px;
+  height: 60px;
   z-index: 20;
 }
 
-/* ✅ 스크롤 */
+/* 스크롤 */
 .voting-scroll {
   max-height: 600px;
   overflow-y: auto;
@@ -158,33 +161,4 @@
 }
 .voting-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #C7EB3E;
-}
-
-/* ✅ 카운트다운 타이머 */
-.timerWrapper {
-  text-align: right;
-  margin-top: 4px;
-}
-
-.timerText {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.875rem; /* text-sm */
-  font-weight: bold;
-  color: #C7EB3E;
-  letter-spacing: 0.05em;
-  background-color: #111;
-  padding: 4px 8px;
-  border-radius: 4px;
-  display: inline-block;
-  box-shadow: 0 0 8px #C7EB3E33;
-  animation: glow 1.5s infinite alternate;
-}
-
-@keyframes glow {
-  from {
-    text-shadow: 0 0 4px #C7EB3E99;
-  }
-  to {
-    text-shadow: 0 0 10px #C7EB3E;
-  }
 }
