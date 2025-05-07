@@ -1,0 +1,86 @@
+.questCard {
+  background-color: #242424;
+  color: white;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  cursor: pointer;
+  min-height: 160px;
+}
+
+.questCard:hover {
+  transform: translateY(-3px) scale(1.02);
+  background-color: #DFFF67;
+  color: black;
+  border: 1.5px solid black;
+}
+
+.questCard:hover h3,
+.questCard:hover p,
+.questCard:hover span {
+  color: black !important;
+}
+
+.questCard:hover .text-gray-400,
+.questCard:hover .text-white,
+.questCard:hover .text-sm,
+.questCard:hover .font-medium {
+  color: black !important;
+}
+
+/* 난이도 배지 (기존과 호환되게 유지할 수 있음) */
+.difficulty-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+  cursor: default;
+}
+
+.difficulty-easy {
+  background-color: #DFFF67;
+  color: black;
+}
+
+.difficulty-medium {
+  background-color: #FDE047;
+  color: black;
+}
+
+.difficulty-hard {
+  background-color: #FDA4AF;
+  color: black;
+}
+
+/* 툴팁 */
+.difficulty-badge[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #111;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.difficulty-badge:hover::after {
+  opacity: 1;
+}

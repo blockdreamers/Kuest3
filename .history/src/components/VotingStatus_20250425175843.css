@@ -1,0 +1,64 @@
+/* 스크롤바 숨기기 */
+.voting-scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+.voting-scroll-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* 카드 전체 배경 제거 → 흰 배경 위에 카드가 바로 보이게 */
+.voting-card {
+  background-color: white; /* 기존 #242424 제거 */
+  color: #000; /* 기본 글씨 색 검정 */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  min-height: 72px;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* hover 시 배경 노랑 + 글씨 검정 유지 */
+.voting-card:hover {
+  background-color: #DFFF67;
+  color: #000;
+}
+
+/* 순위 버블 */
+.voting-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 9999px;
+  background-color: white;
+  color: black;
+}
+
+/* 1~5위용 파이어 등급 색상 (순차적 강렬함) */
+.voting-rank.rank-1 { background-color: #dc2626; color: white; }
+.voting-rank.rank-2 { background-color: #ef4444; color: white; }
+.voting-rank.rank-3 { background-color: #f87171; color: white; }
+.voting-rank.rank-4 { background-color: #fca5a5; color: white; }
+.voting-rank.rank-5 { background-color: #fecaca; color: white; }
+
+/* 이름 hover 시 색상 전환 */
+.voting-name {
+  font-size: 0.95rem;
+  transition: color 0.3s;
+  color: #000;
+}
+.voting-card:hover .voting-name {
+  color: #fff;
+}

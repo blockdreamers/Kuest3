@@ -1,0 +1,157 @@
+.profileContainer {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Montserrat', 'Pretendard', sans-serif;
+  }
+  
+  .profileGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  @media (min-width: 1024px) {
+    .profileGrid {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+  
+  .profileBox {
+    background: #242424;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  .profileCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profileAvatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 9999px;
+    object-fit: cover;
+  }
+  
+  .profileFallback {
+    width: 96px;
+    height: 96px;
+    border-radius: 9999px;
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .profileName {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111;
+  }
+  
+  .profileSection {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+  
+  .profileRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .profileLabel {
+    display: flex;
+    align-items: center;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  
+  .profileValue {
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .profileLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    color: #555;
+    text-decoration: none;
+  }
+  
+  .profileLink:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .referralTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .referralGrid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .referralInputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .referralInput {
+    flex: 1;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem 0 0 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .referralBtn {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    transition: background 0.2s ease;
+  }
+  
+  .referralBtn:hover {
+    background-color: #1e40af;
+  }
+  
+  .pointsBox {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    color: #666;
+  }
+  
+  .pointsBox h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .pointsBox p {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  

@@ -1,0 +1,51 @@
+.coin-box {
+  background-color: #1b1b1b;
+  color: white;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.coin-box:hover {
+  border: 2px solid #C7EB3E;
+  background-color: #dfff67;
+  color: black;
+}
+
+.coin-box:hover .coin-name,
+.coin-box:hover .text-gray-400,
+.coin-box:hover .text-white,
+.coin-box:hover .font-medium {
+  color: black !important;
+}
+
+.coin-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  margin-bottom: 2px;
+}
+
+.coin-box img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.text-sm {
+  font-size: 0.85rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.font-medium {
+  font-weight: 600;
+}

@@ -1,0 +1,245 @@
+/* CoinDetail.module.css (Tailwind-safe, scoped version) */
+
+.coinDetailContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+}
+
+.coinDetailBackBtn {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.coinDetailBackBtn:hover {
+  color: #3b82f6;
+}
+
+.coinDetailLayout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .coinDetailLayout {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.coinDetailCard {
+  background-color: #242424;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.coinDetailCard:hover {
+  background-color: #DFFF67;
+  color: black;
+  border-color: black;
+}
+
+.coinDetailTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.coinDetailInfoBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.coinDetailLogo {
+  width: 48px;
+  height: 48px;
+}
+
+.coinDetailTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.coinDetailTicker {
+  margin-left: 0.5rem;
+  font-size: 1.125rem;
+  color: #aaa;
+}
+
+.coinDetailRank {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.coinDetailStar {
+  width: 1rem;
+  height: 1rem;
+  color: #facc15;
+}
+
+.coinDetailRankText {
+  font-size: 0.875rem;
+  color: #aaa;
+}
+
+.coinDetailPriceBox {
+  text-align: right;
+}
+
+.coinDetailPrice {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.coinDetailDiff {
+  font-size: 0.875rem;
+}
+
+.up {
+  color: #22c55e;
+}
+
+.down {
+  color: #ef4444;
+}
+
+.coinDetailStatsBlock {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.coinDetailStatsCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.coinDetailLabel {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.coinDetailValue {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.coinDetailScoreSection {
+  margin-bottom: 2rem;
+}
+
+.coinDetailSubtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.coinDetailBar {
+  background-color: #e5e5e5;
+  border-radius: 9999px;
+  height: 8px;
+}
+
+.coinDetailBarFill {
+  background-color: #22c55e;
+  height: 8px;
+  border-radius: 9999px;
+}
+
+.coinDetailBarLabel {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-top: 0.25rem;
+}
+
+.coinDetailLinksSection {
+  margin-bottom: 2rem;
+}
+
+.coinDetailLinkGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.coinDetailLinkGrid a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #999;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.coinDetailLinkGrid a:hover {
+  color: #3b82f6;
+}
+
+.coinDetailIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.coinDetailDesc {
+  font-size: 0.9rem;
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.coinDetailRightBox {
+  background-color: #1b1b1b;
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.coinDetailTweetHead {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.coinDetailTweetLoading {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.coinDetailVoteBtn {
+  background: linear-gradient(to right, #7c3aed, #3b82f6);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem;
+  width: 100%;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.coinDetailVoteBtn:hover {
+  background: linear-gradient(to right, #6d28d9, #2563eb);
+  transform: scale(1.03);
+}

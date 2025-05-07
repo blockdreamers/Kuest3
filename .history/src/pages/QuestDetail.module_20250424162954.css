@@ -1,0 +1,96 @@
+.questBox {
+    background-color: #242424;
+    color: white;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    font-family: 'Montserrat', 'Pretendard', sans-serif;
+    position: relative;
+  }
+  
+  .questBox:hover {
+    background-color: #DFFF67;
+    color: black;
+    transform: translateY(-2px) scale(1.02);
+    border: 2px solid black;
+  }
+  
+  .questBox:hover .text-gray-600,
+  .questBox:hover .text-gray-500,
+  .questBox:hover .text-white,
+  .questBox:hover h3,
+  .questBox:hover span {
+    color: black !important;
+  }
+  
+  .taskButton {
+    background-color: #000;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+  
+  .taskButton:hover {
+    background-color: #DFFF67;
+    color: black;
+    border: 1.5px solid black;
+    transform: scale(0.98);
+  }
+  
+  .claimButtonActive {
+    background: linear-gradient(to right, #2563eb, #7c3aed);
+    color: white;
+  }
+  
+  .claimButtonInactive {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+  
+  .progressBar {
+    background-color: #3b82f6;
+    height: 0.5rem;
+    border-radius: 9999px;
+  }
+  
+  .progressTrack {
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    height: 0.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1rem;
+  }
+  
+  .guideBox {
+    background-color: #eff6ff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+  
+  .participantTable th,
+  .participantTable td {
+    font-family: 'Pretendard', 'Montserrat', sans-serif;
+    font-size: 0.875rem;
+  }
+  
+  .participantTable th {
+    background-color: #f9fafb;
+    color: #6b7280;
+  }
+  
+  .participantTable td {
+    color: #111827;
+  }
+  

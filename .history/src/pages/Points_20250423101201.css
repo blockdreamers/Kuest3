@@ -1,0 +1,97 @@
+.points-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.points-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.3fr;
+  gap: 2rem;
+}
+
+.checkin-block {
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 1rem;
+}
+
+.checkin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.checkin-button {
+  background-color: #1b1b1b;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 0.6rem;
+  aspect-ratio: 1/1;
+  font-size: 0.8rem;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+  position: relative;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkin-button img {
+  width: 36px;
+  margin-bottom: 0.25rem;
+}
+
+.checkin-button:hover {
+  background-color: #dfff67;
+  color: #000;
+  border: 1px solid black;
+}
+
+.checkin-button.checked {
+  background-color: #9333ea;
+}
+
+.checkin-button.bonus {
+  grid-column: span 3;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.9rem;
+}
+
+.quest-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quest-box {
+  background-color: #1b1b1b;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.quest-box:hover {
+  background-color: #dfff67;
+  color: #000;
+  border: 1px solid black;
+}
+
+.quest-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.quest-description {
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
+.quest-header {
+  margin-bottom: 1rem;
+}

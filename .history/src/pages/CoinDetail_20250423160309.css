@@ -1,0 +1,243 @@
+/* CoinDetail.css - 네이밍 충돌 방지 버전 */
+
+.coin-detail-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Montserrat', 'Pretendard', sans-serif;
+}
+
+.coin-detail-back-button {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+.coin-detail-back-button:hover {
+  color: #3b82f6;
+}
+
+.coin-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 1024px) {
+  .coin-detail-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.coin-detail-box {
+  background-color: #242424;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 2rem 2rem 2.5rem 2rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+.coin-detail-box:hover {
+  background-color: #DFFF67;
+  color: black;
+  border: 1px solid black;
+}
+
+.coin-detail-box:hover .text-gray-500 {
+  color: #333;
+}
+.coin-detail-box:hover .text-gray-600 {
+  color: #111;
+}
+
+.coin-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.coin-detail-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.coin-detail-logo {
+  width: 48px;
+  height: 48px;
+}
+
+.coin-detail-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.coin-detail-symbol {
+  margin-left: 0.5rem;
+  font-size: 1.125rem;
+  color: #aaa;
+}
+
+.coin-detail-rank {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+.coin-detail-star-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #facc15;
+}
+.coin-detail-rank-label {
+  font-size: 0.875rem;
+  color: #bbb;
+  font-weight: 500;
+}
+
+.coin-detail-price-box {
+  text-align: right;
+}
+.coin-detail-price {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.coin-detail-change {
+  font-size: 0.875rem;
+}
+.coin-detail-change.positive {
+  color: #22c55e;
+}
+.coin-detail-change.negative {
+  color: #ef4444;
+}
+
+.coin-detail-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.coin-detail-stat-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.coin-detail-stat-label {
+  font-size: 0.8rem;
+  color: #bbb;
+}
+.coin-detail-stat-value {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.coin-detail-profile-score {
+  margin-bottom: 2rem;
+}
+.coin-detail-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: white !important;
+  transition: color 0.3s ease;
+}
+.coin-detail-section-title:hover {
+  color: black !important;
+}
+
+.coin-detail-description .coin-detail-section-title {
+  color: white;
+}
+.coin-detail-description .coin-detail-section-title:hover {
+  color: black;
+}
+
+.coin-detail-score-bar {
+  background-color: #e5e5e5;
+  border-radius: 9999px;
+  height: 8px;
+}
+.coin-detail-score-filled {
+  background-color: #22c55e;
+  height: 8px;
+  border-radius: 9999px;
+}
+.coin-detail-score-label {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-top: 0.25rem;
+}
+
+.coin-detail-links {
+  margin-bottom: 2rem;
+}
+.coin-detail-links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.coin-detail-links-grid a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #999;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+.coin-detail-links-grid a:hover {
+  color: #3b82f6;
+}
+.coin-detail-link-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.coin-detail-description .coin-detail-description-text {
+  font-size: 0.9rem;
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.coin-detail-right .coin-detail-twitter-box {
+  background-color: #1b1b1b;
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: white;
+  transition: all 0.3s ease;
+  min-height: 200px;
+}
+.coin-detail-twitter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.coin-detail-tweet-placeholder {
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.coin-detail-vote-button {
+  background: linear-gradient(to right, #7c3aed, #3b82f6);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem;
+  width: 100%;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+.coin-detail-vote-button:hover {
+  background: linear-gradient(to right, #6d28d9, #2563eb);
+  transform: scale(1.03);
+}
