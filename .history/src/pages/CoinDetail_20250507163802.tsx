@@ -4,7 +4,6 @@ import { Globe, Twitter, Github, ExternalLink, Star, Vote, ArrowLeft } from 'luc
 import supabase from '../lib/supabase';
 import { extractHandleFromTwitterUrl } from '../lib/utils/twitter';
 import styles from './CoinDetail.module.css';
-import VotingInfoBox from '../components/VotingInfoBox';
 
 async function fetchUSDKRW(): Promise<number> {
   try {
@@ -42,6 +41,14 @@ const CoinDetail = () => {
   const [coin, setCoin] = useState<any | null>(null);
   const [exchangeRate, setExchangeRate] = useState<number>(1350);
   const twitterRef = useRef<HTMLDivElement>(null);
+
+  const [selectedSeason, setSelectedSeason] = useState<string>('1');
+  const [seasonList, setSeasonList] = useState<any[]>([]);
+  const [totalVotes, setTotalVotes] = useState<number>(123456);
+  const [seasonTotalVotes, setSeasonTotalVotes] = useState<number>(34567);
+  const [userVotes, setUserVotes] = useState<number>(123);
+  const [airdropAmount, setAirdropAmount] = useState<number>(9999);
+  const [rank, setRank] = useState<number>(2);
 
   useEffect(() => {
     fetchUSDKRW().then(setExchangeRate);
@@ -140,113 +147,50 @@ const CoinDetail = () => {
 
       <div className={styles['coin-detail-layout']}>
         <div className={styles['coin-detail-card']}>
-          {/* 코인 기본 정보 */}
-          <div className={styles['coin-detail-top']}>
-            <div className={styles['coin-detail-info-box']}>
-              <img src={coin.logo} alt={coin.name} className={styles['coin-detail-logo']} />
-              <div>
-                <h1 className={styles['coin-detail-title']}>
-                  {coin.name_ko || coin.name} <span className={styles['coin-detail-ticker']}>{coin.symbol}</span>
-                </h1>
-                <div className={styles['coin-detail-rank']}>
-                  <Star className={styles['coin-detail-star']} />
-                  <span className={styles['coin-detail-rank-text']}>랭킹 1위</span>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles['coin-detail-price-box']}>
-              <p className={styles['coin-detail-price']}>{formatPriceKRW(coin.price, exchangeRate)}</p>
-              <p className={`${styles['coin-detail-diff']} ${coin.price_change >= 0 ? styles['up'] : styles['down']}`}>
-                {coin.price_change >= 0 ? '+' : ''}
-                {coin.price_change.toFixed(2)}% (24시간)
-              </p>
-            </div>
-          </div>
-
-          {/* 주요 지표 */}
-          <div className={styles['coin-detail-stats-block']}>
-            <div className={styles['coin-detail-stats-col']}>
-              <p className={styles['coin-detail-label']}>시가총액</p>
-              <p className={styles['coin-detail-value']}>{formatMarketCapKRW(coin.market_cap, exchangeRate)}</p>
-              <p className={styles['coin-detail-label']}>FDV</p>
-              <p className={styles['coin-detail-value']}>{formatMarketCapKRW(coin.fdv, exchangeRate)}</p>
-              <p className={styles['coin-detail-label']}>유통량</p>
-              <p className={styles['coin-detail-value']}>
-                {Number(coin.circulating_supply).toLocaleString()} {coin.symbol}
-              </p>
-            </div>
-
-            <div className={styles['coin-detail-stats-col']}>
-              <p className={styles['coin-detail-label']}>24시간 거래량</p>
-              <p className={styles['coin-detail-value']}>{formatVolumeKRW(coin.volume, exchangeRate)}</p>
-              <p className={styles['coin-detail-label']}>최대 발행량</p>
-              <p className={styles['coin-detail-value']}>
-                {Number(coin.max_supply).toLocaleString()} {coin.symbol}
-              </p>
-            </div>
-          </div>
-
-          {/* 프로필 점수 */}
-          <div className={styles['coin-detail-score-section']}>
-            <h2 className={styles['coin-detail-subtitle']}>프로필 점수</h2>
-            <div className={styles['coin-detail-bar']}>
-              <div
-                className={styles['coin-detail-bar-fill']}
-                style={{ width: `${coin.profile_score}%` }}
-              ></div>
-            </div>
-            <p className={styles['coin-detail-bar-label']}>{coin.profile_score}%</p>
-          </div>
-
-          {/* 관련 링크 */}
-          <div className={styles['coin-detail-links-section']}>
-            <h2 className={styles['coin-detail-subtitle']}>관련 링크</h2>
-            <div className={styles['coin-detail-link-grid']}>
-              {coin.website && (
-                <a href={coin.website} target="_blank" rel="noopener noreferrer">
-                  <Globe className={styles['coin-detail-icon']} /> <span>공식 홈페이지</span>
-                </a>
-              )}
-              {coin.whitepaper && (
-                <a href={coin.whitepaper} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className={styles['coin-detail-icon']} /> <span>백서</span>
-                </a>
-              )}
-              {coin.github && (
-                <a href={coin.github} target="_blank" rel="noopener noreferrer">
-                  <Github className={styles['coin-detail-icon']} /> <span>GitHub</span>
-                </a>
-              )}
-              {coin.twitter && (
-                <a href={coin.twitter} target="_blank" rel="noopener noreferrer">
-                  <Twitter className={styles['coin-detail-icon']} /> <span>Twitter</span>
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* 프로젝트 소개 */}
-          <div className={styles['coin-detail-desc']}>
-            <h2 className={styles['coin-detail-subtitle']}>{coin.name_ko || coin.name} 소개</h2>
-            <p className={styles['coin-detail-text']}>{coin.description}</p>
-          </div>
-
-          {/* 트레이딩뷰 차트 */}
-          <h2 className={styles['coin-detail-chart-title']}>트레이딩뷰 차트</h2>
-          <div className={styles['coin-detail-tradingview-container']} id="tradingview-widget"></div>
+          {/* 기존 정보 렌더링은 생략 */}
         </div>
 
-        {/* 오른쪽 박스 (트위터) */}
         <div className={styles['coin-detail-right-box']}>
-          <div className={styles['coin-detail-vote-box']}>
-            <VotingInfoBox
-              coinId={coin.id}
-              coinName={coin.name_ko || coin.name}
-              coinSymbol={coin.symbol}
-              />
+          {/* 투표 현황 박스 */}
+          <div className={styles['coin-detail-vote-summary-box']}>
+            <div className="flex justify-between items-center mb-3 w-full">
+              <h2 className={styles['coin-detail-subtitle']}>투표 현황</h2>
+              <select
+                className="bg-[#1a1a1a] border border-gray-600 rounded px-2 py-1 text-sm text-white"
+                value={selectedSeason}
+                onChange={(e) => setSelectedSeason(e.target.value)}
+              >
+                {seasonList.map((season, index) => (
+                  <option key={season.id || index} value={season.id}>
+                    시즌 {season.number}
+                  </option>
+                ))}
+              </select>
             </div>
+            <p className="text-sm text-gray-300 mb-2">
+              {coin.name_ko || coin.name} 프로젝트는 #시즌1, #시즌2에 참여하여 총 {totalVotes.toLocaleString()}표를 획득하였으며 누적 투표수 기준 {rank}위입니다.
+            </p>
+            <div className="w-full text-sm space-y-2 mb-4">
+              <div className="flex justify-between text-gray-400">
+                <span>누적 투표수</span>
+                <span className="text-white">{seasonTotalVotes.toLocaleString()} 표</span>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <span>나의 투표수</span>
+                <span className="text-white">{userVotes.toLocaleString()} 표</span>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <span>이번 시즌 에어드랍 수량</span>
+                <span className="text-white">{airdropAmount.toLocaleString()} {coin.symbol}</span>
+              </div>
+            </div>
+            <button className={styles['coin-detail-vote-btn']}>
+              <Vote className="w-5 h-5" />
+              <span>투표하러 가기</span>
+            </button>
+          </div>
 
+          {/* 트위터 */}
           <div className={styles['coin-detail-tweet-head']}>
             <Twitter className="text-blue-400 w-5 h-5" />
             <h2 className="text-lg font-semibold">최신 트윗</h2>

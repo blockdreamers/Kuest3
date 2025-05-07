@@ -341,7 +341,7 @@
 .coin-detail-right-box {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* 투표와 트윗 박스 간 간격 */
+  gap: 200px; /* 투표와 트윗 박스 간 간격 */
 }
 
 .coin-detail-vote-box {

@@ -336,22 +336,3 @@
   border: 1px solid #333;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-
-
-.coin-detail-right-box {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* 투표와 트윗 박스 간 간격 */
-}
-
-.coin-detail-vote-box {
-  background-color: #1c1c1c;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.coin-detail-tweet-box {
-  background-color: #1c1c1c;
-  border-radius: 12px;
-  padding: 20px;
-}

@@ -245,12 +245,12 @@ const CoinDetail = () => {
               coinName={coin.name_ko || coin.name}
               coinSymbol={coin.symbol}
               />
-            </div>
 
           <div className={styles['coin-detail-tweet-head']}>
             <Twitter className="text-blue-400 w-5 h-5" />
             <h2 className="text-lg font-semibold">최신 트윗</h2>
           </div>
+
           <div ref={twitterRef} className={styles['coin-detail-tweet-container']}></div>
         </div>
       </div>
