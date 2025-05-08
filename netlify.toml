@@ -62,6 +62,6 @@ included_files = ["src/**/*"]
 
 # ✅ fetchTelegram 전용 함수 환경 변수 설정 (Netlify UI에서 제거한 것들)
 [functions."fetchTelegram.environment"]
-TELEGRAM_API_ID=20526799
-TELEGRAM_API_HASH=2a19ca1ddfa66cc874c3fc2dc6112260
+TELEGRAM_API_ID="20526799"
+TELEGRAM_API_HASH="2a19ca1ddfa66cc874c3fc2dc6112260"
 NETLIFY_FETCH_URL = "https://kuest3.com/.netlify/functions/fetchTelegram"
