@@ -3,15 +3,13 @@ import json
 import requests
 import asyncio
 from uuid import uuid4
-from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 from telethon.sync import TelegramClient
 from telethon.tl.types import Message, MessageMediaPhoto
 
-# ✅ .env 불러오기 (GitHub Actions에서도 dotenv 지원을 위해 명시)
-env_path = Path(__file__).resolve().parents[3] / ".env"
-load_dotenv(dotenv_path=env_path)
+# ✅ .env 불러오기 (루트 기준 실행)
+load_dotenv(dotenv_path=Path(".env"))
 
 # ✅ 환경 변수
 API_ID = os.getenv("TELEGRAM_API_ID")
@@ -20,23 +18,28 @@ NETLIFY_FUNCTION_URL = os.getenv("NETLIFY_FETCH_URL")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_STORAGE_BUCKET = "telegram-images"
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")  # 🔐 GitHub Secret
+TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")
 
-# ✅ 세션 파일 다운로드 (없으면 다운로드 시도)
+# ✅ 세션 파일 다운로드
 session_file = "telegram_fetcher_session.session"
 if not Path(session_file).exists():
-    try:
-        res = requests.get(TELEGRAM_SESSION_URL)
-        if res.status_code == 200:
-            with open(session_file, "wb") as f:
-                f.write(res.content)
-            print(f"✅ Session file downloaded: {session_file}")
-        else:
-            print(f"❌ Failed to download session file: {res.status_code}")
-    except Exception as e:
-        print(f"❌ Error downloading session: {e}")
+    if TELEGRAM_SESSION_URL:
+        try:
+            print(f"🌐 Downloading session file from: {TELEGRAM_SESSION_URL}")
+            res = requests.get(TELEGRAM_SESSION_URL)
+            if res.status_code == 200:
+                with open(session_file, "wb") as f:
+                    f.write(res.content)
+                print(f"✅ Session file downloaded: {session_file}")
+            else:
+                print(f"❌ Failed to download session file: HTTP {res.status_code}")
+        except Exception as e:
+            print(f"❌ Error downloading session: {e}")
+    else:
+        print("❌ TELEGRAM_SESSION_URL is not set. Please check your .env or GitHub secrets.")
+        exit(1)
 
-# ✅ 텔레그램 클라이언트 초기화
+# ✅ Telegram Client 초기화
 client = TelegramClient(session_file, API_ID, API_HASH)
 
 # ✅ Supabase 업로드 함수
@@ -56,21 +59,20 @@ def upload_to_supabase(file_path, dest_filename):
             print(f"✅ Uploaded to Supabase: {public_url}")
             return public_url
         else:
-            print(f"[ERROR] Failed to upload {dest_filename}: {res.text}")
+            print(f"[ERROR] Upload failed for {dest_filename}: {res.text}")
             return None
     except Exception as e:
         print(f"[EXCEPTION] During upload: {e}")
         return None
 
-# ✅ 메시지 수집 및 전송
+# ✅ 메시지 수집 및 Netlify 함수 전송
 async def fetch_and_send_messages():
-    # 연결 재시도 최대 5회
     for attempt in range(5):
         try:
             await client.start()
             break
         except Exception as e:
-            print(f"Attempt {attempt + 1} at connecting failed: {e}")
+            print(f"⏳ Attempt {attempt + 1} to connect failed: {e}")
             await asyncio.sleep(5)
     else:
         print("❌ Failed to connect to Telegram after 5 attempts.")

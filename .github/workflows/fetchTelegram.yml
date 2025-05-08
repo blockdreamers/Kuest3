@@ -30,6 +30,15 @@ jobs:
         run: |
           curl -o telegram_fetcher_session.session "$TELEGRAM_SESSION_URL"
 
+      - name: Check session file integrity
+        run: |
+          echo "📂 File Info:"
+          ls -lh telegram_fetcher_session.session
+          echo "🔎 File Type:"
+          file telegram_fetcher_session.session
+          echo "🧬 First 10 Lines of Hexdump:"
+          hexdump -C telegram_fetcher_session.session | head -n 10
+
       - name: Run telegram fetcher
         env:
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
