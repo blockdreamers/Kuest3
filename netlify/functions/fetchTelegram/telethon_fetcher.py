@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import asyncio
 from uuid import uuid4
 from datetime import datetime
 from pathlib import Path
@@ -12,7 +13,7 @@ from telethon.tl.types import Message, MessageMediaPhoto
 env_path = Path(__file__).resolve().parents[3] / ".env"
 load_dotenv(dotenv_path=env_path)
 
-# ✅ 환경 변수 로딩
+# ✅ 환경 변수
 API_ID = os.getenv("TELEGRAM_API_ID")
 API_HASH = os.getenv("TELEGRAM_API_HASH")
 NETLIFY_FUNCTION_URL = os.getenv("NETLIFY_FETCH_URL")
@@ -23,33 +24,50 @@ SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 client = TelegramClient('session', API_ID, API_HASH)
 
 def upload_to_supabase(file_path, dest_filename):
-    with open(file_path, 'rb') as f:
-        res = requests.post(
-            f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_STORAGE_BUCKET}/{dest_filename}",
-            headers={
-                "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
-                "Content-Type": "application/octet-stream"
-            },
-            data=f
-        )
-    if res.status_code in [200, 201]:
-        public_url = f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_STORAGE_BUCKET}/{dest_filename}"
-        print(f"✅ Uploaded to Supabase: {public_url}")
-        return public_url
-    else:
-        print(f"[ERROR] Failed to upload {dest_filename}: {res.text}")
+    try:
+        with open(file_path, 'rb') as f:
+            res = requests.post(
+                f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_STORAGE_BUCKET}/{dest_filename}",
+                headers={
+                    "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+                    "Content-Type": "application/octet-stream"
+                },
+                data=f
+            )
+        if res.status_code in [200, 201]:
+            public_url = f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_STORAGE_BUCKET}/{dest_filename}"
+            print(f"✅ Uploaded to Supabase: {public_url}")
+            return public_url
+        else:
+            print(f"[ERROR] Failed to upload {dest_filename}: {res.text}")
+            return None
+    except Exception as e:
+        print(f"[EXCEPTION] During upload: {e}")
         return None
 
 async def fetch_and_send_messages():
-    await client.start()
+    # ✅ 연결 재시도 (최대 5번)
+    for attempt in range(5):
+        try:
+            await client.start()
+            break
+        except Exception as e:
+            print(f"Attempt {attempt + 1} at connecting failed: {e}")
+            await asyncio.sleep(5)
+    else:
+        print("❌ Failed to connect to Telegram after 5 attempts.")
+        return
 
     with open('channels.json', 'r', encoding='utf-8') as f:
         channels = json.load(f)
 
-    all_messages = []
-
     for channel in channels:
-        print(f"📡 Fetching from @{channel}")
+        print(f"\n📡 Fetching from @{channel}")
+        all_messages = []
+        uploaded_images = 0
+        inserted = 0
+        duplicate = 0
+
         try:
             async for message in client.iter_messages(channel, limit=10):
                 if not isinstance(message, Message):
@@ -61,6 +79,8 @@ async def fetch_and_send_messages():
                     await message.download_media(file=file_path)
                     filename = f"{channel}_{message.id}_{uuid4()}.jpg".replace(" ", "_").replace("/", "_")
                     media_url = upload_to_supabase(file_path, filename)
+                    if media_url:
+                        uploaded_images += 1
 
                 msg_data = {
                     "channel_id": getattr(message.peer_id, 'channel_id', None),
@@ -80,21 +100,33 @@ async def fetch_and_send_messages():
 
                 all_messages.append(msg_data)
 
-        except Exception as e:
-            print(f"❌ Error fetching @{channel}: {str(e)}")
-            continue  # 다음 채널로 이동
+            await asyncio.sleep(1)  # ✅ RPS 제한
 
-    # ✅ Supabase로 전송
-    if all_messages:
-        try:
-            res = requests.post(NETLIFY_FUNCTION_URL, json={"messages": all_messages})
-            print(f"✅ Sent {len(all_messages)} messages: {res.status_code}")
         except Exception as e:
-            print(f"❌ Error sending to Netlify function: {str(e)}")
-    else:
-        print("⚠️ No messages fetched.")
+            print(f"❌ Error fetching @{channel}: {e}")
+            continue
+
+        # ✅ 10개씩 쪼개서 Netlify에 전송
+        if all_messages:
+            batch_size = 10
+            for i in range(0, len(all_messages), batch_size):
+                chunk = all_messages[i:i + batch_size]
+                try:
+                    res = requests.post(NETLIFY_FUNCTION_URL, json={"messages": chunk})
+                    if res.status_code == 200:
+                        inserted += len(chunk)
+                    elif res.status_code == 409:
+                        duplicate += len(chunk)
+                    else:
+                        print(f"[WARN] Non-200 response: {res.status_code}")
+                    await asyncio.sleep(0.5)
+                except Exception as e:
+                    print(f"❌ Error sending batch to Netlify: {e}")
+        else:
+            print(f"⚠️ No messages collected from @{channel}")
+
+        print(f"📊 Summary for @{channel} → Inserted: {inserted} | Duplicates: {duplicate} | Uploaded Images: {uploaded_images}")
 
 # ✅ 실행
-import asyncio
 if __name__ == "__main__":
     asyncio.run(fetch_and_send_messages())
