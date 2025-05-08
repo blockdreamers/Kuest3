@@ -78,7 +78,10 @@ async def fetch_and_send_messages():
         print("❌ Failed to connect to Telegram after 5 attempts.")
         return
 
-    with open('channels.json', 'r', encoding='utf-8') as f:
+    script_path = Path(__file__).resolve().parent
+    channels_path = script_path / "channels.json"
+
+    with open(channels_path, 'r', encoding='utf-8') as f:
         channels = json.load(f)
 
     for channel in channels:
