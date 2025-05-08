@@ -71,9 +71,9 @@ included_files = ["src/**/*"]
 # ✅ fetchTelegram 함수 전용 환경변수 최소화 (4KB 제한 우회)
 [functions."fetchTelegram"]
 environment = { 
-  TELEGRAM_API_ID = "20526xxxxx",                 # 실제 값은 Netlify Dashboard에서 설정
-  TELEGRAM_API_HASH = "2a1xxxxx",                 
-  SUPABASE_URL = "https://vdxtuwgphckipadagkuj.supabase.co",
-  SUPABASE_SERVICE_ROLE_KEY = "your_service_role_key",
+  TELEGRAM_API_ID = "20526xxxxx",
+  TELEGRAM_API_HASH = "2a1xxxxx",
+  SUPABASE_URL = "https://xxx.supabase.co",
+  SUPABASE_SERVICE_ROLE_KEY = "xxxx",
   NETLIFY_FETCH_URL = "https://kuest3.com/.netlify/functions/fetchTelegram"
 }
