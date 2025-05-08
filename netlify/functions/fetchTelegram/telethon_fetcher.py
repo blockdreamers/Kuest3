@@ -20,9 +20,25 @@ NETLIFY_FUNCTION_URL = os.getenv("NETLIFY_FETCH_URL")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_STORAGE_BUCKET = "telegram-images"
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")  # 🔑 GitHub Secrets에 등록 필요
 
-client = TelegramClient('telegram_fetcher_session.session', API_ID, API_HASH)
+# ✅ 세션 파일 다운로드
+session_file = "telegram_fetcher_session.session"
+if not Path(session_file).exists():
+    try:
+        res = requests.get(TELEGRAM_SESSION_URL)
+        if res.status_code == 200:
+            with open(session_file, "wb") as f:
+                f.write(res.content)
+            print(f"✅ Session file downloaded: {session_file}")
+        else:
+            print(f"❌ Failed to download session file: {res.status_code}")
+    except Exception as e:
+        print(f"❌ Error downloading session: {e}")
 
+client = TelegramClient(session_file, API_ID, API_HASH)
+
+# ✅ Supabase 업로드 함수
 def upload_to_supabase(file_path, dest_filename):
     try:
         with open(file_path, 'rb') as f:
@@ -45,8 +61,8 @@ def upload_to_supabase(file_path, dest_filename):
         print(f"[EXCEPTION] During upload: {e}")
         return None
 
+# ✅ 메시지 수집 및 전송
 async def fetch_and_send_messages():
-    # ✅ 연결 재시도 (최대 5번)
     for attempt in range(5):
         try:
             await client.start()
@@ -100,13 +116,12 @@ async def fetch_and_send_messages():
 
                 all_messages.append(msg_data)
 
-            await asyncio.sleep(1)  # ✅ RPS 제한
+            await asyncio.sleep(1)
 
         except Exception as e:
             print(f"❌ Error fetching @{channel}: {e}")
             continue
 
-        # ✅ 10개씩 쪼개서 Netlify에 전송
         if all_messages:
             batch_size = 10
             for i in range(0, len(all_messages), batch_size):
