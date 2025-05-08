@@ -75,4 +75,6 @@ jobs:
           TELEGRAM_SESSION_URL: ${{ secrets.TELEGRAM_SESSION_URL }}
         run: |
           echo "🚀 Launching Telethon fetcher from correct directory..."
+          ls -la
+          pwd
           python telethon_fetcher.py
