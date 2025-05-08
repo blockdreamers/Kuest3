@@ -3,7 +3,7 @@ name: Telegram Fetcher
 on:
   schedule:
     - cron: '0 */2 * * *'  # 매 2시간마다 실행
-  workflow_dispatch:        # 수동 실행도 가능
+  workflow_dispatch:
 
 jobs:
   fetch:
@@ -20,23 +20,56 @@ jobs:
 
       - name: 📥 Install Python dependencies
         run: |
-          pip install telethon python-dotenv requests
+          echo "🐍 Installing required packages..."
+          pip install --quiet telethon python-dotenv requests
+          pip list
 
       - name: 🔐 Download Telegram session file from Supabase
         env:
           TELEGRAM_SESSION_URL: ${{ secrets.TELEGRAM_SESSION_URL }}
         run: |
-          echo "📥 Downloading session file from Supabase..."
+          echo "📥 Attempting to download session file from Supabase..."
+          if [ -z "$TELEGRAM_SESSION_URL" ]; then
+            echo "❌ TELEGRAM_SESSION_URL not set. Exiting."
+            exit 1
+          fi
+
           curl -s -o telegram_fetcher_session.session "$TELEGRAM_SESSION_URL"
+
+          if [ ! -f telegram_fetcher_session.session ]; then
+            echo "❌ Session file download failed. File not found after curl."
+            exit 1
+          fi
 
       - name: 🔎 Check session file integrity
         run: |
           echo "📂 File Info:"
           ls -lh telegram_fetcher_session.session || echo "❌ File not found"
+          
           echo "🔍 File Type:"
           file telegram_fetcher_session.session || echo "❌ Cannot determine file type"
+          
           echo "🧬 First 10 Lines of Hexdump:"
           hexdump -C telegram_fetcher_session.session | head -n 10 || echo "❌ Hexdump failed"
+
+          echo "📄 File ends with:"
+          tail -n 5 telegram_fetcher_session.session || echo "❌ Tail failed"
+
+      - name: 🧪 Check presence of channels.json
+        run: |
+          echo "🔍 Verifying channels.json exists in correct directory..."
+          if [ ! -f netlify/functions/fetchTelegram/channels.json ]; then
+            echo "❌ channels.json not found in netlify/functions/fetchTelegram/"
+            exit 1
+          fi
+          echo "✅ channels.json found."
+
+      - name: 🔧 Print working directory and list files
+        run: |
+          echo "📁 Current Working Directory:"
+          pwd
+          echo "📂 Directory Structure:"
+          tree -a -L 3 || ls -R
 
       - name: 🚀 Run telegram fetcher
         env:
@@ -46,4 +79,6 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           TELEGRAM_SESSION_URL: ${{ secrets.TELEGRAM_SESSION_URL }}
-        run: python netlify/functions/fetchTelegram/telethon_fetcher.py
+        run: |
+          echo "🚀 Launching Telethon fetcher..."
+          python netlify/functions/fetchTelegram/telethon_fetcher.py
