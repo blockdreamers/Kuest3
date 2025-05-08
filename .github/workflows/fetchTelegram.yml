@@ -1,4 +1,5 @@
 name: Telegram Fetcher
+run: pip install -r ./requirements.txt
 
 on:
   schedule:
