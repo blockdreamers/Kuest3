@@ -21,7 +21,7 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_STORAGE_BUCKET = "telegram-images"
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-client = TelegramClient('session', API_ID, API_HASH)
+client = TelegramClient('telegram_fetcher_session.session', API_ID, API_HASH)
 
 def upload_to_supabase(file_path, dest_filename):
     try:

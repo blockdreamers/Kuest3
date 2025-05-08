@@ -24,6 +24,10 @@ jobs:
           pip install python-dotenv
           pip install requests
 
+      - name: Download Telegram session file from Supabase
+        run: |
+          curl -o telegram_fetcher_session.session "https://vdxtuwgphckipadagkuj.supabase.co/storage/v1/object/sign/telegram-sessions/telegram_fetcher_session.session?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV81MzQxYWI3Ni0yYTlmLTQzNGQtOTBmNS0zMTM3NzMzMGQ4ZjMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ0ZWxlZ3JhbS1zZXNzaW9ucy90ZWxlZ3JhbV9mZXRjaGVyX3Nlc3Npb24uc2Vzc2lvbiIsImlhdCI6MTc0NjY4OTEwMywiZXhwIjoxNzc4MjI1MTAzfQ.ki0p1GdWFhpPZe3XTahS4IH5NKItkAavm9cnYCL-n0I"
+
       - name: Run telegram fetcher
         env:
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
