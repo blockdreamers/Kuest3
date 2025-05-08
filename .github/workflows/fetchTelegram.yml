@@ -1,9 +1,8 @@
 name: Telegram Fetcher
-run: pip install -r ./requirements.txt
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # 매 6시간마다 실행
+    - cron: '0 */2 * * *'  # 매 2시간마다 실행
   workflow_dispatch:        # 수동 실행도 가능
 
 jobs:
@@ -20,7 +19,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r ./requirements.txt
 
       - name: Run telegram fetcher
         env:
