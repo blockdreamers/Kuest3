@@ -74,6 +74,7 @@ jobs:
           tree -a -L 3 || ls -R
 
       - name: 🚀 Run telegram fetcher
+        working-directory: netlify/functions/fetchTelegram
         env:
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
           TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
@@ -82,5 +83,5 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           TELEGRAM_SESSION_URL: ${{ secrets.TELEGRAM_SESSION_URL }}
         run: |
-          echo "🚀 Launching Telethon fetcher..."
-          python netlify/functions/fetchTelegram/telethon_fetcher.py
+          echo "🚀 Launching Telethon fetcher from correct directory..."
+          python telethon_fetcher.py
