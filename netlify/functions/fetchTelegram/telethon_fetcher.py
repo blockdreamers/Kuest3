@@ -78,8 +78,13 @@ async def fetch_and_send_messages():
         print("❌ Failed to connect to Telegram after 5 attempts.")
         return
 
+    # ✅ channels.json 경로를 현재 스크립트 기준으로 지정
     script_path = Path(__file__).resolve().parent
     channels_path = script_path / "channels.json"
+
+    if not channels_path.exists():
+        print(f"❌ channels.json not found at: {channels_path}")
+        return
 
     with open(channels_path, 'r', encoding='utf-8') as f:
         channels = json.load(f)

@@ -10,40 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: 📦 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: 🐍 Set up Python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install Python dependencies
+      - name: 📥 Install Python dependencies
         run: |
-          pip install telethon
-          pip install python-dotenv
-          pip install requests
+          pip install telethon python-dotenv requests
 
-      - name: Download Telegram session file from Supabase
+      - name: 🔐 Download Telegram session file from Supabase
         env:
           TELEGRAM_SESSION_URL: ${{ secrets.TELEGRAM_SESSION_URL }}
         run: |
-          curl -o telegram_fetcher_session.session "$TELEGRAM_SESSION_URL"
+          echo "📥 Downloading session file from Supabase..."
+          curl -s -o telegram_fetcher_session.session "$TELEGRAM_SESSION_URL"
 
-      - name: Check session file integrity
+      - name: 🔎 Check session file integrity
         run: |
           echo "📂 File Info:"
-          ls -lh telegram_fetcher_session.session
-          echo "🔎 File Type:"
-          file telegram_fetcher_session.session
+          ls -lh telegram_fetcher_session.session || echo "❌ File not found"
+          echo "🔍 File Type:"
+          file telegram_fetcher_session.session || echo "❌ Cannot determine file type"
           echo "🧬 First 10 Lines of Hexdump:"
-          hexdump -C telegram_fetcher_session.session | head -n 10
+          hexdump -C telegram_fetcher_session.session | head -n 10 || echo "❌ Hexdump failed"
 
-      - name: Run telegram fetcher
+      - name: 🚀 Run telegram fetcher
         env:
           TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
           TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
           NETLIFY_FETCH_URL: ${{ secrets.NETLIFY_FETCH_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_SESSION_URL: ${{ secrets.TELEGRAM_SESSION_URL }}
         run: python netlify/functions/fetchTelegram/telethon_fetcher.py
