@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from telethon.sync import TelegramClient
 from telethon.tl.types import Message, MessageMediaPhoto
 
-# ✅ .env 불러오기
+# ✅ .env 불러오기 (GitHub Actions에서도 dotenv 지원을 위해 명시)
 env_path = Path(__file__).resolve().parents[3] / ".env"
 load_dotenv(dotenv_path=env_path)
 
@@ -20,9 +20,9 @@ NETLIFY_FUNCTION_URL = os.getenv("NETLIFY_FETCH_URL")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_STORAGE_BUCKET = "telegram-images"
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")  # 🔑 GitHub Secrets에 등록 필요
+TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")  # 🔐 GitHub Secret
 
-# ✅ 세션 파일 다운로드
+# ✅ 세션 파일 다운로드 (없으면 다운로드 시도)
 session_file = "telegram_fetcher_session.session"
 if not Path(session_file).exists():
     try:
@@ -36,6 +36,7 @@ if not Path(session_file).exists():
     except Exception as e:
         print(f"❌ Error downloading session: {e}")
 
+# ✅ 텔레그램 클라이언트 초기화
 client = TelegramClient(session_file, API_ID, API_HASH)
 
 # ✅ Supabase 업로드 함수
@@ -63,6 +64,7 @@ def upload_to_supabase(file_path, dest_filename):
 
 # ✅ 메시지 수집 및 전송
 async def fetch_and_send_messages():
+    # 연결 재시도 최대 5회
     for attempt in range(5):
         try:
             await client.start()
