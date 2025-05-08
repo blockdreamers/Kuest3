@@ -22,6 +22,7 @@ jobs:
         run: |
           echo "🐍 Installing required packages..."
           pip install --quiet telethon python-dotenv requests
+          echo "📚 Installed packages:"
           pip list
 
       - name: 🔐 Download Telegram session file from Supabase
@@ -36,10 +37,11 @@ jobs:
 
           curl -s -o telegram_fetcher_session.session "$TELEGRAM_SESSION_URL"
 
-          if [ ! -f telegram_fetcher_session.session ]; then
-            echo "❌ Session file download failed. File not found after curl."
+          if [ ! -s telegram_fetcher_session.session ]; then
+            echo "❌ Session file download failed. File is empty or missing."
             exit 1
           fi
+          echo "✅ Session file downloaded."
 
       - name: 🔎 Check session file integrity
         run: |
@@ -51,7 +53,7 @@ jobs:
           
           echo "🧬 First 10 Lines of Hexdump:"
           hexdump -C telegram_fetcher_session.session | head -n 10 || echo "❌ Hexdump failed"
-
+          
           echo "📄 File ends with:"
           tail -n 5 telegram_fetcher_session.session || echo "❌ Tail failed"
 
@@ -64,11 +66,11 @@ jobs:
           fi
           echo "✅ channels.json found."
 
-      - name: 🔧 Print working directory and list files
+      - name: 🧭 Print working directory and file tree
         run: |
-          echo "📁 Current Working Directory:"
+          echo "📁 Working directory:"
           pwd
-          echo "📂 Directory Structure:"
+          echo "📂 Project tree up to 3 levels:"
           tree -a -L 3 || ls -R
 
       - name: 🚀 Run telegram fetcher
