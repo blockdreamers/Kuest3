@@ -21,8 +21,6 @@ const VotingStatus = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const rate = await fetchUSDKRW();
-      setExchangeRate(rate);
 
       const [{ data: voteData }, { data: seasonData }] = await Promise.all([
         supabase
@@ -55,7 +53,7 @@ const VotingStatus = () => {
           ...item.project_info,
           ...item,
           name_ko: item.project_info?.name_ko ? JSON.parse(`"${item.project_info.name_ko}"`) : '',
-          price: Math.round((item.project_info?.price || 0) * rate),
+          price: item.project_info?.price || 0,
         }));
         setCoins(parsed);
       }

@@ -19,7 +19,7 @@
   to = "/index.html"
   status = 200
 
-# ✅ Firebase 인증 경로에만 iframe 허용 (팝업 로그인 정상 작동)
+# ✅ Firebase 인증 경로에만 iframe 허용
 [[headers]]
   for = "/__/auth/*"
   [headers.values]
@@ -36,12 +36,12 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'none';"
 
-# ✅ Production context (지금은 dev 브랜치를 production으로 설정함)
+# ✅ Production context
 [context.production]
   command = "npm run build:dev"
   publish = "dist"
   functions = "netlify/functions"
-  
+
 [context.production.environment]
   VITE_APP_ENV = "development"
   NODE_ENV = "development"
@@ -62,7 +62,18 @@
   VITE_APP_ENV = "development"
   NODE_ENV = "development"
 
+# ✅ Netlify Functions 전역 설정
 [functions]
 directory = "netlify/functions"
 node_bundler = "esbuild"
 included_files = ["src/**/*"]
+
+# ✅ fetchTelegram 함수 전용 환경변수 최소화 (4KB 제한 우회)
+[functions."fetchTelegram"]
+environment = { 
+  TELEGRAM_API_ID = "20526xxxxx",                 # 실제 값은 Netlify Dashboard에서 설정
+  TELEGRAM_API_HASH = "2a1xxxxx",                 
+  SUPABASE_URL = "https://vdxtuwgphckipadagkuj.supabase.co",
+  SUPABASE_SERVICE_ROLE_KEY = "your_service_role_key",
+  NETLIFY_FETCH_URL = "https://kuest3.com/.netlify/functions/fetchTelegram"
+}

@@ -81,9 +81,9 @@ const VotingInfoBox: React.FC<VotingInfoBoxProps> = ({ coinId, coinName, coinSym
   }, [coinId, selectedSeason]);
 
   return (
-    <div className={styles['coin-detail-right-box']}>
+    <div className={styles.coinDetailRightBox}>
       <div className="flex justify-between items-start mb-3 w-full">
-        <h2 className="text-lg font-semibold">투표 현황</h2>
+        <h2 className="text-lg font-semibold text-white">투표 현황</h2>
         <select
           value={selectedSeason}
           onChange={(e) => setSelectedSeason(Number(e.target.value))}
@@ -98,9 +98,16 @@ const VotingInfoBox: React.FC<VotingInfoBoxProps> = ({ coinId, coinName, coinSym
       </div>
 
       <p className="text-sm text-gray-300 mb-4">
-        {coinName} 프로젝트는 <strong>#시즌{selectedSeason}</strong>에 참여하여 총{' '}
-        <strong>{seasonData?.total_pick?.toLocaleString() || '0'}</strong>표를 획득하였으며,
-        누적 투표수 기준 <strong>{seasonData?.rank || '-'}위</strong>입니다.
+        {coinName} 프로젝트는{' '}
+        <span className={styles.seasonHashtag}>#시즌{selectedSeason}</span>에 참여하여 총{' '}
+        <span className={styles.voteCount}>
+          {seasonData?.total_pick?.toLocaleString() || '0'}표
+        </span>
+        를 획득하였으며, 누적 투표수 기준{' '}
+        <span className={styles.rankText}>
+          {seasonData?.rank ? `${seasonData.rank}위` : '-위'}
+        </span>
+        입니다.
       </p>
 
       <div className="text-sm text-white space-y-2 mb-4 w-full">
@@ -118,7 +125,7 @@ const VotingInfoBox: React.FC<VotingInfoBoxProps> = ({ coinId, coinName, coinSym
         </div>
       </div>
 
-      <button className={styles['coin-detail-vote-btn']}>
+      <button className={styles.coinDetailVoteBtn}>
         <Vote className="w-5 h-5" />
         <span>투표하러 가기</span>
       </button>
