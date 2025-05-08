@@ -22,14 +22,14 @@ const Navbar = () => {
     <nav className="bg-white border-b border-gray-200 font-['Montserrat','Pretendard',sans-serif]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          
           {/* 왼쪽: 로고 + 메뉴 */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center">
               <img
-                src="https://raw.githubusercontent.com/blockdreamers/Kuest3/dev/222.png"
+                src="/assets/Kuest3 logo small.png"
                 alt="Kuest3"
                 className="h-12 w-auto object-contain"
-                style={{ objectFit: 'contain', objectPosition: 'center' }}
               />
             </Link>
 

@@ -1,0 +1,31 @@
+name: Telegram Fetcher
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'  # 매 6시간마다 실행
+  workflow_dispatch:        # 수동 실행도 가능
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run telegram fetcher
+        env:
+          TELEGRAM_API_ID: ${{ secrets.TELEGRAM_API_ID }}
+          TELEGRAM_API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
+          NETLIFY_FETCH_URL: ${{ secrets.NETLIFY_FETCH_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python netlify/functions/fetchTelegram/telethon_fetcher.py

@@ -78,7 +78,7 @@ const CryptoProjects = () => {
   return (
     <div className="mb-12 font-['Montserrat','Pretendard']">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-black">🔥요즘 핫한 코인</h1>
+        <h1 className="text-3xl font-bold text-white">🔥요즘 핫한 코인</h1>
       </div>
 
       <div className="flex items-center justify-between mt-2 mb-2 text-sm text-gray-400">
@@ -139,14 +139,14 @@ const CryptoProjects = () => {
                 </div>
               </div>
 
-              <div className={`grid grid-cols-2 gap-2 text-xs text-white mt-[0.2rem] ${styles.cryptoStatsGrid}`}>
+              <div className={`grid grid-cols-2 gap-2 text-xs mt-[0.2rem] ${styles.cryptoStatsGrid}`}>
                 <div>
                   <p className="text-gray-400">시가총액</p>
-                  <p className="font-medium">{formatMarketCapKRW(coin.marketCap, exchangeRate)}</p>
+                  <p className="cryptoStatValue">{formatMarketCapKRW(coin.marketCap, exchangeRate)}</p>
                 </div>
                 <div>
                   <p className="text-gray-400">거래량 (24h)</p>
-                  <p className="font-medium">{formatVolumeKRW(coin.volume, exchangeRate)}</p>
+                  <p className="cryptoStatValue">{formatVolumeKRW(coin.volume, exchangeRate)}</p>
                 </div>
               </div>
             </div>

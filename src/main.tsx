@@ -7,6 +7,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { PrivyProvider } from '@privy-io/react-auth';
+import "./lib/utils/debug";
+
 
 const PRIVY_APP_ID = 'cm9uph3hy01eol20mdoyg7d0v';
 

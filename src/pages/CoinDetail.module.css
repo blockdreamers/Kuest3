@@ -1,4 +1,4 @@
-/* CoinDetail.module.css - 완전 모듈화된 버전 */
+/* CoinDetail.module.css - 통합 정리된 최적화 버전 */
 
 .coin-detail-container {
   max-width: 1280px;
@@ -22,14 +22,9 @@
 
 .coin-detail-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .coin-detail-layout {
-    grid-template-columns: 2fr 1fr;
-  }
+  align-items: start;
 }
 
 .coin-detail-card {
@@ -222,12 +217,22 @@
 }
 
 .coin-detail-right-box {
-  background-color: #1b1b1b;
-  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: none;
+  padding: 0;
+  box-shadow: none;
+  align-self: start;
+}
+
+.coin-detail-vote-box,
+.coin-detail-twitter-box {
+  background-color: #1a1a1a;
   padding: 1.5rem;
-  color: white;
-  transition: all 0.3s ease;
-  min-height: 200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  width: 100%;
 }
 
 .coin-detail-tweet-head {
@@ -235,31 +240,48 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-}
-
-.coin-detail-tweet-loading {
-  background-color: #2a2a2a;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.coin-detail-vote-btn {
-  background: linear-gradient(to right, #7c3aed, #3b82f6);
   color: white;
-  font-weight: 600;
-  padding: 0.75rem;
-  width: 100%;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
 }
 
-.coin-detail-vote-btn:hover {
-  background: linear-gradient(to right, #6d28d9, #2563eb);
-  transform: scale(1.03);
+.coin-detail-tweet-container {
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  justify-content: flex-start;
 }
+
+.coin-detail-chart-title {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.coin-detail-chart-title:hover {
+  color: #121212;
+}
+
+.coin-detail-tradingview-container {
+  width: 100%;
+  height: 600px;
+  margin-top: 10px;
+}
+
+/* 🔧 색 강조용 클래스 */
+seasonHashtag {
+  color: #dfff67;
+  font-weight: 600;
+}
+
+voteCount {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+rankText {
+  color: #22c55e;
+  font-weight: 600;
+}
+

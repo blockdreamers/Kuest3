@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
+import { coinNameMap } from "../lib/data/coinNameMap";
+import { formatPriceKRW } from "../lib/utils/formatKRW"; // ✨ 추가
 import './RollingBanner.css';
 
 const supabase = createClient(
@@ -16,6 +18,7 @@ const RollingBanner = () => {
   const scrollLeft = useRef(0);
 
   const [coins, setCoins] = useState<any[]>([]);
+  const [exchangeRate, setExchangeRate] = useState<number>(1420); // ✨ 환율 기본값 임시 (1달러=1420원)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,9 +84,14 @@ const RollingBanner = () => {
         >
           <div className="inline-flex space-x-6">
             {coins.map((coin, index) => {
-              const price = Number(coin.price);
+              const priceUSD = Number(coin.price);
               const percentChange = Number(coin.price_change_24h);
               const isUp = percentChange >= 0;
+
+              const koreanName = coinNameMap[coin.symbol] || coin.name;
+
+              // ✨ 가격을 KRW로 변환
+              const priceKRW = formatPriceKRW(priceUSD, exchangeRate);
 
               return (
                 <Link
@@ -92,14 +100,9 @@ const RollingBanner = () => {
                   className="rolling-coin-box"
                 >
                   <img src={coin.logo} alt={coin.name} className="rolling-logo" />
-                  <span className="rolling-name">{coin.name}</span>
+                  <span className="rolling-name">{koreanName}</span>
                   <span className="rolling-symbol">{coin.symbol}</span>
-                  <span className="rolling-price flicker">
-                    ${price.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </span>
+                  <span className="rolling-price flicker">{priceKRW}</span> {/* ✨ 수정 */}
                   <span className={`rolling-change ${isUp ? 'up' : 'down'} flicker`}>
                     {isUp ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
                     <span className="ml-1">{Math.abs(percentChange).toFixed(2)}%</span>
