@@ -43,7 +43,7 @@ jobs:
           fi
           echo "✅ Session file downloaded."
 
-      - name: 🔎 Check session file integrity
+      - name: 🔎 Inspect session file
         run: |
           echo "📂 File Info:"
           ls -lh telegram_fetcher_session.session || echo "❌ File not found"
@@ -56,15 +56,6 @@ jobs:
           
           echo "📄 File ends with:"
           tail -n 5 telegram_fetcher_session.session || echo "❌ Tail failed"
-
-      - name: 🧪 Check presence of channels.json
-        run: |
-          echo "🔍 Verifying channels.json exists in correct directory..."
-          if [ ! -f netlify/functions/fetchTelegram/channels.json ]; then
-            echo "❌ channels.json not found in netlify/functions/fetchTelegram/"
-            exit 1
-          fi
-          echo "✅ channels.json found."
 
       - name: 🧭 Print working directory and file tree
         run: |

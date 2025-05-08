@@ -26,7 +26,7 @@ TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")
 missing_envs = [k for k, v in {
     "TELEGRAM_API_ID": API_ID,
     "TELEGRAM_API_HASH": API_HASH,
-    "NETLIFY_FETCH_URL": NETLIFY_FETCH_URL,
+    "NETLIFY_FETCH_URL": NETLIFY_FUNCTION_URL,
     "SUPABASE_URL": SUPABASE_URL,
     "SUPABASE_SERVICE_ROLE_KEY": SUPABASE_SERVICE_KEY,
     "TELEGRAM_SESSION_URL": TELEGRAM_SESSION_URL
@@ -81,9 +81,34 @@ def upload_to_supabase(file_path, dest_filename):
         print(f"[EXCEPTION] During upload: {e}")
         return None
 
+# ✅ 하드코딩된 채널 리스트
+channels = [
+    "coinkcgchannel",
+    "moneybullkr",
+    "bitcoinlupin",
+    "sepowerr",
+    "gensencoin",
+    "cobak_alert",
+    "jutrobedzielepsze",
+    "BMTube",
+    "yobeullyANN",
+    "moneystation_best",
+    "cineking0",
+    "blockmedia",
+    "NEWS_CRYPTO_BLOCKCHAINS",
+    "coincodekr",
+    "dontak00",
+    "moon252423",
+    "liambitcoin",
+    "minchoisfuture",
+    "AAAAAFELb629XxplVGg9zA",
+    "oddstrading2",
+    "coingram_ch",
+    "diglett88"
+]
+
 # ✅ 메시지 수집 및 전송
 async def fetch_and_send_messages():
-    # Telegram 연결 시도
     for attempt in range(5):
         try:
             print(f"🔌 Connecting to Telegram (attempt {attempt+1})...")
@@ -97,25 +122,8 @@ async def fetch_and_send_messages():
         print("❌ Failed to connect to Telegram after 5 attempts.")
         return
 
-    # ✅ channels.json 경로 확인
-    script_path = Path(__file__).resolve().parent
-    channels_path = script_path / "channels.json"
-    print(f"🔍 Looking for channels.json at: {channels_path}")
+    print(f"📡 Loaded {len(channels)} channels: {channels}")
 
-    if not channels_path.exists():
-        print(f"❌ channels.json not found. Aborting.")
-        return
-
-    # ✅ 채널 목록 로드
-    try:
-        with open(channels_path, 'r', encoding='utf-8') as f:
-            channels = json.load(f)
-        print(f"📡 Loaded channels: {channels}")
-    except Exception as e:
-        print(f"❌ Failed to load channels.json: {e}")
-        return
-
-    # ✅ 채널별 메시지 순회
     for channel in channels:
         print(f"\n📨 Fetching messages from @{channel}")
         all_messages = []
@@ -161,7 +169,6 @@ async def fetch_and_send_messages():
             print(f"❌ Error fetching messages from @{channel}: {e}")
             continue
 
-        # ✅ Netlify에 데이터 전송
         if all_messages:
             batch_size = 10
             for i in range(0, len(all_messages), batch_size):
