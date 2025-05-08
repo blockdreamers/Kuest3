@@ -20,6 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r ./requirements.txt
+        working-directory: ${{ github.workspace }}
 
       - name: Run telegram fetcher
         env:
