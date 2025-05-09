@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from telethon.sync import TelegramClient
 from telethon.tl.types import Message, MessageMediaPhoto
 
-# ✅ .env 불러오기 (루트 기준)
+# ✅ .env 불러오기
 env_path = Path(__file__).resolve().parents[3] / ".env"
 print(f"📄 Loading .env from: {env_path.resolve()}")
 load_dotenv(dotenv_path=env_path)
@@ -22,7 +22,7 @@ SUPABASE_STORAGE_BUCKET = "telegram-images"
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 TELEGRAM_SESSION_URL = os.getenv("TELEGRAM_SESSION_URL")
 
-# ✅ 필수 환경 변수 검사
+# ✅ 환경 변수 검사
 missing_envs = [k for k, v in {
     "TELEGRAM_API_ID": API_ID,
     "TELEGRAM_API_HASH": API_HASH,
@@ -36,8 +36,11 @@ if missing_envs:
     print(f"❌ Missing environment variables: {', '.join(missing_envs)}")
     exit(1)
 
-# ✅ 세션 파일 다운로드
-session_file = "telegram_fetcher_session.session"
+# ✅ 세션 파일
+session_file = "telegram_fetcher_local.session"
+client = TelegramClient(session_file, API_ID, API_HASH)
+
+
 if not Path(session_file).exists():
     try:
         print(f"🌐 Downloading session file from: {TELEGRAM_SESSION_URL}")
@@ -55,7 +58,7 @@ if not Path(session_file).exists():
 else:
     print(f"📦 Existing session file found: {session_file}")
 
-# ✅ Telegram Client 초기화
+# ✅ Telegram client init
 client = TelegramClient(session_file, API_ID, API_HASH)
 
 # ✅ Supabase 업로드 함수
@@ -81,33 +84,16 @@ def upload_to_supabase(file_path, dest_filename):
         print(f"[EXCEPTION] During upload: {e}")
         return None
 
-# ✅ 하드코딩된 채널 리스트
+# ✅ 대상 채널 리스트
 channels = [
-    "coinkcgchannel",
-    "moneybullkr",
-    "bitcoinlupin",
-    "sepowerr",
-    "gensencoin",
-    "cobak_alert",
-    "jutrobedzielepsze",
-    "BMTube",
-    "yobeullyANN",
-    "moneystation_best",
-    "cineking0",
-    "blockmedia",
-    "NEWS_CRYPTO_BLOCKCHAINS",
-    "coincodekr",
-    "dontak00",
-    "moon252423",
-    "liambitcoin",
-    "minchoisfuture",
-    "AAAAAFELb629XxplVGg9zA",
-    "oddstrading2",
-    "coingram_ch",
-    "diglett88"
+    "coinkcgchannel", "moneybullkr", "bitcoinlupin", "sepowerr", "gensencoin",
+    "cobak_alert", "jutrobedzielepsze", "BMTube", "yobeullyANN", "moneystation_best",
+    "cineking0", "blockmedia", "NEWS_CRYPTO_BLOCKCHAINS", "coincodekr", "dontak00",
+    "moon252423", "liambitcoin", "minchoisfuture", "AAAAAFELb629XxplVGg9zA",
+    "oddstrading2", "coingram_ch", "diglett88"
 ]
 
-# ✅ 메시지 수집 및 전송
+# ✅ 메시지 수집
 async def fetch_and_send_messages():
     for attempt in range(5):
         try:
@@ -158,6 +144,9 @@ async def fetch_and_send_messages():
                     "content": message.message,
                     "entities": json.dumps([e.to_dict() for e in message.entities]) if message.entities else None,
                     "media": json.dumps({"type": "photo", "url": media_url}) if media_url else None,
+                    "views": message.views or 0,
+                    "forwards": message.forwards or 0,
+                    "replies": message.replies.replies if message.replies else 0,
                     "raw": message.to_json()
                 }
 
