@@ -44,7 +44,6 @@ const TelegramFeedDetail = () => {
 
   const fetchCategory = useCallback(async () => {
     if (!username) return;
-
     const { data, error } = await supabase
       .from('telegram_channel_avatars')
       .select('category')
@@ -115,15 +114,16 @@ const TelegramFeedDetail = () => {
         <div className={styles['feed-list']}>
           {posts.map(post => {
             const media = typeof post.media === 'string' ? JSON.parse(post.media) : post.media;
+            const safeUrl = media?.url?.replace(/([^:]\/)\/+/g, '$1'); // double slash fix
             return (
               <div
                 key={post.id}
                 className={styles['feed-card']}
                 onClick={() => window.open(`https://t.me/${username}`, '_blank')}
               >
-                {media?.type === 'photo' && media?.url && (
+                {media?.type === 'photo' && safeUrl && (
                   <img
-                    src={media.url.replace(/\/\//g, '/')}
+                    src={safeUrl}
                     alt="media"
                     className={styles.mediaImage}
                   />
