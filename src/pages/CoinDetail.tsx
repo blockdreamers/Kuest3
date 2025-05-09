@@ -197,7 +197,12 @@ const CoinDetail = () => {
               <p className={styles["coin-detail-label"]}>24시간 거래량</p>
               <p className={styles["coin-detail-value"]}>{formatVolumeKRW(coin.volume, exchangeRate)}</p>
               <p className={styles["coin-detail-label"]}>최대 발행량</p>
-              <p className={styles["coin-detail-value"]}>{Number(coin.max_supply).toLocaleString()} {coin.symbol}</p>
+              <p className={styles["coin-detail-value"]}>
+                {coin.max_supply === null
+                  ? "--"
+                  : `${Number(coin.max_supply).toLocaleString()} ${coin.symbol}`}
+              </p>
+
             </div>
           </div>
 

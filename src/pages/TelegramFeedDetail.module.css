@@ -220,3 +220,11 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+
+.categoryTags {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #9ca3af; /* Tailwind gray-400 */
+  word-break: break-word;
+}
+

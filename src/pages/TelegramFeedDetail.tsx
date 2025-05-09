@@ -16,6 +16,7 @@ const TelegramFeedDetail = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<any[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const offsetRef = useRef(0);
@@ -41,11 +42,28 @@ const TelegramFeedDetail = () => {
     setLoading(false);
   }, [username, loading, hasMore]);
 
+  const fetchCategory = useCallback(async () => {
+    if (!username) return;
+
+    const { data, error } = await supabase
+      .from('telegram_channel_avatars')
+      .select('category')
+      .eq('username', username)
+      .single();
+
+    if (error) {
+      console.error('⚠️ Error fetching category:', error);
+      return;
+    }
+    setCategory(data?.category ?? null);
+  }, [username]);
+
   useEffect(() => {
     offsetRef.current = 0;
     setPosts([]);
     setHasMore(true);
     fetchPosts();
+    fetchCategory();
   }, [username]);
 
   useEffect(() => {
@@ -77,6 +95,14 @@ const TelegramFeedDetail = () => {
           <img src={avatar} alt={channelName} className={styles.avatar} />
           <h2 className={styles['channel-name']}>{channelName}</h2>
           <p className={styles.handle}>@{username}</p>
+
+          {category && (
+            <div className={styles.categoryTags}>
+              {category.split(',').map((tag: string) => (
+                <span key={tag}>#{tag.trim()} </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className={styles['subscriber-chart-wrapper']}>

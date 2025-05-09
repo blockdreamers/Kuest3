@@ -18,7 +18,7 @@ const TelegramFeed = () => {
       const { data, error } = await supabase
         .from('telegram_posts')
         .select(`
-          id, sender_username, channel_name, avatar, content,
+          id, sender_username, channel_title, avatar, content,
           replies, forwards, views, posted_at
         `)
         .order('posted_at', { ascending: false });
@@ -64,7 +64,7 @@ const TelegramFeed = () => {
         <div className="telegram-grid">
           {posts.map((post) => (
             <div
-              key={post.id}
+              key={`${post.sender_username}-${post.id}`} // key 충돌 방지
               className="telegram-card cursor-pointer hover:shadow-lg transition"
               onClick={() => navigate(`/telegram/${post.sender_username}`)}
             >
@@ -73,12 +73,12 @@ const TelegramFeed = () => {
                 <div className="flex items-center space-x-3">
                   <img
                     src={post.avatar || '/default-avatar.png'}
-                    alt={post.channel_name || 'unknown'}
+                    alt={post.channel_title || 'unknown'}
                     className="telegram-avatar"
                   />
                   <div>
                     <h3 className="telegram-author text-sm font-semibold text-white">
-                      {post.channel_name || '알 수 없음'}
+                      {post.channel_title || '알 수 없음'}
                     </h3>
                     <p className="telegram-handle text-xs text-gray-400">
                       @{post.sender_username || 'unknown'}
