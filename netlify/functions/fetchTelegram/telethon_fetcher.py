@@ -9,7 +9,7 @@ from telethon.sync import TelegramClient
 from telethon.tl.types import Message, MessageMediaPhoto
 
 # ✅ .env 불러오기 (루트 기준)
-env_path = Path(".env")
+env_path = Path(__file__).resolve().parents[3] / ".env"
 print(f"📄 Loading .env from: {env_path.resolve()}")
 load_dotenv(dotenv_path=env_path)
 
